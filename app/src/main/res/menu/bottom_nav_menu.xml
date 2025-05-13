@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home_nav"
+        android:title="TODO" />
+    <item
+        android:id="@+id/nav_books"
+        android:icon="@drawable/search"
+        android:title="TODO" />
+    <item
+        android:id="@+id/nav_add"
+        android:icon="@drawable/add"
+        android:title="TODO" />
+    <item
+        android:id="@+id/nav_fav"
+        android:icon="@drawable/activity"
+        android:title="TODO" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/profile"
+        android:title="TODO" />
+</menu>
