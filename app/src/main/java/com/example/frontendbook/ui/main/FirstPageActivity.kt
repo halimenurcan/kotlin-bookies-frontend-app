@@ -2,39 +2,30 @@ package com.example.frontendbook.ui.main
 
 import android.content.Intent
 import android.graphics.Color
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.frontendbook.R
+
+import com.example.frontendbook.databinding.FirstpageActivityBinding
+import com.example.frontendbook.ui.base.BaseSimpleActivity
 import com.example.frontendbook.ui.register.RegisterActivity
 import com.example.frontendbook.ui.signIn.SignInActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-import com.google.android.material.button.MaterialButton
+@AndroidEntryPoint
+class FirstPageActivity : BaseSimpleActivity<FirstpageActivityBinding>() {
 
-class FirstPageActivity : AppCompatActivity() {
-    lateinit var layout : ConstraintLayout
-    lateinit var signInButton : MaterialButton
-    lateinit var createAcountButton : MaterialButton
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.firstpage_activity)
+    override fun getViewBinding(): FirstpageActivityBinding {
+        return FirstpageActivityBinding.inflate(layoutInflater)
+    }
 
-        createAcountButton = findViewById(R.id.createaccount)
-        signInButton = findViewById(R.id.signin)
-        // Arkaplan rengini ayarla
-        layout = findViewById(R.id.main)
-        layout.setBackgroundColor(Color.parseColor("#FAF7F2"))
+    override fun setupViews() {
+        // Arkaplan rengi
+        binding.main.setBackgroundColor(Color.parseColor("#FAF7F2"))
 
-
-        signInButton.setOnClickListener {
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
+        binding.signin.setOnClickListener {
+            startActivity(Intent(this, SignInActivity::class.java))
         }
-        createAcountButton.setOnClickListener{
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+
+        binding.createaccount.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<VM : ViewModel, S, VB : ViewBinding> : AppCompatActivity() {
+abstract class BaseActivity<VM : ViewModel, S : BaseUiState, VB : ViewBinding> : AppCompatActivity() {
 
     protected lateinit var binding: VB
     protected abstract val viewModel: VM
@@ -20,12 +20,13 @@ abstract class BaseActivity<VM : ViewModel, S, VB : ViewBinding> : AppCompatActi
         super.onCreate(savedInstanceState)
         binding = getViewBinding()
         setContentView(binding.root)
-
         setupViews()
         observeState()
     }
 
     private fun observeState() {
-        state.observe(this) { handleState(it) }
+        state.observe(this) { state ->
+            state?.let { handleState(it) }
+        }
     }
 }
