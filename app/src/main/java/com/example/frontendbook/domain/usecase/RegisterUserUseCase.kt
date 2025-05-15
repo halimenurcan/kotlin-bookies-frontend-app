@@ -2,26 +2,30 @@ package com.example.frontendbook.domain.usecase
 
 import com.example.frontendbook.data.model.register.RegisterRequest
 import com.example.frontendbook.domain.repository.AuthRepository
-import com.example.frontendbook.retrofit.ApiService
+import com.example.frontendbook.domain.usecase.params.RegisterParams
 import com.example.frontendbook.ui.register.RegisterState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RegisterUserUseCase @Inject constructor(
     private val repository: AuthRepository
-) {
-    suspend fun execute(username: String, email: String, password: String): RegisterState {
+) : BaseUseCase<RegisterParams, RegisterState>() {
+
+    override suspend fun execute(params: RegisterParams): RegisterState {
         return try {
-            val response = repository.register(RegisterRequest(username, email, password))
+            val response = repository.register(
+                RegisterRequest(
+                    username = params.username,
+                    email = params.email,
+                    password = params.password
+                )
+            )
             if (response.isSuccessful) {
-                RegisterState.Success(response.body()?.message ?: "Kayıt başarılı")
+                RegisterState.Success(response.body()?.message ?: "Join successfully")
             } else {
-                RegisterState.Error("Kayıt başarısız")
+                RegisterState.Error("Error Join")
             }
         } catch (e: Exception) {
-            RegisterState.Error("Hata: ${e.message}")
+            RegisterState.Error("Error: ${e.message}")
         }
     }
 }
-

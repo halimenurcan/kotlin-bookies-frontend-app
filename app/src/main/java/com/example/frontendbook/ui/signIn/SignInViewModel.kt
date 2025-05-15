@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendbook.domain.usecase.SignInUseCase
+import com.example.frontendbook.domain.usecase.params.SignInParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +21,8 @@ class SignInViewModel @Inject constructor(
     fun signIn(username: String, password: String) {
         viewModelScope.launch {
             _signInState.value = SignInState.Loading
-            val result = signInUseCase.execute(username, password)
+            var params = SignInParams(username,password)
+            val result = signInUseCase.execute(params)
             _signInState.value = result
         }
     }
