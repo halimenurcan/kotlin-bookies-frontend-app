@@ -5,48 +5,33 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.frontendbook.databinding.RegisterActivityBinding
+import com.example.frontendbook.ui.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity<RegisterViewModel, RegisterState, RegisterActivityBinding>() {
 
-    private lateinit var binding: RegisterActivityBinding
-    private val viewModel: RegisterViewModel by viewModels()
+    override val viewModel: RegisterViewModel by viewModels()
+    override val state get() = viewModel.registerState
+    override fun getViewBinding() = RegisterActivityBinding.inflate(layoutInflater)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = RegisterActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun setupViews() {
         binding.registerButton.setOnClickListener {
             val username = binding.usernameInput.text.toString()
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
             viewModel.register(username, email, password)
         }
-
-        observeViewModel()
     }
 
-    private fun observeViewModel() {
-        viewModel.registerState.observe(this) { state ->
-            when (state) {
-                is RegisterState.Loading -> showLoading()
-                is RegisterState.Success -> showToast(state.message)
-                is RegisterState.Error -> showError(state.errorMessage)
-            }
+    override fun handleState(state: RegisterState) {
+        when (state) {
+            is RegisterState.Loading -> { /* Show loading */ }
+            is RegisterState.Success -> showToast(state.message)
+            is RegisterState.Error -> showToast(state.errorMessage)
         }
     }
 
-    private fun showLoading() {
-        // Progress bar göstermek istersen burada yap
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showError(error: String) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+    private fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }

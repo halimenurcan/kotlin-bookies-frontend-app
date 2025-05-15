@@ -1,4 +1,4 @@
-package com.example.frontendbook
+package com.example.frontendbook.ui.main
 
 import android.content.Intent
 import android.graphics.Color
@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.frontendbook.R
 import com.example.frontendbook.ui.register.RegisterActivity
 import com.example.frontendbook.ui.signIn.SignInActivity
 

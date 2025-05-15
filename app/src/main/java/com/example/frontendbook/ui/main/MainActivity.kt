@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout  // ← İşte eksik olan satır, BUNU EKLEDİK!
+import com.example.frontendbook.ui.main.FirstPageActivity
 
 
 class MainActivity : AppCompatActivity() {

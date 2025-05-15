@@ -1,4 +1,4 @@
-package com.example.frontendbook.signIn
+package com.example.frontendbook.ui.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

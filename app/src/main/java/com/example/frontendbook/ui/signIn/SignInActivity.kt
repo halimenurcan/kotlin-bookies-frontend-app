@@ -1,46 +1,36 @@
 package com.example.frontendbook.ui.signIn
 
 import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.example.frontendbook.databinding.SignInActivityBinding
-import com.example.frontendbook.signIn.MainPageActivity
+import com.example.frontendbook.ui.base.BaseActivity
+import com.example.frontendbook.ui.main.MainPageActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : BaseActivity<SignInViewModel, SignInState, SignInActivityBinding>() {
 
-    private lateinit var binding: SignInActivityBinding
-    private val viewModel: SignInViewModel by viewModels()
+    override val viewModel: SignInViewModel by viewModels()
+    override val state get() = viewModel.signInState
+    override fun getViewBinding(): SignInActivityBinding = SignInActivityBinding.inflate(layoutInflater)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = SignInActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun setupViews() {
         binding.goMain.setOnClickListener {
             val username = binding.usernameInput.text.toString()
             val password = binding.passwordInput.text.toString()
             viewModel.signIn(username, password)
         }
-
-        observeState()
     }
 
-    private fun observeState() {
-        viewModel.signInState.observe(this) { state ->
-            when (state) {
-                is SignInState.Loading -> showLoading()
-                is SignInState.Success -> goToMain(state.token)
-                is SignInState.Error -> showError(state.message)
+    override fun handleState(state: SignInState) {
+        when (state) {
+            is SignInState.Loading -> {
+                // TODO: show loading spinner if needed
             }
+            is SignInState.Success -> goToMain(state.token)
+            is SignInState.Error -> showToast(state.message)
         }
-    }
-
-    private fun showLoading() {
-        // Progress göster
     }
 
     private fun goToMain(token: String?) {
@@ -50,7 +40,7 @@ class SignInActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showError(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
