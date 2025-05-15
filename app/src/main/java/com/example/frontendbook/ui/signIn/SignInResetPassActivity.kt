@@ -4,23 +4,21 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
-import androidx.activity.R
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.frontendbook.databinding.ActivitySignInResetPassBinding
+import com.example.frontendbook.databinding.SignInResetPassActivityBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignInResetPassActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySignInResetPassBinding
+    private lateinit var binding: SignInResetPassActivityBinding
     private val viewModel: SignInResetPassViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignInResetPassBinding.inflate(layoutInflater)
+        binding = SignInResetPassActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.goReset.setOnClickListener {

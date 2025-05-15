@@ -5,19 +5,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.frontendbook.databinding.ActivitySignInBinding
+import com.example.frontendbook.databinding.SignInActivityBinding
 import com.example.frontendbook.signIn.MainPageActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySignInBinding
+    private lateinit var binding: SignInActivityBinding
     private val viewModel: SignInViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignInBinding.inflate(layoutInflater)
+        binding = SignInActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.goMain.setOnClickListener {

@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.frontendbook.databinding.ActivityRegisterBinding
+import com.example.frontendbook.databinding.RegisterActivityBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityRegisterBinding
+    private lateinit var binding: RegisterActivityBinding
     private val viewModel: RegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = RegisterActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.registerButton.setOnClickListener {
