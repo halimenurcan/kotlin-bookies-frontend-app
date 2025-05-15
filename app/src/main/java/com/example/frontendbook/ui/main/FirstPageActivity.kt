@@ -18,7 +18,7 @@ class FirstPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_firstpage)
+        setContentView(R.layout.firstpage_activity)
 
         createAcountButton = findViewById(R.id.createaccount)
         signInButton = findViewById(R.id.signin)
