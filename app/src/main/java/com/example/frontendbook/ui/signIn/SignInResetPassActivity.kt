@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.signIn
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.frontendbook.databinding.SignInResetPassActivityBinding
+import com.example.frontendbook.ui.register.RegisterActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +30,12 @@ class SignInResetPassActivity : AppCompatActivity() {
 
         viewModel.resultMessage.observe(this) { message ->
             showSnackbar(message)
+        }
+        binding.gobacktoSignin.setOnClickListener {
+            startActivity(Intent(this, SignInActivity::class.java))
+        }
+        binding.gobacktoJoin.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 

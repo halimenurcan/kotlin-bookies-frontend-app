@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import com.example.frontendbook.databinding.SignInActivityBinding
 import com.example.frontendbook.ui.base.BaseActivity
 import com.example.frontendbook.ui.main.MainPageActivity
+import com.example.frontendbook.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +21,13 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, SignInActivity
             val username = binding.usernameInput.text.toString()
             val password = binding.passwordInput.text.toString()
             viewModel.signIn(username, password)
+        }
+        binding.resetPass.setOnClickListener {
+            startActivity(Intent(this, SignInResetPassActivity::class.java))
+        }
+
+        binding.gobacktoJoin.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
