@@ -9,5 +9,9 @@
     <color name="primary_bordo_dark">#2A0303</color>
     <color name="outline_bordo">#400505</color>
 
+    <color name="background">#FFF9FD</color> <!-- açık arka plan -->
+    <color name="textPrimary">#2B0000</color> <!-- koyu bordo metin -->
+    <color name="divider">#D9BFC3</color> <!-- yumuşak ayraç çizgisi -->
+    <color name="itemRipple">#33000000</color> <!-- ripple efekti -->
 
 </resources>
