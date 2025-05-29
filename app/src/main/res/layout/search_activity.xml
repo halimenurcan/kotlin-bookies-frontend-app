@@ -5,9 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+    tools:context="com.example.frontendbook.ui.search.SearchActivity">
 
-    <!-- Üstte arama başlığı ve çubuğu -->
+    <!-- Üst: Arama başlığı ve çubuğu -->
     <LinearLayout
         android:id="@+id/searchHeader"
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:drawablePadding="8dp" />
     </LinearLayout>
 
-    <!-- İçerik: Browse by -->
+    <!-- Browse ve içerik alanı -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,51 +60,47 @@
                 android:textStyle="bold"
                 android:paddingBottom="8dp" />
 
-            <!-- Alt alta sıralanmış 8 buton -->
-            <LinearLayout
-                android:id="@+id/browseButtonList"
+            <!-- Browse buttons -->
+            <Button android:id="@+id/genreButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Genre" />
+            <Button android:id="@+id/authorButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Author" />
+            <Button android:id="@+id/countryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Country" />
+            <Button android:id="@+id/languageButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Language" />
+            <Button android:id="@+id/releaseDateButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Release Date" />
+            <Button android:id="@+id/mostPopularButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Most Popular" />
+            <Button android:id="@+id/highlyRatedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Highly Rated" />
+
+            <!-- Browse input -->
+            <EditText
+                android:id="@+id/browseInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:divider="?android:attr/dividerHorizontal"
-                android:showDividers="middle">
+                android:hint="Enter a value..."
+                android:visibility="gone"
+                android:layout_marginTop="12dp" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Genre" />
+            <Button
+                android:id="@+id/browseSubmitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:visibility="gone"
+                android:layout_marginTop="4dp" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Author" />
+            <!-- AI Search button -->
+            <Button
+                android:id="@+id/aiSearchButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Search"
+                android:layout_marginTop="16dp" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Country" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Language" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Release Date" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Most Popular" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Highly Rated" />
-
-            </LinearLayout>
+            <!-- RecyclerView for book list -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

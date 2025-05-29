@@ -1,0 +1,50 @@
+package com.example.frontendbook.ui.search
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.frontendbook.R
+import com.example.frontendbook.databinding.ItemBookBinding
+import com.example.frontendbook.domain.model.Book
+
+class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallback()) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
+        val binding = ItemBookBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return BookViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    inner class BookViewHolder(private val binding: ItemBookBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(book: Book) {
+            binding.titleTextView.text = book.title
+            binding.authorTextView.text = book.author
+            binding.yearTextView.text = book.year.toString()
+
+            // Glide ile kapak resmini yükle
+            Glide.with(binding.root.context)
+                .load(book.imageUrl)
+                .placeholder(R.drawable.placeholder) // drawable altına placeholder.png ekleyebilirsin
+                .error(R.drawable.search)       // ERROR SOLL SEIN
+                .into(binding.bookCoverImage)
+        }
+    }
+}
+
+class BookDiffCallback : DiffUtil.ItemCallback<Book>() {
+    override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+        return oldItem.title == newItem.title && oldItem.author == newItem.author
+    }
+
+    override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
+        return oldItem == newItem
+    }
+}
