@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn1"
+            android:id="@+id/booksButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Books"
@@ -50,7 +50,7 @@
             />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn2"
+            android:id="@+id/ReviewsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reviews"
@@ -63,7 +63,7 @@
             />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn3"
+            android:id="@+id/ListsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lists"
