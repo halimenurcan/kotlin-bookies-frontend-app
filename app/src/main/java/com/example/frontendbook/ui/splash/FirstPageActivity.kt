@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.main
+package com.example.frontendbook.ui.splash
 
 import android.content.Intent
 import android.graphics.Color
