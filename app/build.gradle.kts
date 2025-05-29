@@ -41,7 +41,7 @@ android {
 
 dependencies {
     implementation ("com.airbnb.android:lottie:6.1.0")
-    implementation (libs.material.v1110)
+    implementation (libs.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation("com.squareup.retrofit2:retrofit:2.7.2")
