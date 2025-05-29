@@ -4,11 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.frontendbook.data.remote.AiRepository
 import com.example.frontendbook.domain.model.Book
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel : ViewModel() {
+    private val aiRepository = AiRepository()
 
     private val _state = MutableLiveData<SearchUiState>()
     val state: LiveData<SearchUiState> = _state
@@ -60,6 +64,37 @@ class SearchViewModel : ViewModel() {
             )
         }
     }
+    fun getAiRecommendedBooks() {
+        _state.value = _state.value?.copy(isLoading = true)
+
+        viewModelScope.launch {
+            try {
+                val jsonString = aiRepository.fetchRecommendations(
+                    userPrompt = "Suggest 3 books as JSON with title, author, year, imageUrl"
+                )
+
+                val books: List<Book> = Gson().fromJson(
+                    jsonString,
+                    object : TypeToken<List<Book>>() {}.type
+                )
+
+                _state.value = _state.value?.copy(
+                    books = books,
+                    isLoading = false,
+                    successMessage = "OpenAI kitap önerileri yüklendi",
+                    isEmptyResult = books.isEmpty()
+                )
+
+            } catch (e: Exception) {
+                _state.value = _state.value?.copy(
+                    isLoading = false,
+                    errorMessage = "OpenAI verisi alınamadı: ${e.message}"
+                )
+            }
+        }
+    }
+
+
 
     // Geçici sahte veri (gerçek repository yerine)
     private fun fakeBookSearch(query: String): List<Book> {

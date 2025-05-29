@@ -5,9 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.example.frontendbook.ui.search.SearchActivity">
 
-    <!-- Üstte arama başlığı ve çubuğu -->
+
+    <!-- Arama Başlığı -->
     <LinearLayout
         android:id="@+id/searchHeader"
         android:layout_width="match_parent"
@@ -35,78 +36,75 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp" />
+            android:drawablePadding="8dp"
+            android:inputType="text" />
     </LinearLayout>
 
-    <!-- İçerik: Browse by -->
-    <ScrollView
+
+    <!-- İçerik -->
+    <LinearLayout
+        android:id="@+id/browseContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="65dp">
+        android:orientation="vertical"
+        android:layout_marginTop="100dp"
+        android:padding="16dp">
 
-        <LinearLayout
-            android:id="@+id/browseContainer"
+        <!-- Browse by başlığı -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Browse by"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <!-- Filtre Butonları -->
+        <Button android:id="@+id/genreButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Genre" />
+        <Button android:id="@+id/authorButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Author" />
+        <Button android:id="@+id/countryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Country" />
+        <Button android:id="@+id/languageButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Language" />
+        <Button android:id="@+id/releaseDateButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Release Date" />
+        <Button android:id="@+id/mostPopularButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Most Popular" />
+        <Button android:id="@+id/highlyRatedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Highly Rated" />
+
+        <!-- Filtreye göre kullanıcı girişi -->
+        <EditText
+            android:id="@+id/browseInput"
+            android:visibility="gone"
+            android:hint="Enter value..."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginTop="12dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Browse by"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingBottom="8dp" />
+        <Button
+            android:id="@+id/browseSubmitButton"
+            android:visibility="gone"
+            android:text="Search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <!-- Alt alta sıralanmış 8 buton -->
-            <LinearLayout
-                android:id="@+id/browseButtonList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:divider="?android:attr/dividerHorizontal"
-                android:showDividers="middle">
+        <!-- AI Search Butonu -->
+        <Button
+            android:id="@+id/aiSearchButton"
+            android:text="AI Search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Genre" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Author" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Country" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Language" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Release Date" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Most Popular" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Highly Rated" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        <!-- Kitap listesi -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_marginTop="16dp"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"
+            android:contentDescription="Book results list" />
+    </LinearLayout>
 
     <!-- Footer -->
     <fragment
