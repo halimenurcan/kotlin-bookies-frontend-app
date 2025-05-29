@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.components
+package com.example.frontendbook.ui.mainPage
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.frontendbook.R
 
-class HeaderFragment : Fragment() {
+class ListsFragment : Fragment() {
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.header_nav_menu, container, false)
+    ): View? {
+        return inflater.inflate(R.layout.fragment_lists, container, false)
     }
 }

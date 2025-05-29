@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Header -->
+    <!-- HEADER layout (include) -->
     <include
         android:id="@+id/header"
         layout="@layout/header_nav_menu"
@@ -15,31 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- İçerik alanı (scrollable) -->
-    <ScrollView
-        android:id="@+id/scrollContainer"
+    <!-- Inner fragment içeriği -->
+    <FrameLayout
+        android:id="@+id/innerFragmentContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:layout_marginBottom="65dp"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- İçeriğin buraya gelecek -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="344dp"
-                android:text="Kitap Listesi burada"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

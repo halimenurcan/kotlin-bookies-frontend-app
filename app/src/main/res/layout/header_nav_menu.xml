@@ -50,7 +50,7 @@
             />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/ReviewsButton"
+            android:id="@+id/reviewsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reviews"
@@ -63,7 +63,7 @@
             />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/ListsButton"
+            android:id="@+id/listsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lists"
