@@ -12,9 +12,9 @@
         android:icon="@drawable/add"
         android:title="Add" />
     <item
-        android:id="@+id/ActivityFragment"
+        android:id="@+id/NotificationsFragment"
         android:icon="@drawable/activity"
-        android:title="Activity" />
+        android:title="Notifications" />
     <item
         android:id="@+id/ProfileFragment"
         android:icon="@drawable/profile"

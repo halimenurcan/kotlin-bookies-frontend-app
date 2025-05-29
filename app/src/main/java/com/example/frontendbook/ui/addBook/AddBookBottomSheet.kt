@@ -1,0 +1,46 @@
+package com.example.frontendbook.ui.addBook
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.frontendbook.databinding.FragmentAddBookBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import android.widget.Toast
+
+
+    class AddBookBottomSheet : BottomSheetDialogFragment() {
+
+        private var _binding: FragmentAddBookBinding? = null
+        private val binding get() = _binding!!
+
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View {
+            _binding = FragmentAddBookBinding.inflate(inflater, container, false)
+            return binding.root
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+
+            // Cancel button functionality
+            binding.cancelButton.setOnClickListener {
+                dismiss()
+            }
+
+            // Dummy add action
+            binding.searchInput.setOnEditorActionListener { _, _, _ ->
+                Toast.makeText(requireContext(), "Book added!", Toast.LENGTH_SHORT).show()
+                dismiss()
+                true
+            }
+        }
+
+        override fun onDestroyView() {
+            super.onDestroyView()
+            _binding = null
+        }
+    }
+

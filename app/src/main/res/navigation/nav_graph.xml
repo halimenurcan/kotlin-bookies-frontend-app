@@ -28,5 +28,11 @@
         android:name="com.example.frontendbook.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 -->
 </navigation>
