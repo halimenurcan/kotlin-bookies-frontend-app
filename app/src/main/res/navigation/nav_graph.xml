@@ -11,19 +11,17 @@
         android:name="com.example.frontendbook.ui.mainPage.MainPageFragment"
         android:label="Main Page"
         tools:layout="@layout/fragment_main_page" />
-
+    <fragment
+        android:id="@+id/addBookFragment"
+        android:name="com.example.frontendbook.ui.addBook.AddBookFragment"
+        android:label="Add"
+        tools:layout="@layout/fragment_add_book" />
     <!-- Örnek diğer sayfalar
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.frontendbook.ui.search.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search" />
-
-    <fragment
-        android:id="@+id/addFragment"
-        android:name="com.example.frontendbook.ui.add.AddFragment"
-        android:label="Add"
-        tools:layout="@layout/fragment_add" />
 
     <fragment
         android:id="@+id/profileFragment"
