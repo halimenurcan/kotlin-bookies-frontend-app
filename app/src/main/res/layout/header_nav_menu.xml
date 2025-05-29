@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="18dp"
-    android:background="@color/primary_bordo">
+    android:background="@color/primary">
 
     <!-- title -->
     <TextView
@@ -30,7 +30,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:background="@color/primary_bordo_dark"
+        android:background="@color/primary_dark"
         app:layout_constraintTop_toBottomOf="@id/headerTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:cornerRadius="24dp"
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:text="Books"
             android:textAllCaps="false"
-            android:textColor="@color/text_muted"
-            android:backgroundTint="#2A0303"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary_dark"
             android:textSize="18sp"
             android:layout_marginEnd="20dp"
             app:cornerRadius="24dp"
@@ -56,8 +56,8 @@
             android:text="Reviews"
             android:textSize="18sp"
             android:textAllCaps="false"
-            android:textColor="@color/text_muted"
-            android:backgroundTint="#2A0303"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary_dark"
             android:layout_marginEnd="20dp"
             app:cornerRadius="24dp"
             />
@@ -69,8 +69,8 @@
             android:text="Lists"
             android:textSize="18sp"
             android:textAllCaps="false"
-            android:textColor="@color/text_muted"
-            android:backgroundTint="#2A0303"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary_dark"
             app:cornerRadius="24dp"/>
     </LinearLayout>
 

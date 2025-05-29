@@ -41,9 +41,9 @@ class SignInResetPassActivity : AppCompatActivity() {
 
     private fun showSnackbar(msg: String) {
         val snackbar = Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG)
-        snackbar.view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0e1d31")))
+        snackbar.view.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#cb6105")))
         snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            .setTextColor(Color.parseColor("#cccccc"))
+            .setTextColor(Color.parseColor("#ffffff"))
         snackbar.show()
     }
 

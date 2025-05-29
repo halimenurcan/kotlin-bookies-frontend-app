@@ -17,8 +17,6 @@ class FirstPageActivity : BaseSimpleActivity<FirstpageActivityBinding>() {
     }
 
     override fun setupViews() {
-        // Arkaplan rengi
-        binding.main.setBackgroundColor(Color.parseColor("#FAF7F2"))
 
         binding.signin.setOnClickListener {
             startActivity(Intent(this, SignInActivity::class.java))

@@ -66,20 +66,20 @@
                         android:layout_width="120dp"
                         android:layout_height="180dp"
                         android:layout_marginEnd="12dp"
-                        android:background="@color/primary_bordo_dark" />
+                        android:background="@color/primary_dark" />
 
 
                     <View
                         android:layout_width="120dp"
                         android:layout_height="180dp"
                         android:layout_marginEnd="12dp"
-                        android:background="@color/primary_bordo_dark" />
+                        android:background="@color/primary_dark" />
 
 
                     <View
                         android:layout_width="120dp"
                         android:layout_height="180dp"
-                        android:background="@color/primary_bordo_dark" />
+                        android:background="@color/primary_dark" />
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -110,42 +110,42 @@
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary_bordo" />
+                    android:background="@color/primary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary_bordo" />
+                    android:background="@color/primary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary_bordo" />
+                    android:background="@color/primary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary_bordo" />
+                    android:background="@color/primary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary_bordo" />
+                    android:background="@color/primary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary_bordo" />
+                    android:background="@color/primary" />
             </GridLayout>
         </LinearLayout>
     </ScrollView>

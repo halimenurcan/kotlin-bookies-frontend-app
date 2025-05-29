@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create Account"
-            android:textColor="@color/primary_bordo"
+            android:textColor="@color/primary"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginTop="250dp"
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Username"
-                android:textColorHint="@color/text_muted"
+                android:textColorHint="@color/primary_dark"
                 android:inputType="textPersonName"
                 android:imeOptions="actionNext" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="E-mail"
-                android:textColorHint="@color/text_muted"
+                android:textColorHint="@color/primary_dark"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:textColorHint="@color/text_muted"
+                android:textColorHint="@color/primary_dark"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,7 +104,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="I agree to the Terms of Use and Privacy Policy"
-            android:textColor="@color/primary_bordo_dark"
+            android:textColor="@color/primary_dark"
             android:layout_marginTop="16dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"

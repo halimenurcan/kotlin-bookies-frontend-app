@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="65dp"
     android:orientation="vertical"
-    android:background="@color/primary_bordo">
+    android:background="@color/primary">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_bordo"
+        android:background="@color/primary"
         app:menu="@menu/bottom_nav_menu"
     app:itemIconTint="@color/selector_bottom_nav"
     app:itemTextColor="@color/selector_bottom_nav"

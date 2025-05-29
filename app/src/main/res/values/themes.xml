@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.FrontendBook" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primary_bordo</item>
-        <item name="colorPrimaryVariant">@color/primary_bordo_dark</item> <!-- Optional -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/background_light</item>
-        <item name="colorOutline">@color/outline_bordo</item>
+        <item name="colorOutline">@color/outline</item>
     </style>
 
 

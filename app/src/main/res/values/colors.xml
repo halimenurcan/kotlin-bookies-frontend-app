@@ -2,16 +2,16 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background_light">#F9F9F9</color>
-    <color name="text_muted">#888888</color>
+    <color name="background_light">#F4F5FB</color>
 
-    <color name="primary_bordo">#400505</color>
-    <color name="primary_bordo_dark">#2A0303</color>
-    <color name="outline_bordo">#400505</color>
 
-    <color name="background">#FFF9FD</color> <!-- açık arka plan -->
-    <color name="textPrimary">#2B0000</color> <!-- koyu bordo metin -->
-    <color name="divider">#D9BFC3</color> <!-- yumuşak ayraç çizgisi -->
-    <color name="itemRipple">#33000000</color> <!-- ripple efekti -->
+    <color name="primary">#132A61</color>
+    <color name="primary_dark">#0D0D40</color>
+    <color name="outline">#132A61</color>
+
+    <color name="background">#F4F5FB</color> <!-- açık arka plan -->
+    <color name="textPrimary">#0D0D40</color> <!-- koyu bordo metin -->
+
+
 
 </resources>
