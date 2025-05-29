@@ -1,27 +1,20 @@
-package com.example.frontendbook
+package com.example.frontendbook.ui.main
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import com.example.frontendbook.databinding.MainActivityBinding
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.frontendbook.R
+import com.example.frontendbook.databinding.ActivityMainBinding
 import com.example.frontendbook.ui.base.BaseSimpleActivity
-import com.example.frontendbook.ui.main.FirstPageActivity
 
-class MainActivity : BaseSimpleActivity<MainActivityBinding>() {
+class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
 
-    override fun getViewBinding(): MainActivityBinding {
-        return MainActivityBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
     }
 
     override fun setupViews() {
-        // Lottie zaten otomatik oynuyor (lottie_autoPlay = true)
-
-        // 1.5 saniye sonra FirstPageActivity’ye geç
-        Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, FirstPageActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 1500)
+        val navController = findNavController(R.id.nav_host_fragment)
+        binding.bottomNav.setupWithNavController(navController)
     }
 }

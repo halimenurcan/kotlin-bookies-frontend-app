@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainPageFragment">
+
+    <!-- Ana Sayfa -->
+    <fragment
+        android:id="@+id/mainPageFragment"
+        android:name="com.example.frontendbook.ui.mainPage.MainPageFragment"
+        android:label="Main Page"
+        tools:layout="@layout/fragment_main_page" />
+    <fragment
+        android:id="@+id/addBookFragment"
+        android:name="com.example.frontendbook.ui.addBook.AddBookFragment"
+        android:label="Add"
+        tools:layout="@layout/fragment_add_book" />
+    <!-- Örnek diğer sayfalar
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.frontendbook.ui.search.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.frontendbook.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+-->
+</navigation>

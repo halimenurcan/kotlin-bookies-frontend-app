@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.frontendbook.databinding.SignInActivityBinding
 import com.example.frontendbook.ui.base.BaseActivity
-import com.example.frontendbook.ui.main.MainPageActivity
+import com.example.frontendbook.ui.main.MainActivity
 import com.example.frontendbook.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +42,7 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, SignInActivity
     }
 
     private fun goToMain(token: String?) {
-        val intent = Intent(this, MainPageActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("token", token)
         startActivity(intent)
         finish()
