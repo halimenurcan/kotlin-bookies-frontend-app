@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
-            android:hint="Find books, authors, users, reviews..."
+            android:hint="Find books, authors, users..."
             android:background="@android:drawable/editbox_background"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
-                android:text="Browse by"
+                android:text="Filter by"
                 android:textColor="@color/textSecondary"
                 android:textSize="18sp"
                 android:textStyle="bold" />

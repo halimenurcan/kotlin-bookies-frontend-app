@@ -10,7 +10,7 @@
         android:id="@+id/mainPageFragment"
         android:name="com.example.frontendbook.ui.homePage.MainPageFragment"
         android:label="Main Page"
-        tools:layout="@layout/fragment_main_page" />
+        tools:layout="@layout/fragment_home_page" />
 
 
     <fragment
