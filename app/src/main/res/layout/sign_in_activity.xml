@@ -32,12 +32,12 @@
         <!-- Username Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameInputLayout"
+            style="@style/Widget.Bookies.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            app:boxBackgroundMode="outline"
             app:layout_constraintTop_toBottomOf="@id/signInTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -48,19 +48,21 @@
                 android:layout_height="wrap_content"
                 android:hint="Username"
                 android:inputType="textPersonName"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/textSecondary"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Password Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordInputLayout"
+            style="@style/Widget.Bookies.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             app:passwordToggleEnabled="true"
-            app:boxBackgroundMode="outline"
             app:layout_constraintTop_toBottomOf="@id/usernameInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -70,12 +72,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/textSecondary"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Sign in Button (Turuncu) -->
+        <!-- Sign in Button (Orange) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/goMain"
+            style="@style/Widget.Bookies.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="32dp"
@@ -93,6 +98,7 @@
         <!-- Join Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/gobacktoJoin"
+            style="@style/Widget.Bookies.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"

@@ -9,5 +9,10 @@
         <item name="backgroundTint">@color/buttonPrimary</item>
     </style>
 
+    <style name="Widget.Bookies.TextInputLayout.OutlinedBox" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/line</item>
+        <item name="android:textColorHint">@color/textSecondary</item>
+    </style>
 
 </resources>
