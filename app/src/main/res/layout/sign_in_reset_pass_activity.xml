@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:background="@color/backgroundPrimary"
+    tools:context=".ui.ResetPasswordFragment">
 
     <!-- Title -->
     <TextView
@@ -13,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="250dp"
         android:text="Reset Password"
-        android:textColor="@color/primary"
+        android:textColor="@color/textPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,55 +44,56 @@
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Buttons -->
-    <LinearLayout
-        android:id="@+id/buttonLayout"
+    <!-- Send Code Button  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goReset"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="Send Code"
+        android:textAllCaps="false"
+        android:textColor="@color/button_textSecondary"
+        app:backgroundTint="@color/buttonSecondary"
+        app:cornerRadius="8dp"
         app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/gobacktoSignin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="Sign in"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:background="@drawable/button_background_round"
-            app:cornerRadius="16dp" />
+    <!-- Join Button  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/gobacktoJoin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="Join"
+        android:textAllCaps="false"
+        android:textColor="@color/button_textPrimary"
+        app:backgroundTint="@color/buttonPrimary"
+        app:cornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/goReset"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/gobacktoJoin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="Join"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:background="@drawable/button_background_round"
-            app:cornerRadius="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/goReset"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Go"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:background="@drawable/button_background_round"
-            app:cornerRadius="16dp" />
-    </LinearLayout>
+    <!-- Sign in Button  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/gobacktoSignin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="Sign in"
+        android:textAllCaps="false"
+        android:textColor="@color/button_textPrimary"
+        app:backgroundTint="@color/buttonPrimary"
+        app:cornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/gobacktoJoin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

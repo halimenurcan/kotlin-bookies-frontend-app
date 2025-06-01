@@ -8,20 +8,19 @@
     <!-- Ana Sayfa -->
     <fragment
         android:id="@+id/mainPageFragment"
-        android:name="com.example.frontendbook.ui.mainPage.MainPageFragment"
+        android:name="com.example.frontendbook.ui.homePage.MainPageFragment"
         android:label="Main Page"
         tools:layout="@layout/fragment_main_page" />
+
+
     <fragment
-        android:id="@+id/addBookFragment"
-        android:name="com.example.frontendbook.ui.addBook.AddBookFragment"
-        android:label="Add"
-        tools:layout="@layout/fragment_add_book" />
-    <!-- Örnek diğer sayfalar
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.frontendbook.ui.search.SearchFragment"
-        android:label="Search"
-        tools:layout="@layout/fragment_search" />
+    android:id="@+id/searchFragment"
+    android:name="com.example.frontendbook.ui.search.SearchFragment"
+    android:label="Search"
+    tools:layout="@layout/fragment_search" />
+
+    <!-- addbook bottomsheet olacak_ Örnek diğer sayfalar
+
 
     <fragment
         android:id="@+id/profileFragment"
@@ -30,9 +29,9 @@
         tools:layout="@layout/fragment_profile" />
 
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/notificationsFragment"
         android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
 -->
 </navigation>

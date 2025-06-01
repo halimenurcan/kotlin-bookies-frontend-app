@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="background_light">#F4F5FB</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="backgroundPrimary">#FEFEFE</color>
+    <color name="backgroundSecondary">#D9D9D9</color>
+
+    <color name="footerColor">#F8F8F8</color>
+    <color name="headerColor">#F8F8F8</color>
+
+    <color name="fh_line_dots">#979797</color>
+    <color name="line">#D9D9D9</color>
+    <color name="boxes_background">#DCDCDC</color>
+    <color name="boxes_small">#979797</color>
+    <color name="checkboxTickColor">#ED7B14</color>
 
 
-    <color name="primary">#132A61</color>
-    <color name="primary_dark">#0D0D40</color>
-    <color name="outline">#132A61</color>
+    <color name="footer_icons">#000000</color>
+    <color name="footer_selected_icon">#ED7B14</color>
 
-    <color name="background">#F4F5FB</color> <!-- açık arka plan -->
-    <color name="textPrimary">#0D0D40</color> <!-- koyu bordo metin -->
+
+    <color name="textPrimary">#000000</color>
+    <color name="textSecondary">#363636</color>
+
+
+    <color name="buttonPrimary">#D9D9D9</color>
+    <color name="button_textPrimary">#000000</color>
+    <color name="button_textSecondary">#FEFEFE</color>
+    <color name="buttonSecondary">#ED7B14</color>
+
+
+    <color name="stars_rated">#363636</color>
+    <color name="stars_empty">#D9D9D9</color>
 
 
 

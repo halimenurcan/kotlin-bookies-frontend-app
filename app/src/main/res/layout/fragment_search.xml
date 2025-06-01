@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:androidx="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SearchFragment">
+    tools:context=".ui.search.SearchFragment"
+    android:background="@color/backgroundPrimary">
 
     <!-- Üst: Arama başlığı ve çubuğu -->
     <LinearLayout
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/headerColor"
         android:elevation="4dp">
 
         <TextView
@@ -23,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Search"
-            android:textColor="@color/primary_dark"
+            android:textColor="@color/textPrimary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -45,7 +46,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="120dp"
-        android:layout_marginBottom="65dp">
+        android:clipToPadding="false"
+        android:paddingBottom="65dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/browseContainer"
@@ -57,28 +60,90 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:text="Browse by"
+                android:textColor="@color/textSecondary"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingBottom="8dp" />
+                android:textStyle="bold" />
 
             <!-- Browse buttons -->
-            <Button android:id="@+id/genreButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Genre" />
-            <Button android:id="@+id/authorButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Author" />
-            <Button android:id="@+id/countryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Country" />
-            <Button android:id="@+id/languageButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Language" />
-            <Button android:id="@+id/releaseDateButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Release Date" />
-            <Button android:id="@+id/mostPopularButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Most Popular" />
-            <Button android:id="@+id/highlyRatedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Highly Rated" />
+            <Button
+                android:id="@+id/genreButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Genre"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
 
-            <!-- Browse input -->
+            <Button
+                android:id="@+id/authorButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Author"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/countryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Country"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/languageButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Language"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/releaseDateButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Release Date"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/mostPopularButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Most Popular"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/highlyRatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/buttonPrimary"
+                android:text="Highly Rated"
+                android:textColor="@color/button_textPrimary"
+                app:cornerRadius="8dp" />
+
+            <!-- Browse input. ??? -->
             <EditText
                 android:id="@+id/browseInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:hint="Enter a value..."
-                android:visibility="gone"
-                android:layout_marginTop="12dp" />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/browseSubmitButton"
@@ -93,8 +158,12 @@
                 android:id="@+id/aiSearchButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="52dp"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="@color/buttonSecondary"
                 android:text="AI Search"
-                android:layout_marginTop="16dp" />
+                android:textColor="@color/button_textSecondary"
+                app:cornerRadius="32dp" />
 
             <!-- RecyclerView for book list -->
             <androidx.recyclerview.widget.RecyclerView

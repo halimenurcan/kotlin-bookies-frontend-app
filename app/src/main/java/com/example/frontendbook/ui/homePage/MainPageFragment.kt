@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.mainPage
+package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
 import android.view.LayoutInflater

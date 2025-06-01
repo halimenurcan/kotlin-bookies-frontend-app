@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mainPageFragment"
-        android:icon="@drawable/home_nav"
+        android:icon="@drawable/home"
         android:title="Home" />
     <item
         android:id="@+id/searchFragment"
@@ -13,7 +13,7 @@
         android:title="Add" />
     <item
         android:id="@+id/NotificationsFragment"
-        android:icon="@drawable/activity"
+        android:icon="@drawable/notifications"
         android:title="Notifications" />
     <item
         android:id="@+id/ProfileFragment"

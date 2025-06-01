@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="12dp"
-    android:background="@android:color/white"
+    android:background="@color/backgroundPrimary"
     android:elevation="2dp"
     android:layout_margin="8dp">
 
-    <!-- Kitap görseli -->
+    <!-- changes will be made.Kitap görseli -->
     <ImageView
         android:id="@+id/bookCoverImage"
         android:layout_width="80dp"
@@ -21,7 +21,7 @@
     <!-- Bilgi bloğu -->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="92dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -30,27 +30,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Book Title"
+            android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/authorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="Author Name"
-            android:textSize="14sp"
-            android:textColor="#444444"
-            android:layout_marginTop="4dp" />
+            android:textColor="#363636"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/yearTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="Year"
-            android:textSize="14sp"
-            android:textColor="#666666"
-            android:layout_marginTop="2dp" />
+            android:textColor="#363636"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

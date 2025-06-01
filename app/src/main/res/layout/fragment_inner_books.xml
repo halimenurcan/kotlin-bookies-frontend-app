@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundPrimary">
 
 
     <!-- HEADER -->
@@ -43,6 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Popular This Week"
+                android:textColor="@color/textSecondary"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingBottom="8dp" />
@@ -58,7 +60,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:background="@color/boxes_background">
 
 
                     <!-- Dummy kitap kutuları -->
@@ -66,20 +69,20 @@
                         android:layout_width="120dp"
                         android:layout_height="180dp"
                         android:layout_marginEnd="12dp"
-                        android:background="@color/primary_dark" />
+                        android:background="@color/backgroundPrimary" />
 
 
                     <View
                         android:layout_width="120dp"
                         android:layout_height="180dp"
                         android:layout_marginEnd="12dp"
-                        android:background="@color/primary_dark" />
+                        android:background="@color/backgroundPrimary" />
 
 
                     <View
                         android:layout_width="120dp"
                         android:layout_height="180dp"
-                        android:background="@color/primary_dark" />
+                        android:background="@color/backgroundPrimary" />
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -89,18 +92,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Explore More"
+                android:textColor="@color/textSecondary"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="24dp"
                 android:paddingBottom="8dp" />
 
 
-            <!-- 🔲 3 Sütun Grid Görünüm -->
+            <!-- 🔲 3 Sütun Grid Görünüm// scrollview olacak -->
             <GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="3"
+                android:layout_height="408dp"
                 android:alignmentMode="alignMargins"
+                android:background="@color/boxes_background"
+                android:columnCount="2"
                 android:rowOrderPreserved="false"
                 android:useDefaultMargins="true">
 
@@ -110,42 +115,42 @@
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary" />
+                    android:background="@color/backgroundPrimary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary" />
+                    android:background="@color/backgroundPrimary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary" />
+                    android:background="@color/backgroundPrimary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary" />
+                    android:background="@color/backgroundPrimary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary" />
+                    android:background="@color/backgroundPrimary" />
 
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
-                    android:background="@color/primary" />
+                    android:background="@color/backgroundPrimary" />
             </GridLayout>
         </LinearLayout>
     </ScrollView>

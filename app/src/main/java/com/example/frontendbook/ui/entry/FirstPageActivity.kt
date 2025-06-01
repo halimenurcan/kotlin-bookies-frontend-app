@@ -1,7 +1,6 @@
-package com.example.frontendbook.ui.splash
+package com.example.frontendbook.ui.entry
 
 import android.content.Intent
-import android.graphics.Color
 
 import com.example.frontendbook.databinding.FirstpageActivityBinding
 import com.example.frontendbook.ui.base.BaseSimpleActivity

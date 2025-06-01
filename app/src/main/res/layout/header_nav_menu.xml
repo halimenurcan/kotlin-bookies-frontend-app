@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="18dp"
-    android:background="@color/primary">
+    android:background="@color/headerColor">
 
     <!-- title -->
     <TextView
@@ -15,7 +15,7 @@
         android:text="BOOKIES"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@color/background_light"
+        android:textColor="@color/textPrimary"
         android:textAlignment="center"
         android:fontFamily="@font/roboto_condensed_bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,53 +25,54 @@
     <!-- Buttons -->
     <LinearLayout
         android:id="@+id/headerButtons"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:background="@color/primary_dark"
+        android:background="@color/backgroundPrimary"
         app:layout_constraintTop_toBottomOf="@id/headerTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:cornerRadius="24dp"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:weightSum="3">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/booksButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
             android:text="Books"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/primary_dark"
             android:textSize="18sp"
-            android:layout_marginEnd="20dp"
-            app:cornerRadius="24dp"
-            />
+            android:textColor="@color/button_textPrimary"
+            android:backgroundTint="@color/buttonPrimary"
+            app:cornerRadius="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reviewsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
             android:text="Reviews"
             android:textSize="18sp"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/primary_dark"
-            android:layout_marginEnd="20dp"
-            app:cornerRadius="24dp"
-            />
+            android:textColor="@color/button_textPrimary"
+            android:backgroundTint="@color/buttonPrimary"
+            app:cornerRadius="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/listsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
             android:text="Lists"
             android:textSize="18sp"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/primary_dark"
-            app:cornerRadius="24dp"/>
+            android:textColor="@color/button_textPrimary"
+            android:backgroundTint="@color/buttonPrimary"
+            app:cornerRadius="8dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

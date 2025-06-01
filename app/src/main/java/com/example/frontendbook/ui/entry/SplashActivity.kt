@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import com.example.frontendbook.databinding.SplashActivityBinding
 import com.example.frontendbook.ui.base.BaseSimpleActivity
-import com.example.frontendbook.ui.splash.FirstPageActivity
+import com.example.frontendbook.ui.entry.FirstPageActivity
 
 class SplashActivity : BaseSimpleActivity<SplashActivityBinding>() {
 

@@ -3,4 +3,11 @@
     <style name="BottomNav_NoIndicator">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="CustomRoundedButton" parent="Widget.Material3.Button">
+        <item name="cornerSize">16dp</item>
+        <item name="backgroundTint">@color/buttonPrimary</item>
+    </style>
+
+
 </resources>

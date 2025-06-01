@@ -5,10 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
-    tools:context=".ui.splash.FirstPageActivity">
+    android:background="@color/backgroundPrimary"
+    tools:context=".ui.entry.FirstPageActivity">
 
-    <!-- "BOOKIES" -->
+    <!-- "BOOKIES" başlık -->
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
@@ -17,52 +17,48 @@
         android:fontFamily="@font/roboto_condensed_bold"
         android:text="BOOKIES"
         android:textAlignment="center"
-        android:textColor="@color/primary"
+        android:textColor="@color/textPrimary"
         android:textSize="72sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Sign In Button -->
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signin"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="25dp"
-        android:background="@drawable/button_background_round"
+        android:layout_marginBottom="290dp"
         android:text="Sign In"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        app:cornerRadius="24dp"
-        app:iconPadding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/createaccount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textColor="@color/textPrimary"
+        android:textSize="18sp"
 
-    <!-- "Create Account" Button -->
+        app:backgroundTint="@color/buttonPrimary"
+        app:cornerRadius="8dp"
+        app:iconPadding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Create Account Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/createaccount"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="217dp"
-        android:background="@drawable/button_background_round"
         android:text="Create Account"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        app:cornerRadius="24dp"
+        android:textColor="@color/textPrimary"
+        android:textSize="18sp"
+
+        app:backgroundTint="@color/buttonPrimary"
+        app:cornerRadius="8dp"
         app:iconPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

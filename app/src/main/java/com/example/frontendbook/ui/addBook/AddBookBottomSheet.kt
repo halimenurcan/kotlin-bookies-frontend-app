@@ -8,6 +8,7 @@ import com.example.frontendbook.databinding.FragmentAddBookBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.widget.Toast
 
+//bottomSheet bu addbokk.kt den her sey degisiyo diye fragment kaldi adi
 
     class AddBookBottomSheet : BottomSheetDialogFragment() {
 
@@ -42,5 +43,14 @@ import android.widget.Toast
             super.onDestroyView()
             _binding = null
         }
+        //tiklandiginda ekranin %80ini kaplamasi icin boyutsal
+        override fun onStart() {
+            super.onStart()
+            dialog?.let {
+                val bottomSheet = it.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheet?.layoutParams?.height = (resources.displayMetrics.heightPixels * 0.8).toInt()
+            }
+        }
+
     }
 
