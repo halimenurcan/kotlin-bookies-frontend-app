@@ -3,14 +3,14 @@ package com.example.frontendbook
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import com.example.frontendbook.databinding.SplashActivityBinding
+import com.example.frontendbook.databinding.ActivitySplashBinding
 import com.example.frontendbook.ui.base.BaseSimpleActivity
 import com.example.frontendbook.ui.entry.FirstPageActivity
 
-class SplashActivity : BaseSimpleActivity<SplashActivityBinding>() {
+class SplashActivity : BaseSimpleActivity<ActivitySplashBinding>() {
 
-    override fun getViewBinding(): SplashActivityBinding {
-        return SplashActivityBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivitySplashBinding {
+        return ActivitySplashBinding.inflate(layoutInflater)
     }
 
     override fun setupViews() {

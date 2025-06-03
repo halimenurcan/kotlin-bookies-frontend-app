@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/popularBooksFragment"
-        android:name="com.example.frontendbook.ui.homePage.PopularBooksFragment"
+        android:name="com.example.frontendbook.ui.homePage.innerBooks.PopularBooksFragment"
         android:label="Popular Books"
         tools:layout="@layout/fragment_popular_books" />
 
@@ -23,8 +23,6 @@
     android:name="com.example.frontendbook.ui.search.SearchFragment"
     android:label="Search"
     tools:layout="@layout/fragment_search" />
-
-
 
     <fragment
         android:id="@+id/profileFragment"

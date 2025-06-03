@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.homePage
+package com.example.frontendbook.ui.homePage.innerBooks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

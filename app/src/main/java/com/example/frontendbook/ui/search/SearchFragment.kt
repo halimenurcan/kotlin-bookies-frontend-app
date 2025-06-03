@@ -42,7 +42,7 @@ class SearchFragment : Fragment() {
         binding.authorButton.setOnClickListener { showInput("author") }
         binding.countryButton.setOnClickListener { showInput("country") }
         binding.languageButton.setOnClickListener { showInput("language") }
-        binding.releaseDateButton.setOnClickListener { showInput("year") }
+
         binding.mostPopularButton.setOnClickListener {
             viewModel.searchBooks("popular")
             hideInput()

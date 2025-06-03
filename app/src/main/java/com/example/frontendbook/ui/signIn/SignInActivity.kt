@@ -3,18 +3,18 @@ package com.example.frontendbook.ui.signIn
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.example.frontendbook.databinding.SignInActivityBinding
+import com.example.frontendbook.databinding.ActivitySignInBinding
 import com.example.frontendbook.ui.base.BaseActivity
 import com.example.frontendbook.ui.main.MainActivity
 import com.example.frontendbook.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInActivity : BaseActivity<SignInViewModel, SignInState, SignInActivityBinding>() {
+class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignInBinding>() {
 
     override val viewModel: SignInViewModel by viewModels()
     override val state get() = viewModel.signInState
-    override fun getViewBinding(): SignInActivityBinding = SignInActivityBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivitySignInBinding = ActivitySignInBinding.inflate(layoutInflater)
 
     override fun setupViews() {
         binding.goMain.setOnClickListener {

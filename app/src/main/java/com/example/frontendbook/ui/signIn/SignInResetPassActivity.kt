@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.frontendbook.databinding.SignInResetPassActivityBinding
+import com.example.frontendbook.databinding.ActivityResetPassBinding
 import com.example.frontendbook.ui.register.RegisterActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,12 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignInResetPassActivity : AppCompatActivity() {
 
-    private lateinit var binding: SignInResetPassActivityBinding
+    private lateinit var binding: ActivityResetPassBinding
     private val viewModel: SignInResetPassViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = SignInResetPassActivityBinding.inflate(layoutInflater)
+        binding = ActivityResetPassBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.goReset.setOnClickListener {

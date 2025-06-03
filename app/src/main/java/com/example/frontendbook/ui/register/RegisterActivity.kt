@@ -5,17 +5,17 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.frontendbook.databinding.RegisterActivityBinding
+import com.example.frontendbook.databinding.ActivityRegisterBinding
 import com.example.frontendbook.ui.base.BaseActivity
 import com.example.frontendbook.ui.signIn.SignInActivity
 import com.example.frontendbook.ui.signIn.SignInResetPassActivity
 import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
-class RegisterActivity : BaseActivity<RegisterViewModel, RegisterState, RegisterActivityBinding>() {
+class RegisterActivity : BaseActivity<RegisterViewModel, RegisterState, ActivityRegisterBinding>() {
 
     override val viewModel: RegisterViewModel by viewModels()
     override val state get() = viewModel.registerState
-    override fun getViewBinding() = RegisterActivityBinding.inflate(layoutInflater)
+    override fun getViewBinding() = ActivityRegisterBinding.inflate(layoutInflater)
 
     override fun setupViews() {
         binding.registerButton.setOnClickListener {

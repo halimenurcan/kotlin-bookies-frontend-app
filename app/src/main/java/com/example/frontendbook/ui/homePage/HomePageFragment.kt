@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
+import com.example.frontendbook.ui.homePage.innerBooks.InnerBooksFragment
 
 class HomePageFragment : Fragment() {
 
