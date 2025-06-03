@@ -20,7 +20,7 @@ class NotificationAdapter(private val notificationList: List<Notification>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.notification_item, parent, false)
+            .inflate(R.layout.item_notification, parent, false)
         return NotificationViewHolder(view)
     }
 

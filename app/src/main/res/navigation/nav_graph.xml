@@ -7,11 +7,16 @@
 
     <!-- Ana Sayfa -->
     <fragment
-        android:id="@+id/mainPageFragment"
+        android:id="@+id/homePageFragment"
         android:name="com.example.frontendbook.ui.homePage.HomePageFragment"
-        android:label="Main Page"
+        android:label="Home Page"
         tools:layout="@layout/fragment_home_page" />
 
+    <fragment
+        android:id="@+id/popularBooksFragment"
+        android:name="com.example.frontendbook.ui.homePage.PopularBooksFragment"
+        android:label="Popular Books"
+        tools:layout="@layout/fragment_popular_books" />
 
     <fragment
     android:id="@+id/searchFragment"

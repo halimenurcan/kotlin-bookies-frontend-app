@@ -59,6 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        tools:layout="@layout/footer_nav_menu" />
+        tools:layout="@layout/nav_footer_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -13,6 +13,6 @@ class FooterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.footer_nav_menu, container, false)
+        return inflater.inflate(R.layout.nav_footer_menu, container, false)
     }
 }

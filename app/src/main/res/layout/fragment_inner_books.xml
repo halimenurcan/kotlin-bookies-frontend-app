@@ -26,15 +26,33 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 📌 "Popular This Week" Title -->
-            <TextView
+            <!-- 📌 "Popular This Week" Title with arrow -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Popular This Week"
-                android:textColor="@color/textSecondary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:paddingBottom="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/popularTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Popular This Week"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/popularArrow"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/more"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="See All Popular Books"
+                    app:tint="@color/textSecondary" />
+            </LinearLayout>
 
             <!-- 🔁 Yatay ScrollView (Popular Books) -->
             <HorizontalScrollView

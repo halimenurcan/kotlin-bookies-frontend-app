@@ -11,7 +11,7 @@
     <!-- HEADER layout (include) -->
     <include
         android:id="@+id/header"
-        layout="@layout/header_nav_menu"
+        layout="@layout/nav_header_menu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

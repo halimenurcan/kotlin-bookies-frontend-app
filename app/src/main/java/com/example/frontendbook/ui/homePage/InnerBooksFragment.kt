@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentInnerBooksBinding
 
 class InnerBooksFragment : Fragment() {
@@ -18,6 +19,17 @@ class InnerBooksFragment : Fragment() {
     ): View {
         _binding = FragmentInnerBooksBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.popularArrow.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.innerFragmentContainer, PopularBooksFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun onDestroyView() {
