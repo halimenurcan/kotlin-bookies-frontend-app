@@ -19,7 +19,6 @@
     android:label="Search"
     tools:layout="@layout/fragment_search" />
 
-    <!-- addbook bottomsheet olacak_ Örnek diğer sayfalar
 
 
     <fragment
@@ -33,5 +32,5 @@
         android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
--->
+
 </navigation>

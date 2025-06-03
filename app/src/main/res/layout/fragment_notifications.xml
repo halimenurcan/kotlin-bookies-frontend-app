@@ -53,5 +53,12 @@
                 android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
+    <fragment
+        android:id="@+id/footerFragment"
+        android:name="com.example.frontendbook.ui.components.FooterFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        tools:layout="@layout/footer_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
