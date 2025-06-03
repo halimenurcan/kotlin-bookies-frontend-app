@@ -2,42 +2,29 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundPrimary">
 
-
-    <!-- HEADER -->
-    <include
-        android:id="@+id/header"
-        layout="@layout/header_nav_menu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <!-- SCROLLABLE CONTENT -->
     <ScrollView
         android:id="@+id/scrollContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingTop="120dp"
+        android:paddingBottom="96dp"
         android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingBottom="65dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
 
             <!-- 📌 "Popular This Week" Title -->
             <TextView
@@ -49,20 +36,17 @@
                 android:textStyle="bold"
                 android:paddingBottom="8dp" />
 
-
             <!-- 🔁 Yatay ScrollView (Popular Books) -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none">
 
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@color/boxes_background">
-
 
                     <!-- Dummy kitap kutuları -->
                     <View
@@ -71,21 +55,28 @@
                         android:layout_marginEnd="12dp"
                         android:background="@color/backgroundPrimary" />
 
-
                     <View
                         android:layout_width="120dp"
                         android:layout_height="180dp"
                         android:layout_marginEnd="12dp"
                         android:background="@color/backgroundPrimary" />
 
-
                     <View
                         android:layout_width="120dp"
                         android:layout_height="180dp"
                         android:background="@color/backgroundPrimary" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/popularMore"
+                        android:layout_width="120dp"
+                        android:layout_height="180dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/more"
+                        android:contentDescription="Go to Popular"
+                        android:background="@color/backgroundPrimary"
+                        app:tint="@color/textSecondary" />
                 </LinearLayout>
             </HorizontalScrollView>
-
 
             <!-- 📌 Grid Başlık -->
             <TextView
@@ -98,17 +89,15 @@
                 android:layout_marginTop="24dp"
                 android:paddingBottom="8dp" />
 
-
-            <!-- 🔲 3 Sütun Grid Görünüm// scrollview olacak -->
+            <!-- 🔲 Grid Görünüm -->
             <GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="408dp"
+                android:layout_height="wrap_content"
                 android:alignmentMode="alignMargins"
                 android:background="@color/boxes_background"
                 android:columnCount="2"
                 android:rowOrderPreserved="false"
                 android:useDefaultMargins="true">
-
 
                 <!-- Dummy kitap kutuları -->
                 <View
@@ -117,6 +106,11 @@
                     android:layout_columnWeight="1"
                     android:background="@color/backgroundPrimary" />
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_columnWeight="1"
+                    android:background="@color/backgroundPrimary" />
 
                 <View
                     android:layout_width="0dp"
@@ -124,27 +118,17 @@
                     android:layout_columnWeight="1"
                     android:background="@color/backgroundPrimary" />
 
-
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
                     android:background="@color/backgroundPrimary" />
 
-
                 <View
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
                     android:background="@color/backgroundPrimary" />
-
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
-
 
                 <View
                     android:layout_width="0dp"
@@ -154,6 +138,4 @@
             </GridLayout>
         </LinearLayout>
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

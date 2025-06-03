@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
 
-class MainPageFragment : Fragment() {
+class HomePageFragment : Fragment() {
 
     private var _binding: FragmentHomePageBinding? = null
     private val binding get() = _binding!!

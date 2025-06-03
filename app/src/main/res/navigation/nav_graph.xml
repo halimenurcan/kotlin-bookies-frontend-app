@@ -8,7 +8,7 @@
     <!-- Ana Sayfa -->
     <fragment
         android:id="@+id/mainPageFragment"
-        android:name="com.example.frontendbook.ui.homePage.MainPageFragment"
+        android:name="com.example.frontendbook.ui.homePage.HomePageFragment"
         android:label="Main Page"
         tools:layout="@layout/fragment_home_page" />
 
