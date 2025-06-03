@@ -6,17 +6,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SearchFragment"
+    tools:context=".ui.notifications.NotificationsFragment"
     android:background="@color/backgroundPrimary">
 
     <LinearLayout
         android:id="@+id/notificationsHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
+        android:layout_height="124dp"
         android:background="@color/headerColor"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/notificationsTitle"
