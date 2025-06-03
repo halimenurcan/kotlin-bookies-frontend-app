@@ -8,18 +8,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.frontendbook.R
-import com.example.frontendbook.databinding.FragmentMainPageBinding
+import com.example.frontendbook.databinding.FragmentHomePageBinding
 
 class MainPageFragment : Fragment() {
 
-    private var _binding: FragmentMainPageBinding? = null
+    private var _binding: FragmentHomePageBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainPageBinding.inflate(inflater, container, false)
+        _binding = FragmentHomePageBinding.inflate(inflater, container, false)
         return binding.root
     }
 
