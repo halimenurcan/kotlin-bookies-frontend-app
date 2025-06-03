@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
-import com.example.frontendbook.databinding.ItemBookBinding
+import com.example.frontendbook.databinding.ItemBookSearchBinding
 import com.example.frontendbook.domain.model.Book
 
 class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
-        val binding = ItemBookBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemBookSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BookViewHolder(binding)
     }
 
@@ -21,7 +21,7 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallba
         holder.bind(getItem(position))
     }
 
-    inner class BookViewHolder(private val binding: ItemBookBinding) :
+    inner class BookViewHolder(private val binding: ItemBookSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(book: Book) {
