@@ -5,218 +5,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundPrimary">
+    android:background="@color/backgroundPrimary"
+    tools:context=".ui.homePage.HomePageFragment">
 
-    <ScrollView
-        android:id="@+id/scrollContainer"
+    <!-- HEADER layout (include) -->
+    <include
+        android:id="@+id/header"
+        layout="@layout/nav_header_menu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Inner fragment içeriği -->
+    <FrameLayout
+        android:id="@+id/innerFragmentContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="120dp"
-        android:paddingBottom="96dp"
-        android:fillViewport="true"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="65dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout="@layout/fragment_lists" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- 📌 "Popular This Week" Title with arrow -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/popularTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Popular This Week"
-                    android:textColor="@color/textSecondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/popularArrow"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/more"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="See All Popular Books"
-                    app:tint="@color/textSecondary" />
-            </LinearLayout>
-
-            <!-- 🔁 Horizontal scroll of popular books -->
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:paddingBottom="12dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/backgroundSecondary">
-
-                    <!-- Kitap kartları -->
-                    <include layout="@layout/item_book_grid" />
-                    <include layout="@layout/item_book_grid" />
-                    <include layout="@layout/item_book_grid" />
-                    <include layout="@layout/item_book_grid" />
-                    <include layout="@layout/item_book_grid" />
-                    <include layout="@layout/item_book_grid" />
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <!-- 📌 Grid başlık -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingBottom="8dp"
-                android:layout_marginTop="24dp">
-
-                <TextView
-                    android:id="@+id/exploreTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Explore More"
-                    android:textColor="@color/textSecondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/exploreArrow"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/more"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="See All Explore Books"
-                    app:tint="@color/textSecondary" />
-            </LinearLayout>
-
-            <!-- 🔲 Explore grid (3x4) -->
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:alignmentMode="alignMargins"
-                android:columnCount="3"
-                android:rowOrderPreserved="false"
-                android:useDefaultMargins="true"
-                android:background="@color/backgroundSecondary">
-
-                <!-- 12 item -->
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:layout_gravity="fill"
-                    android:layout_columnWeight="1">
-
-                    <include layout="@layout/item_book_grid" />
-                </FrameLayout>
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:layout_gravity="fill"
-                    android:layout_columnWeight="1">
-
-                    <include layout="@layout/item_book_grid" />
-                </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
-
-                <include layout="@layout/item_book_grid" />
-            </FrameLayout>
-            </GridLayout>
-
-        </LinearLayout>
-    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
