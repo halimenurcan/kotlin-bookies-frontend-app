@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainPageFragment">
+    app:startDestination="@id/homePageFragment">
 
     <!-- Ana Sayfa -->
     <fragment
@@ -19,10 +19,10 @@
         tools:layout="@layout/fragment_popular_books" />
 
     <fragment
-    android:id="@+id/searchFragment"
-    android:name="com.example.frontendbook.ui.search.SearchFragment"
-    android:label="Search"
-    tools:layout="@layout/fragment_search" />
+        android:id="@+id/searchFragment"
+        android:name="com.example.frontendbook.ui.search.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/profileFragment"

@@ -4,11 +4,12 @@ import com.example.frontendbook.domain.repository.AuthRepository
 import com.example.frontendbook.domain.usecase.RegisterUserUseCase
 import com.example.frontendbook.domain.usecase.SignInUseCase
 import com.example.frontendbook.retrofit.ApiService
-import com.example.frontendbook.retrofit.RetrofitClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -17,25 +18,29 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(): ApiService {
-        return RetrofitClient.api
-    }
+    fun provideRetrofit(): Retrofit =
+        Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/") // ← burayı kendi API adresinle değiştir
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
     @Provides
     @Singleton
-    fun provideAuthRepository(apiService: ApiService): AuthRepository {
-        return AuthRepositoryImpl(apiService)
-    }
+    fun provideApiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideRegisterUserUseCase(repository: AuthRepository): RegisterUserUseCase {
-        return RegisterUserUseCase(repository)
-    }
+    fun provideAuthRepository(apiService: ApiService): AuthRepository =
+        AuthRepositoryImpl(apiService)
 
     @Provides
     @Singleton
-    fun provideSignInUseCase(repository: AuthRepository): SignInUseCase {
-        return SignInUseCase(repository)
-    }
+    fun provideRegisterUserUseCase(repository: AuthRepository): RegisterUserUseCase =
+        RegisterUserUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideSignInUseCase(repository: AuthRepository): SignInUseCase =
+        SignInUseCase(repository)
 }

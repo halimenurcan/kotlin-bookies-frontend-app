@@ -1,7 +1,6 @@
 package com.example.frontendbook.ui.main
 
-
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ActivityMainBinding
@@ -15,7 +14,8 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
     }
 
     override fun setupViews() {
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
         // Set up normal nav for bottom navigation
         binding.bottomNav.setupWithNavController(navController)
@@ -24,10 +24,9 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.addBookFragment -> {
-                    // Show BottomSheetDialogFragment instead of navigating
                     val addBookSheet = AddBookBottomSheet()
                     addBookSheet.show(supportFragmentManager, addBookSheet.tag)
-                    false // Prevent navigation to this item
+                    false
                 }
                 else -> {
                     navController.navigate(item.itemId)

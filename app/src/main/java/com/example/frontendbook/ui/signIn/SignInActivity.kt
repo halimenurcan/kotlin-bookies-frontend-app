@@ -18,8 +18,8 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
 
     override fun setupViews() {
         binding.goMain.setOnClickListener {
-            val username = binding.usernameInput.text.toString()
-            val password = binding.passwordInput.text.toString()
+            val username = binding.usernameInput.text.toString().trim()
+            val password = binding.passwordInput.text.toString().trim()
             viewModel.signIn(username, password)
         }
         binding.resetPass.setOnClickListener {
