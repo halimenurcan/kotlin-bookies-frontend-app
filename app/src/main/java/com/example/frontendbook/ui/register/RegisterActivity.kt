@@ -1,10 +1,8 @@
 package com.example.frontendbook.ui.register
 
 import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.example.frontendbook.databinding.ActivityRegisterBinding
 import com.example.frontendbook.ui.base.BaseActivity
 import com.example.frontendbook.ui.signIn.SignInActivity

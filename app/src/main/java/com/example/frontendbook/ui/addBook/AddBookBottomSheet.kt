@@ -4,22 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.frontendbook.databinding.FragmentAddBookBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.widget.Toast
+import com.example.frontendbook.databinding.BottomSheetAddBookBinding
 
 //bottomSheet bu addbokk.kt den her sey degisiyo diye fragment kaldi adi
 
     class AddBookBottomSheet : BottomSheetDialogFragment() {
 
-        private var _binding: FragmentAddBookBinding? = null
+        private var _binding: BottomSheetAddBookBinding? = null
         private val binding get() = _binding!!
 
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View {
-            _binding = FragmentAddBookBinding.inflate(inflater, container, false)
+            _binding = BottomSheetAddBookBinding.inflate(inflater, container, false)
             return binding.root
         }
 
