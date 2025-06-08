@@ -14,7 +14,7 @@ class SignInResetPassViewModel @Inject constructor() : ViewModel() {
 
     fun sendResetMail(email: String) {
         if (email.length < 8 || !email.contains("@")) {
-            _resultMessage.value = "Geçersiz e-posta"
+            _resultMessage.value = "Invalid e-mail adresse."
         } else {
             _resultMessage.value = "Mail has been sent."
         }
