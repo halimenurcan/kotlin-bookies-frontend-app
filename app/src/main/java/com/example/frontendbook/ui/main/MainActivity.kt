@@ -14,13 +14,15 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
     }
 
     override fun setupViews() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        // 👇 NavHostFragment üzerinden güvenli şekilde navController alıyoruz
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Set up normal nav for bottom navigation
+        // Bottom nav ile bağla
         binding.bottomNav.setupWithNavController(navController)
 
-        // Intercept the middle "Add" button to open the bottom sheet
+        // Orta butona özel işlem
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.addBookFragment -> {
@@ -29,7 +31,10 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
                     false
                 }
                 else -> {
-                    navController.navigate(item.itemId)
+                    // Sadece destination varsa gitmeye çalış
+                    if (navController.currentDestination?.id != item.itemId) {
+                        navController.navigate(item.itemId)
+                    }
                     true
                 }
             }

@@ -12,9 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/footerColor"
-        app:menu="@menu/bottom_nav_menu"
-    app:itemIconTint="@color/selector_bottom_nav"
-    app:itemTextColor="@color/selector_bottom_nav"
-    app:labelVisibilityMode="unlabeled"
-    />
+        app:itemIconTint="@color/selector_bottom_nav"
+        app:itemTextColor="@color/selector_bottom_nav"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
