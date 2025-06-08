@@ -5,20 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentInnerBooksBinding
-import com.example.frontendbook.domain.model.Book
-import com.example.frontendbook.ui.base.adapter.BookAdapter
+import com.example.frontendbook.ui.common.ThreeColumnFragment
 
 class InnerBooksFragment : Fragment() {
 
     private var _binding: FragmentInnerBooksBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var popularAdapter: BookAdapter
-    private lateinit var exploreAdapter: BookAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,23 +25,8 @@ class InnerBooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupAdapters()
         setupListeners()
-        loadDummyData()
-    }
-
-    private fun setupAdapters() {
-        // 📚 Popular yatay liste
-        popularAdapter = BookAdapter()
-        binding.popularBooksRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.popularBooksRecyclerView.adapter = popularAdapter
-
-        // 📚 Explore 3 sütun grid liste
-        exploreAdapter = BookAdapter()
-        binding.exploreBooksRecyclerView.layoutManager =
-            GridLayoutManager(requireContext(), 3)
-        binding.exploreBooksRecyclerView.adapter = exploreAdapter
+        // Veriler XML'e statik include ile yerleştirildiği için adapter gerekmez.
     }
 
     private fun setupListeners() {
@@ -66,24 +45,6 @@ class InnerBooksFragment : Fragment() {
             .replace(R.id.innerFragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    private fun loadDummyData() {
-        val dummyBooks = List(12) { index ->
-            Book(
-                title = "Book ${index + 1}",
-                author = "Author ${index + 1}",
-                year = 2000 + index,
-                genre = "Genre",
-                country = "Country",
-                language = "EN",
-                popularity = (50..100).random(),
-                rating = (3..5).random().toDouble()
-            )
-        }
-
-        popularAdapter.submitList(dummyBooks)
-        exploreAdapter.submitList(dummyBooks)
     }
 
     override fun onDestroyView() {
