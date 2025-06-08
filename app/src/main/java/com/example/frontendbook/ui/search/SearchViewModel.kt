@@ -44,6 +44,28 @@ class SearchViewModel : ViewModel() {
             }
         }
     }
+    fun searchBooks(query: String) {
+        _state.value = _state.value?.copy(isLoading = true)
+
+        viewModelScope.launch {
+            try {
+                val result = bookRepository.searchBooks(query)
+
+                _state.value = _state.value?.copy(
+                    isLoading = false,
+                    books = result,
+                    isEmptyResult = result.isEmpty(),
+                    successMessage = "${result.size} book(s) found"
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value?.copy(
+                    isLoading = false,
+                    errorMessage = "Search failed: ${e.message}"
+                )
+            }
+        }
+    }
+
 
     fun getAiRecommendedBooks() {
         _state.value = _state.value?.copy(isLoading = true)

@@ -24,5 +24,14 @@ class BookRepository {
         }
     }
 
+    suspend fun searchBooks(query: String): List<Book> {
+        val response = api.searchBooks(query)
+        if (response.isSuccessful) {
+            return response.body() ?: emptyList()
+        } else {
+            throw Exception("API error: ${response.code()} ${response.message()}")
+        }
+    }
+
     // İleride: genre, country, language filtreleme fonksiyonları da buraya eklenecek
 }
