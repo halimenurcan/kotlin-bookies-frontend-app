@@ -8,7 +8,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.widget.Toast
 import com.example.frontendbook.databinding.BottomSheetAddBookBinding
 
-//bottomSheet bu addbokk.kt den her sey degisiyo diye fragment kaldi adi
 
     class AddBookBottomSheet : BottomSheetDialogFragment() {
 
