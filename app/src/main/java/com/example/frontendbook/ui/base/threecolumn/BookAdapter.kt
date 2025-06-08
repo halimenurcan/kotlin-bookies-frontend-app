@@ -1,13 +1,14 @@
-package com.example.frontendbook.ui.homePage.innerBooks
+package com.example.frontendbook.ui.base.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.databinding.ItemBookGridBinding
+import com.example.frontendbook.domain.model.Book
 
-class PopularBooksAdapter(
-    private val books: List<String> // Dummy string verisi, ileride model eklenebilir
-) : RecyclerView.Adapter<PopularBooksAdapter.BookViewHolder>() {
+class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
+
+    private var books: List<String> = emptyList()
 
     inner class BookViewHolder(val binding: ItemBookGridBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -17,9 +18,13 @@ class PopularBooksAdapter(
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
-        val title = books[position]
-        holder.binding.bookTitle.text = title
+        holder.binding.bookTitle.text = books[position]
     }
 
     override fun getItemCount(): Int = books.size
+
+    fun submitList(newBooks: List<Book>) {
+        books = newBooks
+        notifyDataSetChanged()
+    }
 }

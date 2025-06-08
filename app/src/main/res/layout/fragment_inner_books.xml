@@ -46,114 +46,177 @@
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/popularArrow"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/more"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="See All Popular Books"
                     app:tint="@color/textSecondary" />
             </LinearLayout>
 
-            <!-- 🔁 Yatay ScrollView (Popular Books) -->
+            <!-- 🔁 Horizontal scroll of popular books -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                android:paddingBottom="12dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@color/boxes_background">
+                    android:background="@color/backgroundSecondary">
 
-                    <!-- Dummy kitap kutuları -->
-                    <View
-                        android:layout_width="120dp"
-                        android:layout_height="180dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@color/backgroundPrimary" />
-
-                    <View
-                        android:layout_width="120dp"
-                        android:layout_height="180dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@color/backgroundPrimary" />
-
-                    <View
-                        android:layout_width="120dp"
-                        android:layout_height="180dp"
-                        android:background="@color/backgroundPrimary" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/popularMore"
-                        android:layout_width="120dp"
-                        android:layout_height="180dp"
-                        android:layout_marginStart="8dp"
-                        android:src="@drawable/more"
-                        android:contentDescription="Go to Popular"
-                        android:background="@color/backgroundPrimary"
-                        app:tint="@color/textSecondary" />
+                    <!-- Kitap kartları -->
+                    <include layout="@layout/item_book_grid" />
+                    <include layout="@layout/item_book_grid" />
+                    <include layout="@layout/item_book_grid" />
+                    <include layout="@layout/item_book_grid" />
+                    <include layout="@layout/item_book_grid" />
+                    <include layout="@layout/item_book_grid" />
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!-- 📌 Grid Başlık -->
-            <TextView
+            <!-- 📌 Grid başlık -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Explore More"
-                android:textColor="@color/textSecondary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"
-                android:paddingBottom="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp"
+                android:layout_marginTop="24dp">
 
-            <!-- 🔲 Grid Görünüm -->
+                <TextView
+                    android:id="@+id/exploreTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Explore More"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/exploreArrow"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/more"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="See All Explore Books"
+                    app:tint="@color/textSecondary" />
+            </LinearLayout>
+
+            <!-- 🔲 Explore grid (3x4) -->
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:alignmentMode="alignMargins"
-                android:background="@color/boxes_background"
-                android:columnCount="2"
+                android:columnCount="3"
                 android:rowOrderPreserved="false"
-                android:useDefaultMargins="true">
+                android:useDefaultMargins="true"
+                android:background="@color/backgroundSecondary">
 
-                <!-- Dummy kitap kutuları -->
-                <View
+                <!-- 12 item -->
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1">
 
-                <View
+                    <include layout="@layout/item_book_grid" />
+                </FrameLayout>
+                <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
+                    <include layout="@layout/item_book_grid" />
+                </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_columnWeight="1"
-                    android:background="@color/backgroundPrimary" />
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout><FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_gravity="fill"
+                android:layout_columnWeight="1">
+
+                <include layout="@layout/item_book_grid" />
+            </FrameLayout>
             </GridLayout>
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
