@@ -8,7 +8,7 @@ import com.example.frontendbook.domain.model.Book
 
 class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
-    private var books: List<String> = emptyList()
+    private var books: List<Book> = emptyList()
 
     inner class BookViewHolder(val binding: ItemBookGridBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -18,7 +18,8 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
-        holder.binding.bookTitle.text = books[position]
+        val book = books[position]
+        holder.binding.bookTitle.text = book.title
     }
 
     override fun getItemCount(): Int = books.size
