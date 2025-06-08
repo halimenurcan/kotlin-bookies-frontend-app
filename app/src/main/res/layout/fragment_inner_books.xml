@@ -123,8 +123,8 @@
                     android:layout_margin="4dp"
                     android:layout_gravity="fill"
                     android:layout_columnWeight="1">
-
                     <include layout="@layout/item_book_grid" />
+
                 </FrameLayout>
                 <FrameLayout
                     android:layout_width="0dp"
@@ -206,14 +206,33 @@
                 android:layout_columnWeight="1">
 
                 <include layout="@layout/item_book_grid" />
-            </FrameLayout><FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_gravity="fill"
-                android:layout_columnWeight="1">
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1"
+                    android:background="@color/backgroundPrimary">
 
-                <include layout="@layout/item_book_grid" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/exploreSeeAll"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="See All"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="14sp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:strokeColor="@color/textSecondary"
+                        android:insetTop="16dp"
+                        android:insetBottom="16dp"
+                        android:insetLeft="8dp"
+                        android:insetRight="8dp"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Go to Explore More" />
+                </FrameLayout>
+
             </FrameLayout>
             </GridLayout>
 
