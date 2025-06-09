@@ -10,7 +10,6 @@ import com.example.frontendbook.databinding.FragmentThreeColumnBinding
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.BookAdapter
 
-
 class ThreeColumnFragment : Fragment() {
 
     private var _binding: FragmentThreeColumnBinding? = null
@@ -18,26 +17,28 @@ class ThreeColumnFragment : Fragment() {
 
     private lateinit var adapter: BookAdapter
     private var pageTitle: String? = null
+    private var type: String? = null
 
     companion object {
         private const val ARG_TITLE = "arg_title"
         private const val ARG_TYPE = "arg_type"
 
+
         fun newInstance(title: String, type: String): ThreeColumnFragment {
             val fragment = ThreeColumnFragment()
-            val args = Bundle()
-            args.putString(ARG_TITLE, title)
-            args.putString(ARG_TYPE, type)
+            val args = Bundle().apply {
+                putString(ARG_TITLE, title)
+                putString(ARG_TYPE, type)
+            }
             fragment.arguments = args
             return fragment
         }
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageTitle = arguments?.getString(ARG_TITLE)
+        type = arguments?.getString(ARG_TYPE)
     }
 
     override fun onCreateView(
@@ -51,16 +52,15 @@ class ThreeColumnFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = BookAdapter{}
+        adapter = BookAdapter {}
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerView.adapter = adapter
-
         binding.headerTitle.text = pageTitle ?: "Books"
 
-        // Dummy veri örneği (gerçekte repo'dan veri gelir)
+        // Dummy veriler (type'e göre veri getirme yapılabilir)
         val dummyBooks = List(12) {
             Book(
-                title = "Book ${it + 1}",
+                title = "$type Book ${it + 1}",
                 author = "Author ${it + 1}",
                 year = 2000 + it,
                 genre = "Genre",
@@ -69,7 +69,7 @@ class ThreeColumnFragment : Fragment() {
                 popularity = (50..100).random(),
                 rating = (3..5).random().toDouble(),
                 imageUrl = null,
-                description = "Yazarin .......",
+                description = "Yazar açıklaması..."
             )
         }
         adapter.submitList(dummyBooks)
@@ -77,6 +77,6 @@ class ThreeColumnFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
-    }
+        _binding=null
+        }
 }

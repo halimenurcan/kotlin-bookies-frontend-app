@@ -36,5 +36,11 @@
         android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
         android:label="Book Info" />
 
+    <fragment
+        android:id="@+id/threeColumnFragment"
+        android:name="com.example.frontendbook.ui.common.ThreeColumnFragment"
+        android:label="ThreeColumnFragment" />
+
+
 
 </navigation>

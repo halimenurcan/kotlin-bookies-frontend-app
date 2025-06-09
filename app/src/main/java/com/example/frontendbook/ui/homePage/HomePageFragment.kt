@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -34,24 +35,24 @@ class HomePageFragment : Fragment() {
             insets
         }
 
-        // Başlangıçta Books sayfasını göster
+        // İlk açılışta Books fragment'ı yükle ve butonu turuncu yap
         loadInnerFragment(InnerBooksFragment())
+        updateButtonColors(binding.header.booksButton)
 
-        // Header içindeki butonlara erişim
-        val booksBtn = binding.root.findViewById<View>(R.id.booksButton)
-        val reviewsBtn = binding.root.findViewById<View>(R.id.reviewsButton)
-        val listsBtn = binding.root.findViewById<View>(R.id.listsButton)
-
-        booksBtn.setOnClickListener {
+        // Butonlara tıklama
+        binding.header.booksButton.setOnClickListener {
             loadInnerFragment(InnerBooksFragment())
+            updateButtonColors(binding.header.booksButton)
         }
 
-        reviewsBtn.setOnClickListener {
+        binding.header.reviewsButton.setOnClickListener {
             loadInnerFragment(ReviewsFragment())
+            updateButtonColors(binding.header.reviewsButton)
         }
 
-        listsBtn.setOnClickListener {
+        binding.header.listsButton.setOnClickListener {
             loadInnerFragment(ListsFragment())
+            updateButtonColors(binding.header.listsButton)
         }
 
         // 🔶 TEST AMAÇLI: Dummy kitapla BookInfoPage'e geçiş
@@ -76,13 +77,28 @@ class HomePageFragment : Fragment() {
             findNavController().navigate(R.id.bookInfoPageFragment, bundle)
             true
         }
-        // 🔶 Bu kısım eklendi: HomePage'te uzun basınca kitap detay sayfasına geçiş yapılır
     }
 
     private fun loadInnerFragment(fragment: Fragment) {
         childFragmentManager.beginTransaction()
             .replace(binding.innerFragmentContainer.id, fragment)
             .commit()
+    }
+
+    private fun updateButtonColors(selectedButton: View) {
+        val context = requireContext()
+        val active = ContextCompat.getColor(context, R.color.buttonSecondary)
+        val inactive = ContextCompat.getColor(context, R.color.buttonPrimary)
+
+        val allButtons = listOf(
+            binding.header.booksButton,
+            binding.header.reviewsButton,
+            binding.header.listsButton
+        )
+
+        allButtons.forEach { button ->
+            button.setBackgroundColor(if (button == selectedButton) active else inactive)
+        }
     }
 
     override fun onDestroyView() {
