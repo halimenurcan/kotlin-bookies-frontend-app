@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
 import com.example.frontendbook.data.model.Notification
+import com.example.frontendbook.ui.base.adapter.NotificationAdapter
 
 class NotificationsFragment : Fragment() {
 

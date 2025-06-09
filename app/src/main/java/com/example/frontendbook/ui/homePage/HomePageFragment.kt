@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
 import com.example.frontendbook.domain.model.Book
-import com.example.frontendbook.ui.homePage.innerBooks.InnerBooksFragment
 
 class HomePageFragment : Fragment() {
 
