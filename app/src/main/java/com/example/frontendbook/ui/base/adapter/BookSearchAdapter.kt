@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.search
+package com.example.frontendbook.ui.base.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookSearchBinding
 import com.example.frontendbook.domain.model.Book
 
-class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallback()) {
+class BookSearchAdapter : ListAdapter<Book, BookSearchAdapter.BookViewHolder>(BookDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = ItemBookSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)

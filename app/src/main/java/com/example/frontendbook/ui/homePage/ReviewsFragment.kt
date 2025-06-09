@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentReviewsBinding
+import com.example.frontendbook.ui.base.adapter.ReviewsAdapter
 
 class ReviewsFragment : Fragment() {
 

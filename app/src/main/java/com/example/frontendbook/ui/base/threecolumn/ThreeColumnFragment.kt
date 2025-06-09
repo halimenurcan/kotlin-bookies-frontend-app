@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frontendbook.databinding.FragmentThreeColumnBinding
 import com.example.frontendbook.domain.model.Book
-import com.example.frontendbook.ui.base.threecolumn.BookAdapter
+import com.example.frontendbook.ui.base.adapter.BookAdapter
 
 
 class ThreeColumnFragment : Fragment() {

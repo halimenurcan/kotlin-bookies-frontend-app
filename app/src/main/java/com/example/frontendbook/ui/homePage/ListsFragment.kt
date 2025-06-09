@@ -1,13 +1,13 @@
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentListsBinding
+import com.example.frontendbook.ui.base.adapter.ListsAdapter
 
 class ListsFragment : Fragment() {
 
