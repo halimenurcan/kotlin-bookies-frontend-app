@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.frontendbook.databinding.FragmentSearchBinding
+import com.example.frontendbook.ui.base.adapter.BookSearchAdapter
 
 class SearchFragment : Fragment() {
 
@@ -16,7 +17,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: BookAdapter
+    private lateinit var adapter: BookSearchAdapter
     private var currentFilterType: String = ""
 
     override fun onCreateView(
@@ -34,7 +35,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupViews() {
-        adapter = BookAdapter()
+        adapter = BookSearchAdapter()
         binding.recyclerView.adapter = adapter
         binding.recyclerView.visibility = View.GONE
 
