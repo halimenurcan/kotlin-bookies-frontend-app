@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
+import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.homePage.innerBooks.InnerBooksFragment
 
 class HomePageFragment : Fragment() {
@@ -52,6 +54,30 @@ class HomePageFragment : Fragment() {
         listsBtn.setOnClickListener {
             loadInnerFragment(ListsFragment())
         }
+
+        // 🔶 TEST AMAÇLI: Dummy kitapla BookInfoPage'e geçiş
+        val dummyBook = Book(
+            title = "Test Book",
+            author = "Author Name",
+            year = 2023,
+            genre = "Fiction",
+            country = "UK",
+            language = "English",
+            popularity = 90,
+            rating = 4.0,
+            imageUrl = null,
+            pageCount = 250,
+            description = "This is a test book used for navigation test."
+        )
+
+        binding.root.setOnLongClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("book", dummyBook)
+            }
+            findNavController().navigate(R.id.bookInfoPageFragment, bundle)
+            true
+        }
+        // 🔶 Bu kısım eklendi: HomePage'te uzun basınca kitap detay sayfasına geçiş yapılır
     }
 
     private fun loadInnerFragment(fragment: Fragment) {
