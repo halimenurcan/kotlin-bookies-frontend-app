@@ -12,11 +12,6 @@
         android:label="Home Page"
         tools:layout="@layout/fragment_home_page" />
 
-    <fragment
-        android:id="@+id/popularBooksFragment"
-        android:name="com.example.frontendbook.ui.homePage.innerBooks.PopularBooksFragment"
-        android:label="Popular Books"
-        tools:layout="@layout/fragment_popular_books" />
 
     <fragment
         android:id="@+id/searchFragment"

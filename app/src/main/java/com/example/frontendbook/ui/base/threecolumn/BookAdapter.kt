@@ -1,8 +1,10 @@
 package com.example.frontendbook.ui.base.adapter
 
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookGridBinding
 import com.example.frontendbook.domain.model.Book
 
@@ -20,6 +22,15 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
         holder.binding.bookTitle.text = book.title
+        // Sabit resim varsa:
+        holder.binding.bookImage.setImageResource(R.drawable.bookk)
+
+        // Eğer Glide kullanıyorsan (imageUrl varsa):
+        // Glide.with(holder.itemView.context)
+        //     .load(book.imageUrl)
+        //     .placeholder(R.drawable.bookk)
+        //     .into(holder.binding.bookImage)
+
     }
 
     override fun getItemCount(): Int = books.size

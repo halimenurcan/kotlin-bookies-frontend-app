@@ -47,7 +47,6 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/more"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="See All Popular Books"
                     app:tint="@color/textSecondary" />
             </LinearLayout>
@@ -99,7 +98,6 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/more"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="See All Explore Books"
                     app:tint="@color/textSecondary" />
             </LinearLayout>
@@ -222,11 +220,6 @@
                         android:textSize="14sp"
                         android:backgroundTint="@android:color/transparent"
                         android:strokeColor="@color/textSecondary"
-                        android:insetTop="16dp"
-                        android:insetBottom="16dp"
-                        android:insetLeft="8dp"
-                        android:insetRight="8dp"
-                        android:padding="8dp"
                         android:layout_gravity="center"
                         android:contentDescription="Go to Explore More" />
                 </FrameLayout>

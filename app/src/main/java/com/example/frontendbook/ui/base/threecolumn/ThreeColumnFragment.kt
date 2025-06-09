@@ -21,15 +21,17 @@ class ThreeColumnFragment : Fragment() {
 
     companion object {
         private const val ARG_TITLE = "arg_title"
+        private const val ARG_TYPE = "arg_type"
 
         fun newInstance(title: String, type: String): ThreeColumnFragment {
             val fragment = ThreeColumnFragment()
             val args = Bundle()
-            args.putString("title", title)
-            args.putString("type", type)
+            args.putString(ARG_TITLE, title)
+            args.putString(ARG_TYPE, type)
             fragment.arguments = args
             return fragment
         }
+
 
     }
 
@@ -61,14 +63,15 @@ class ThreeColumnFragment : Fragment() {
                 title = "Book ${it + 1}",
                 author = "Author ${it + 1}",
                 year = 2000 + it,
-                genre = "Fiction",
-                country = "USA",
-                language = "English",
+                genre = "Genre",
+                country = "Country",
+                language = "EN",
                 popularity = (50..100).random(),
-                rating = (3..5).random() + listOf(0.0, 0.5).random(),
+                rating = (3..5).random().toDouble(),
                 imageUrl = null
             )
         }
+        adapter.submitList(dummyBooks)
     }
 
     override fun onDestroyView() {
