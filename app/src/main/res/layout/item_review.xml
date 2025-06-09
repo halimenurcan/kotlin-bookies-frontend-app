@@ -1,19 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="12dp"
-    android:layout_marginBottom="8dp"
+    android:orientation="horizontal"
     android:background="@color/boxes_background">
 
-    <TextView
-        android:id="@+id/reviewText"
-        android:layout_width="match_parent"
+    <!-- Kitap Görseli -->
+    <include
+        layout="@layout/item_book_grid"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="12dp" /> />
+
+    <!-- Sağdaki Yorum Bilgileri -->
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Sample review text"
-        android:textColor="@color/textPrimary"
-        android:textSize="16sp"
-        android:lineSpacingExtra="4dp"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Yıldızlar (Sadece varsa görünsün diye visibility ayarlanabilir Java/Kotlin'de) -->
+        <RatingBar
+            android:id="@+id/reviewRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"
+            android:isIndicator="true"
+            android:layout_marginBottom="4dp"
+            style="@style/Widget.AppCompat.RatingBar.Small" />
+
+        <!-- Yorum Metni -->
+        <TextView
+            android:id="@+id/reviewText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kitap çok güzeldi, herkese tavsiye ederim!"
+            android:textColor="@color/textPrimary"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Kullanıcı Adı -->
+        <TextView
+            android:id="@+id/reviewUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="– kullanıcıadı123"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp" />
+    </LinearLayout>
 </LinearLayout>
