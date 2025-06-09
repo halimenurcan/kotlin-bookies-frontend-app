@@ -3,6 +3,7 @@ package com.example.frontendbook.ui.base.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookGridBinding
 import com.example.frontendbook.domain.model.Book
@@ -25,11 +26,16 @@ class BookAdapter(
         val book = books[position]
 
         holder.binding.bookTitle.text = book.title
-        holder.binding.bookImage.setImageResource(R.drawable.bookk)
+        Glide.with(holder.binding.root.context)
+            .load(book.imageUrl)
+            .placeholder(com.example.frontendbook.R.drawable.placeholder) // loading sırasında
+            .error(com.example.frontendbook.R.drawable.bookk)             // hata durumunda
+            .into(holder.binding.bookImage)
 
         holder.itemView.setOnClickListener {
             onBookClick(book)
         }
+
     }
 
     override fun getItemCount(): Int = books.size
