@@ -22,6 +22,7 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
             val password = binding.passwordInput.text.toString().trim()
             viewModel.signIn(username, password)
         }
+
         binding.resetPass.setOnClickListener {
             startActivity(Intent(this, SignInResetPassActivity::class.java))
         }
@@ -34,7 +35,7 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
     override fun handleState(state: SignInState) {
         when (state) {
             is SignInState.Loading -> {
-                // TODO: show loading spinner if needed
+                // loading gösterebilirsin
             }
             is SignInState.Success -> goToMain(state.token)
             is SignInState.Error -> showToast(state.message)
@@ -42,9 +43,14 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
     }
 
     private fun goToMain(token: String?) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("token", token)
-        startActivity(intent)
+        if (!token.isNullOrEmpty()) {
+            getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .edit()
+                .putString("token", token)
+                .apply()
+        }
+
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 
