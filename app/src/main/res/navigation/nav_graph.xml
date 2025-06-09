@@ -34,7 +34,14 @@
     <fragment
         android:id="@+id/bookInfoPageFragment"
         android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
-        android:label="Book Info" />
+        android:label="Book Info"
+        tools:layout="@layout/fragment_book_info_page" />
+
+    <fragment
+        android:id="@+id/threeColumnFragment"
+        android:name="com.example.frontendbook.ui.common.ThreeColumnFragment"
+        android:label="ThreeColumnFragment" />
+
 
 
 </navigation>

@@ -13,11 +13,6 @@ import com.example.frontendbook.ui.base.adapter.NotificationAdapter
 
 class NotificationsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Gerekirse parametreleri burada alabilirsin
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,17 +20,17 @@ class NotificationsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_notifications, container, false)
 
         // RecyclerView referansı
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.notificationrecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Dummy bildirim listesi BURAYİ DÜZENLİCEZ
+        // Dummy veriler
         val notifications = listOf(
-            Notification(R.drawable.notification2, "Your profile image was removed", "32s ago"),
-            Notification(R.drawable.notification2, "Tell us about your business", "1h ago"),
-            Notification(R.drawable.notification2, "New feature released!", "Yesterday")
+            Notification(R.drawable.notifications_new, "Your profile image was removed", "32s ago"),
+            Notification(R.drawable.notifications_new, "Tell us about your business", "1h ago"),
+            Notification(R.drawable.notifications_new, "New feature released!", "Yesterday")
         )
 
-        // Adapter ile bağla
+        // Adapter bağlama
         val adapter = NotificationAdapter(notifications)
         recyclerView.adapter = adapter
         recyclerView.visibility = View.VISIBLE
