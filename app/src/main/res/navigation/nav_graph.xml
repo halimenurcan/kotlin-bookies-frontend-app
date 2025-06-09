@@ -31,4 +31,10 @@
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
 
+    <fragment
+        android:id="@+id/bookInfoPageFragment"
+        android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
+        android:label="Book Info" />
+
+
 </navigation>

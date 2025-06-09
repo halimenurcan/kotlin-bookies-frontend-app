@@ -1,5 +1,4 @@
-package com.example.frontendbook.ui.base.adapter
-
+package com.example.frontendbook.ui.base.threecolumn
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,11 +7,14 @@ import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookGridBinding
 import com.example.frontendbook.domain.model.Book
 
-class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
+class BookAdapter(
+    private val onBookClick: (Book) -> Unit
+) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     private var books: List<Book> = emptyList()
 
-    inner class BookViewHolder(val binding: ItemBookGridBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class BookViewHolder(val binding: ItemBookGridBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = ItemBookGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,16 +23,13 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
+
         holder.binding.bookTitle.text = book.title
-        // Sabit resim varsa:
         holder.binding.bookImage.setImageResource(R.drawable.bookk)
 
-        // Eğer Glide kullanıyorsan (imageUrl varsa):
-        // Glide.with(holder.itemView.context)
-        //     .load(book.imageUrl)
-        //     .placeholder(R.drawable.bookk)
-        //     .into(holder.binding.bookImage)
-
+        holder.itemView.setOnClickListener {
+            onBookClick(book)
+        }
     }
 
     override fun getItemCount(): Int = books.size

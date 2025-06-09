@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Arka Plan Görsel -->
+    <ImageView
+        android:id="@+id/bookCoverImage"
+        android:layout_width="match_parent"
+        android:layout_height="382dp"
+        android:alpha="0.4"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bookk" />
+
+    <!-- More Button -->
+    <ImageButton
+        android:id="@+id/buttonMore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/more"
+        android:contentDescription="@string/more_options" />
+
+    <!-- İçerik Alanı -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bookCoverImage"
+        android:layout_marginTop="-53dp"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Başlık -->
+            <TextView
+                android:id="@+id/bookTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PRIDE AND PREJUDICE"
+                android:textColor="@color/black"
+                android:textSize="28sp" />
+
+            <!-- Yazar -->
+            <TextView
+                android:id="@+id/bookAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jane Austen"
+                android:textColor="@color/textBookInfo"
+                android:textSize="22sp" />
+
+            <!-- Tarih ve Sayfa -->
+            <TextView
+                android:id="@+id/bookMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1831\n300 pages"
+                android:textColor="@color/textBookInfo"
+                android:textSize="18sp"
+                android:textStyle="italic" />
+
+            <!-- Ayırıcı -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/line" />
+
+            <!-- Açıklama -->
+            <TextView
+                android:id="@+id/bookDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@color/textBookInfo"
+                android:textSize="16sp"
+                tools:text="İngiliz taşra hayatında geçen ve aşk, evlilik..." />
+
+            <!-- Ayırıcı -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="12dp"
+                android:background="@color/line" />
+
+            <!-- Butonlar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonReviews"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_background_round"
+                    android:text="Reviews"
+                    android:textColor="@color/button_textSecondary" />
+
+                <Button
+                    android:id="@+id/buttonLists"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_background_round"
+                    android:text="Lists"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <!-- Ratings -->
+            <TextView
+                android:id="@+id/ratingsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ratings"
+                android:textColor="@color/textBookInfo"
+                android:textSize="18sp"
+                android:textStyle="italic" />
+
+            <!-- Yıldızlar -->
+            <LinearLayout
+                android:id="@+id/ratingStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
