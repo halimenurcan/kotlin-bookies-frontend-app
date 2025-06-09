@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frontendbook.databinding.FragmentThreeColumnBinding
 import com.example.frontendbook.domain.model.Book
-import com.example.frontendbook.ui.base.adapter.BookAdapter
+import com.example.frontendbook.ui.base.threecolumn.BookAdapter
 
 
 class ThreeColumnFragment : Fragment() {
@@ -51,7 +51,7 @@ class ThreeColumnFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = BookAdapter()
+        adapter = BookAdapter{}
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerView.adapter = adapter
 
@@ -68,7 +68,8 @@ class ThreeColumnFragment : Fragment() {
                 language = "EN",
                 popularity = (50..100).random(),
                 rating = (3..5).random().toDouble(),
-                imageUrl = null
+                imageUrl = null,
+                description = "Yazarin .......",
             )
         }
         adapter.submitList(dummyBooks)
