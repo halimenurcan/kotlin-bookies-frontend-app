@@ -28,6 +28,8 @@
     <color name="button_textPrimary">#000000</color>
     <color name="button_textSecondary">#FEFEFE</color>
     <color name="buttonSecondary">#ED7B14</color>
+    <color name="textBookInfo">#363636</color>
+
 
 
     <color name="stars_rated">#363636</color>
