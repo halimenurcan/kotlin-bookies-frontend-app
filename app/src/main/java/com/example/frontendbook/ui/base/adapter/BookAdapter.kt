@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookGridBinding
 import com.example.frontendbook.domain.model.Book
 
@@ -28,7 +27,7 @@ class BookAdapter(
         holder.binding.bookTitle.text = book.title
         Glide.with(holder.binding.root.context)
             .load(book.imageUrl)
-            .placeholder(com.example.frontendbook.R.drawable.placeholder) // loading sırasında
+            .placeholder(com.example.frontendbook.R.drawable.placeholder)
             .error(com.example.frontendbook.R.drawable.bookk)             // hata durumunda
             .into(holder.binding.bookImage)
 
