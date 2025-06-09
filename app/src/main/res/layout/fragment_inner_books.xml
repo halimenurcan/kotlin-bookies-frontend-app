@@ -9,7 +9,6 @@
         android:id="@+id/scrollContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="?attr/actionBarSize"
         android:paddingBottom="96dp"
         android:fillViewport="true"
         android:clipToPadding="false"
