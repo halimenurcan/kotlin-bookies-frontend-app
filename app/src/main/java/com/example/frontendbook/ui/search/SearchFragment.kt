@@ -1,13 +1,18 @@
 package com.example.frontendbook.ui.search
 
+import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentSearchBinding
 import com.example.frontendbook.ui.base.adapter.BookSearchAdapter
 
@@ -37,6 +42,7 @@ class SearchFragment : Fragment() {
     private fun setupViews() {
         adapter = BookSearchAdapter()
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.visibility = View.GONE
 
         binding.genreButton.setOnClickListener { showInput("genre") }
@@ -64,6 +70,24 @@ class SearchFragment : Fragment() {
         binding.aiSearchButton.setOnClickListener {
             viewModel.getAiRecommendedBooks()
             hideInput()
+        }
+        binding.searchInput.setOnEditorActionListener { v, actionId, event ->
+            val isSearchAction = actionId == EditorInfo.IME_ACTION_SEARCH
+            val isEnterKey = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
+
+            if (isSearchAction || isEnterKey) {
+                val query = binding.searchInput.text.toString().trim()
+                if (query.isNotEmpty()) {
+                    viewModel.searchBooks(query)
+                    // Klavyeyi kapatmak isterseniz:
+                    val imm = requireContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
+                }
+                true
+            } else {
+                false
+            }
         }
     }
 

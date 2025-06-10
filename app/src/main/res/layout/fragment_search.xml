@@ -38,7 +38,9 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp" />
+            android:drawablePadding="8dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
     </LinearLayout>
 
     <!-- Browse ve içerik alanı -->
