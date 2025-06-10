@@ -40,7 +40,11 @@
     <fragment
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.common.ThreeColumnFragment"
-        android:label="ThreeColumnFragment" />
+        android:label="three_column_fragment" />
+    <fragment
+        android:id="@+id/addBookBottomSheet"
+        android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
+        android:label="add_book_bottom_sheet" />
 
 
 
