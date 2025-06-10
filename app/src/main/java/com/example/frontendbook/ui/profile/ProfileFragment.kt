@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.R
-import androidx.navigation.fragment.findNavController // en üste ekle
-import com.example.frontendbook.ui.common.ThreeColumnFragment
+import com.example.frontendbook.domain.model.UserListType
 
 class ProfileFragment : Fragment() {
 
@@ -17,45 +17,58 @@ class ProfileFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        // Butonlara tıklama olayları tanımlanıyor
+        // Read
         view.findViewById<View>(R.id.btnRead).setOnClickListener {
-            openThreeColumnPage("Read", "read")
+            val bundle = Bundle().apply {
+                putString("arg_title", "Read")
+                putString("arg_type", "read")
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
+
+        // Readlist
         view.findViewById<View>(R.id.btnReadlist).setOnClickListener {
-            openThreeColumnPage("Readlist", "readlist")
+            val bundle = Bundle().apply {
+                putString("arg_title", "Readlist")
+                putString("arg_type", "readlist")
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
+
+        // Lists
         view.findViewById<View>(R.id.btnLists).setOnClickListener {
-            openThreeColumnPage("Lists", "lists")
+            val bundle = Bundle().apply {
+                putString("arg_title", "Lists")
+                putString("arg_type", "lists")
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
+
+        // Likes
         view.findViewById<View>(R.id.btnLikes).setOnClickListener {
-            openThreeColumnPage("Likes", "likes")
+            val bundle = Bundle().apply {
+                putString("arg_title", "Likes")
+                putString("arg_type", "likes")
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
+        }
+
+        // Followers
+        view.findViewById<View>(R.id.btnFollowers).setOnClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("arg_user_list_type", UserListType.FOLLOWERS)
+            }
+            findNavController().navigate(R.id.userListFragment, bundle)
+        }
+
+        // Following
+        view.findViewById<View>(R.id.btnFollowing).setOnClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("arg_user_list_type", UserListType.FOLLOWING)
+            }
+            findNavController().navigate(R.id.userListFragment, bundle)
         }
 
         return view
-    }
-
-    // ThreeColumnFragment'e geçiş yapan fonksiyon
-
-    private fun openThreeColumnPage(title: String, type: String) {
-        val bundle = Bundle().apply {
-            putString("arg_title", title)
-            putString("arg_type", type)
-        }
-        findNavController().navigate(R.id.threeColumnFragment, bundle)
-    }
-
-
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }
