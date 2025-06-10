@@ -42,6 +42,13 @@
         android:name="com.example.frontendbook.ui.common.ThreeColumnFragment"
         android:label="ThreeColumnFragment" />
 
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.example.frontendbook.ui.common.UserListFragment"
+        android:label="UserListFragment"
+        tools:layout="@layout/fragment_user_list" />
+
+
 
 
 </navigation>
