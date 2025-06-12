@@ -37,12 +37,9 @@ class ProfileFragment : Fragment() {
 
         // Lists
         view.findViewById<View>(R.id.btnLists).setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("arg_title", "Lists")
-                putString("arg_type", "lists")
-            }
-            findNavController().navigate(R.id.threeColumnFragment, bundle)
+            findNavController().navigate(R.id.listsFragment)
         }
+
 
         // Likes
         view.findViewById<View>(R.id.btnLikes).setOnClickListener {
