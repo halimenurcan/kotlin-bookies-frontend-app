@@ -24,4 +24,10 @@
         <item name="android:textColorHint">@color/textSecondary</item>
     </style>
 
+    <style name="CustomRatingBarStyle" parent="@style/Widget.AppCompat.RatingBar">
+        <item name="colorControlActivated">@color/buttonSecondary</item>
+        <item name="colorControlNormal">@color/stars_rated</item>    <!-- yıldız rengi -->
+    </style>
+
+
 </resources>

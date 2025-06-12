@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentBookInfoPageBinding
 import com.example.frontendbook.domain.model.Book
+import com.example.frontendbook.ui.bookInfoPage.BookInfoMoreDialog
+
 
 class BookInfoPageFragment : Fragment() {
 
@@ -47,6 +49,10 @@ class BookInfoPageFragment : Fragment() {
 
             // Yıldızlar
             renderRatingStars(book.rating)
+            binding.buttonMore.setOnClickListener {
+                BookInfoMoreDialog().show(parentFragmentManager, "BookInfoMoreDialog")
+            }
+
         }
     }
 

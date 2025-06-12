@@ -65,6 +65,11 @@ class ProfileFragment : Fragment() {
             }
             findNavController().navigate(R.id.userListFragment, bundle)
         }
+//settings bottom şit
+        view.findViewById<View>(R.id.btnSettings).setOnClickListener {
+            SettingsBottomSheetFragment().show(parentFragmentManager, "SettingsBottomSheet")
+        }
+
 
         return view
     }
