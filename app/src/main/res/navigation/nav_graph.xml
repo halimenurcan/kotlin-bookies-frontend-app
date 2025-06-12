@@ -23,7 +23,13 @@
         android:id="@+id/profileFragment"
         android:name="com.example.frontendbook.ui.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+    <action
+        android:id="@+id/action_profileFragment_to_listsFragment"
+        app:destination="@id/listsFragment" />
+
+    </fragment>
+
 
     <fragment
         android:id="@+id/notificationsFragment"
@@ -52,7 +58,10 @@
         android:label="UserListFragment"
         tools:layout="@layout/fragment_user_list" />
 
-
+    <fragment
+        android:id="@+id/listsFragment"
+        android:name="com.example.frontendbook.ui.homePage.ListsFragment"
+        android:label="Lists" />
 
 
 </navigation>
