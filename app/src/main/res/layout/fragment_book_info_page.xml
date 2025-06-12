@@ -6,7 +6,19 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundPrimary">
 
+
     <!-- Arka Plan Görsel -->
+
+    <ImageButton
+        android:id="@+id/bookCoverImage"
+        android:layout_width="match_parent"
+        android:layout_height="382dp"
+        android:alpha="0.4"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bookk"
+        />
+
+    <!-- More Button -->
     <ImageButton
         android:id="@+id/buttonMore"
         android:layout_width="48dp"
@@ -15,21 +27,10 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/more"
+        android:src="@drawable/moreinfo"
         android:contentDescription="@string/more_options"
+
         />
-
-    <!-- More Button -->
-    <ImageButton
-        android:id="@+id/bookCoverImage"
-        android:layout_width="match_parent"
-        android:layout_height="382dp"
-        android:alpha="0.4"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bookk" />
-
-
-
 
     <!-- İçerik Alanı -->
     <ScrollView
