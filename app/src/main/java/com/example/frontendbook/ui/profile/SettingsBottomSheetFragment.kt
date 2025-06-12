@@ -50,7 +50,9 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         view.findViewById<Button>(R.id.btnChangePassword).setOnClickListener {
-            // TODO: Şifre değiştirme Bottom Sheet aç
+            val bottomSheet = ChangePasswordBottomSheetFragment()
+            bottomSheet.show(parentFragmentManager, "ChangePasswordBottomSheet")
         }
+
     }
 }
