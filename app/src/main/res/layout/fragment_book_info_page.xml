@@ -7,6 +7,17 @@
     android:background="@color/backgroundPrimary">
 
     <!-- Arka Plan Görsel -->
+    <ImageButton
+        android:id="@+id/buttonMore"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/more"
+        android:contentDescription="@string/more_options"
+        />
 
     <!-- More Button -->
     <ImageButton
@@ -16,17 +27,7 @@
         android:alpha="0.4"
         android:scaleType="centerCrop"
         android:src="@drawable/bookk" />
-    <ImageButton
-        android:id="@+id/buttonMore"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/moreinfo"
-        android:contentDescription="@string/more_options"
-        />
+
 
 
 
@@ -101,32 +102,6 @@
                 android:background="@color/line" />
 
             <!-- Butonlar -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/buttonReviews"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_background_round"
-                    android:text="Reviews"
-                    android:textColor="@color/button_textSecondary" />
-
-                <Button
-                    android:id="@+id/buttonLists"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_background_round"
-                    android:text="Lists"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
 
             <!-- Ratings -->
             <TextView
@@ -147,6 +122,5 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal" />
         </LinearLayout>
-
     </ScrollView>
 </RelativeLayout>

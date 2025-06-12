@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.frontendbook.databinding.BottomSheetAddBookBinding
-import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.AddBookSearchAdapter
 import com.example.frontendbook.ui.search.SearchViewModel
 import com.bumptech.glide.Glide
