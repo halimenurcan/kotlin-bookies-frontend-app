@@ -144,7 +144,14 @@
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
             </LinearLayout>
-
+            <!-- Browse input. ??? -->
+            <EditText
+                android:id="@+id/browseInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Enter a value..."
+                android:visibility="gone" />
             <!-- Search button -->
             <Button
                 android:id="@+id/browseSubmitButton"
@@ -163,7 +170,7 @@
             <!-- RecyclerView for book list -->
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/aiSearchFab"
+                android:id="@+id/aiSearchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
