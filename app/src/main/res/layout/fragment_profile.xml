@@ -17,19 +17,18 @@
         android:elevation="4dp">
 
         <!-- Ayarlar Butonu -->
-        <Button
+        <ImageButton
             android:id="@+id/btnSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/buttonPrimary"
-            android:onClick="settingsOpen"
-            android:text="@string/settings"
-            android:textColor="@color/textPrimary"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:cornerRadius="8dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="8dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/settings"
+            android:src="@drawable/settings"
+            app:tint="@color/textPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <!-- Profil Resmi -->
         <ImageView
