@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundPrimary">
+    android:background="@color/backgroundPrimary"
+   >
 
     <!-- Arka Plan Görsel -->
-
-    <!-- More Button -->
     <ImageButton
         android:id="@+id/bookCoverImage"
         android:layout_width="match_parent"
         android:layout_height="382dp"
         android:alpha="0.4"
         android:scaleType="centerCrop"
-        android:src="@drawable/bookk" />
+        android:src="@drawable/bookk"
+        android:background="@null" />
+
+    <!-- More Button -->
     <ImageButton
         android:id="@+id/buttonMore"
         android:layout_width="48dp"
@@ -25,10 +28,7 @@
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/moreinfo"
-        android:contentDescription="@string/more_options"
-        />
-
-
+        android:contentDescription="@string/more_options" />
 
     <!-- İçerik Alanı -->
     <ScrollView
@@ -36,8 +36,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/bookCoverImage"
         android:layout_marginTop="-53dp"
-        android:padding="16dp"
-        >
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,26 +105,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonReviews"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_background_round"
                     android:text="Reviews"
-                    android:textColor="@color/button_textSecondary" />
+                    app:cornerRadius="8dp"
+                    android:textColor="@color/button_textSecondary"
+                    app:backgroundTint="@color/buttonSecondary"
+                    style="?attr/materialButtonOutlinedStyle"
+                    />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonLists"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_background_round"
                     android:text="Lists"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/button_textSecondary"
+                    app:backgroundTint="@color/buttonSecondary"
+                    app:cornerRadius="8dp" />
+
             </LinearLayout>
 
             <!-- Ratings -->
@@ -146,6 +151,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" />
+
         </LinearLayout>
 
     </ScrollView>
