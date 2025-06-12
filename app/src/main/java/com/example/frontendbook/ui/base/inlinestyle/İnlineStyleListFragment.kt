@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.common
+package com.example.frontendbook.ui.base.inlinestyle
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.example.frontendbook.domain.model.UserListType
 import com.example.frontendbook.domain.model.UserSimple
 import com.example.frontendbook.ui.base.adapter.UserListAdapter
 
-class UserListFragment : Fragment() {
+class İnlineStyleListFragment : Fragment() {
 
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
@@ -21,8 +21,8 @@ class UserListFragment : Fragment() {
     companion object {
         private const val ARG_TYPE = "arg_user_list_type"
 
-        fun newInstance(type: UserListType): UserListFragment {
-            val fragment = UserListFragment()
+        fun newInstance(type: UserListType): İnlineStyleListFragment {
+            val fragment = İnlineStyleListFragment()
             val args = Bundle().apply {
                 putSerializable(ARG_TYPE, type)
             }

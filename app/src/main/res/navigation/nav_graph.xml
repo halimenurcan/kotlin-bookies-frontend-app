@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/userListFragment"
-        android:name="com.example.frontendbook.ui.common.UserListFragment"
+        android:name="com.example.frontendbook.ui.base.inlinestyle.İnlineStyleListFragment"
         android:label="UserListFragment"
         tools:layout="@layout/fragment_user_list" />
 
