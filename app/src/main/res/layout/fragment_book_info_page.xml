@@ -7,7 +7,20 @@
     android:background="@color/backgroundPrimary">
 
     <!-- Arka Plan Görsel -->
-    <ImageView
+    <ImageButton
+        android:id="@+id/buttonMore"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/more"
+        android:contentDescription="@string/more_options"
+        />
+
+    <!-- More Button -->
+    <ImageButton
         android:id="@+id/bookCoverImage"
         android:layout_width="match_parent"
         android:layout_height="382dp"
@@ -15,17 +28,8 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bookk" />
 
-    <!-- More Button -->
-    <ImageButton
-        android:id="@+id/buttonMore"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/more"
-        android:contentDescription="@string/more_options" />
+
+
 
     <!-- İçerik Alanı -->
     <ScrollView
@@ -33,7 +37,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/bookCoverImage"
         android:layout_marginTop="-53dp"
-        android:padding="16dp">
+        android:padding="16dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:text="PRIDE AND PREJUDICE"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 android:textSize="28sp" />
 
             <!-- Yazar -->
@@ -83,6 +89,9 @@
                 android:lineSpacingExtra="4dp"
                 android:textColor="@color/textBookInfo"
                 android:textSize="16sp"
+                android:textStyle="italic"
+                android:maxLines="100"
+                android:scrollbars="vertical"
                 tools:text="İngiliz taşra hayatında geçen ve aşk, evlilik..." />
 
             <!-- Ayırıcı -->
