@@ -27,7 +27,7 @@ class BookSearchAdapter : ListAdapter<Book, BookSearchAdapter.BookViewHolder>(Bo
         fun bind(book: Book) {
             binding.titleTextView.text = book.title
             binding.authorTextView.text = book.author
-            binding.yearTextView.text = book.year.toString()
+
 
             // Glide ile kapak resmini yükle
             Glide.with(binding.root.context)
