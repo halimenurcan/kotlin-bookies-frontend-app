@@ -1,7 +1,10 @@
 package com.example.frontendbook.domain.model
 
+import android.annotation.SuppressLint
+import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
+
 
 @Parcelize
 data class Book(
@@ -16,4 +19,9 @@ data class Book(
     val imageUrl: String? = null,
     val pageCount: Int =0,
     val description: String,
-) :Parcelable
+) :Parcelable {
+    override fun describeContents(): Int {
+        TODO("Not yet implemented")
+    }
+
+}
