@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,10 +20,29 @@ class ProfileFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        // Username TextView'e SharedPreferences'ten alınan kullanıcı adını set et
         val sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
+        // Kullanıcı adı gösterimi
         val username = sharedPrefs.getString("user_username", "default")
         view.findViewById<TextView>(R.id.usernameText).text = username
+
+        // Kayıtlı avatar varsa göster
+        val savedAvatar = sharedPrefs.getInt("user_avatar", R.drawable.avatar)
+        val profileImageView = view.findViewById<ImageView>(R.id.profileImage)
+        profileImageView.setImageResource(savedAvatar)
+
+        // Avatar'a tıklayınca bottom sheet aç
+        profileImageView.setOnClickListener {
+            ChooseProfileImageBottomSheetFragment { selectedImageResId ->
+                profileImageView.setImageResource(selectedImageResId)
+                sharedPrefs.edit().putInt("user_avatar", selectedImageResId).apply()
+            }.show(parentFragmentManager, "ChooseProfileImageBottomSheet")
+        }
+
+        // Ayarlar BottomSheet
+        view.findViewById<View>(R.id.btnSettings).setOnClickListener {
+            SettingsBottomSheetFragment().show(parentFragmentManager, "SettingsBottomSheet")
+        }
 
         // Read
         view.findViewById<View>(R.id.btnRead).setOnClickListener {
@@ -70,11 +90,6 @@ class ProfileFragment : Fragment() {
                 putSerializable("arg_user_list_type", UserListType.FOLLOWING)
             }
             findNavController().navigate(R.id.userListFragment, bundle)
-        }
-
-        // Settings BottomSheet
-        view.findViewById<View>(R.id.btnSettings).setOnClickListener {
-            SettingsBottomSheetFragment().show(parentFragmentManager, "SettingsBottomSheet")
         }
 
         return view
