@@ -84,17 +84,18 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             } else false
         }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            if (state.books.isNotEmpty()) {
+        viewModel.state.observe(viewLifecycleOwner) { currentState ->
+            if (currentState.books.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
-                adapter.submitList(state.books)
+                adapter.submitList(currentState.books)
             } else {
                 binding.recyclerView.visibility = View.GONE
-                if (state.isEmptyResult) {
+                if (currentState.isEmptyResult) {
                     Toast.makeText(requireContext(), "No books found", Toast.LENGTH_SHORT).show()
                 }
             }
-            state.errorMessage?.let {
+
+            currentState.errorMessage?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }

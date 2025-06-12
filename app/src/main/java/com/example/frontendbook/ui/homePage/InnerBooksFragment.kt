@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentInnerBooksBinding
 import com.example.frontendbook.domain.model.Book
+import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
 import com.example.frontendbook.ui.common.ThreeColumnFragment
 import com.example.frontendbook.ui.viewmodel.BookViewModel
 
@@ -82,13 +83,25 @@ class InnerBooksFragment : Fragment() {
             val imageView = itemView.findViewById<ImageView>(R.id.bookImage)
 
             titleView.text = book.title
-            imageView.setBackgroundColor(Color.RED)
 
             Glide.with(requireContext())
                 .load(book.imageUrl ?: R.drawable.bookk)
                 .placeholder(R.drawable.bookk)
-                .error(R.drawable.bookk)
-                .into(imageView) // 🔧 Burada direkt imageView kullanılmalı
+                .into(imageView)
+
+            // 👇 Kitaba tıklandığında BookInfoPage'e git
+            itemView.setOnClickListener {
+                val fragment = BookInfoPageFragment().apply {
+                    arguments = Bundle().apply {
+                        putParcelable("book", book)
+                    }
+                }
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.innerFragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
 
             container.addView(itemView)
         }

@@ -9,8 +9,6 @@ import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentBookInfoPageBinding
 import com.example.frontendbook.domain.model.Book
-import com.example.frontendbook.ui.bookInfoPage.BookInfoMoreDialog
-
 
 class BookInfoPageFragment : Fragment() {
 
@@ -21,8 +19,8 @@ class BookInfoPageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Bundle içinden Book modelini al
         book = arguments?.getParcelable("book")
+
     }
 
     override fun onCreateView(
@@ -35,24 +33,23 @@ class BookInfoPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         book?.let { book ->
-            // Başlık
             binding.bookTitle.text = book.title
             binding.bookAuthor.text = book.author
             binding.bookMeta.text = "${book.year}\n${book.pageCount} pages"
             binding.bookDescription.text = book.description
 
-            // Görsel (Glide ile)
             Glide.with(requireContext())
-                .load(book.imageUrl)
+                .load(book.imageUrl ?: R.drawable.bookk)
                 .placeholder(R.drawable.bookk)
+                .error(R.drawable.bookk)
                 .into(binding.bookCoverImage)
 
-            // Yıldızlar
             renderRatingStars(book.rating)
-            binding.buttonMore.setOnClickListener {
-                BookInfoMoreDialog().show(parentFragmentManager, "BookInfoMoreDialog")
-            }
 
+            binding.buttonMore.setOnClickListener {
+                val dialog = BookInfoMoreDialog.newInstance(book)
+                dialog.show(parentFragmentManager, "BookInfoMoreDialog")
+            }
         }
     }
 
@@ -60,7 +57,7 @@ class BookInfoPageFragment : Fragment() {
         val maxStars = 5
         binding.ratingStars.removeAllViews()
         for (i in 1..maxStars) {
-            val star = View.inflate(context, R.layout.item_star, null) as View
+            val star = View.inflate(context, R.layout.item_star, null)
             val imageView = star.findViewById<android.widget.ImageView>(R.id.starIcon)
             imageView.setImageResource(
                 if (i <= rating.toInt()) R.drawable.star_rated else R.drawable.star_empty

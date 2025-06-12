@@ -5,8 +5,9 @@ package com.example.frontendbook.ui.bookInfoPage
     import android.widget.*
     import androidx.fragment.app.DialogFragment
     import com.example.frontendbook.R
+    import com.example.frontendbook.domain.model.Book
 
-    class BookInfoMoreDialog : DialogFragment() {
+class BookInfoMoreDialog : DialogFragment() {
 
         private var isLiked = false
         private var isRead = false
@@ -58,5 +59,16 @@ package com.example.frontendbook.ui.bookInfoPage
                 (resources.displayMetrics.heightPixels * 0.6).toInt() // %60 ekran yüksekliği
             )
         }
+    companion object {
+        private const val ARG_BOOK = "book"
 
+        fun newInstance(book: Book): BookInfoMoreDialog {
+            val fragment = BookInfoMoreDialog()
+            val bundle = Bundle().apply {
+                putParcelable(ARG_BOOK, book)
+            }
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
     }

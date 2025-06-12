@@ -4,16 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.frontendbook.R
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frontendbook.databinding.FragmentThreeColumnBinding
-import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.BookAdapter
+import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
+import com.example.frontendbook.ui.viewmodel.BookViewModel
 
 class ThreeColumnFragment : Fragment() {
 
     private var _binding: FragmentThreeColumnBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: BookViewModel by viewModels()
 
     private lateinit var adapter: BookAdapter
     private var pageTitle: String? = null
@@ -22,7 +27,6 @@ class ThreeColumnFragment : Fragment() {
     companion object {
         private const val ARG_TITLE = "arg_title"
         private const val ARG_TYPE = "arg_type"
-
 
         fun newInstance(title: String, type: String): ThreeColumnFragment {
             val fragment = ThreeColumnFragment()
@@ -52,31 +56,32 @@ class ThreeColumnFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = BookAdapter {}
-        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+        adapter = BookAdapter { book ->
+            // Örneğin, BookInfoPage'e git
+            val fragment = BookInfoPageFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("book", book)
+                }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.innerFragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+            binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),3)
+
+        }
         binding.recyclerView.adapter = adapter
         binding.headerTitle.text = pageTitle ?: "Books"
 
-        // Dummy veriler (type'e göre veri getirme yapılabilir)
-        val dummyBooks = List(12) {
-            Book(
-                title = "$type Book ${it + 1}",
-                author = "Author ${it + 1}",
-                year = 2000 + it,
-                genre = "Genre",
-                country = "Country",
-                language = "EN",
-                popularity = (50..100).random(),
-                rating = (3..5).random().toDouble(),
-                imageUrl = null,
-                description = "Yazar açıklaması..."
-            )
+        viewModel.books.observe(viewLifecycleOwner) { books ->
+            adapter.submitList(books)
         }
-        adapter.submitList(dummyBooks)
+
+        viewModel.fetchBooks(type ?: "fiction")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
-        }
+        _binding = null
+    }
 }
