@@ -22,9 +22,13 @@ class RegisterActivity : BaseActivity<RegisterViewModel, RegisterState, Activity
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
-            // SharedPreferences'e username'i kaydet
-            val sharedPrefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            sharedPrefs.edit().putString("username", username).apply()
+            // SharedPreferences'e username'i kaydet -- e mail i de kaydediyoruz buraya
+            val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            sharedPrefs.edit()
+                .putString("user_username", username)
+                .putString("user_email", email)
+                .putString("user_password", password)  // 🔐 Yeni satır
+                .apply()
 
             viewModel.register(username, email, password)
         }
@@ -45,6 +49,7 @@ class RegisterActivity : BaseActivity<RegisterViewModel, RegisterState, Activity
                 val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
                 sharedPrefs.edit()
                     .putString("user_username", binding.usernameInput.text.toString())
+                    .putString("user_password", binding.passwordInput.text.toString())
                     .apply()
 
                 showToast(state.message)

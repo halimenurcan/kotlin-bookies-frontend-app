@@ -44,15 +44,18 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
 
     private fun goToMain(token: String?) {
         if (!token.isNullOrEmpty()) {
-            getSharedPreferences("user_prefs", MODE_PRIVATE)
-                .edit()
+            val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            sharedPrefs.edit()
                 .putString("token", token)
+                .putString("user_username", binding.usernameInput.text.toString()) // 🆔
+                .putString("user_password", binding.passwordInput.text.toString()) // 🔐
                 .apply()
         }
 
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
+
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
