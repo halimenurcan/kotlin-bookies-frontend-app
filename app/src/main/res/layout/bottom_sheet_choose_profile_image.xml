@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@color/backgroundSecondary">
+
+    <ImageView
+        android:id="@+id/imgAvatar1"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/bookworms"
+        android:padding="8dp"
+        android:clickable="true" />
+
+    <ImageView
+        android:id="@+id/imgAvatar2"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/bookfriends"
+        android:padding="8dp"
+        android:clickable="true" />
+
+    <ImageView
+        android:id="@+id/imgAvatar3"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/bookbibliofil"
+        android:padding="8dp"
+        android:clickable="true" />
+
+    <ImageView
+        android:id="@+id/imgAvatar4"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/bookcat"
+        android:padding="8dp"
+        android:clickable="true" />
+</LinearLayout>
