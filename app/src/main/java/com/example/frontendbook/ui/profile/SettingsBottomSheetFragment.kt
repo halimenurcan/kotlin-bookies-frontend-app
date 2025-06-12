@@ -1,13 +1,14 @@
 package com.example.frontendbook.ui.profile
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import com.example.frontendbook.R
+import com.example.frontendbook.ui.signIn.SignInActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
@@ -23,34 +24,65 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Dummy veriler (örnek amaçlı). Gerçek uygulamada ViewModel veya başka bir kaynaktan gelir.
-        val username = "100Lesh"
-        val name = "John"
-        val surname = "Doe"
-        val email = "john.doe@example.com"
+        val sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
-        view.findViewById<EditText>(R.id.settingsUsername).setText(username)
-        view.findViewById<EditText>(R.id.settingsName).setText(name)
-        view.findViewById<EditText>(R.id.settingsSurname).setText(surname)
-        view.findViewById<EditText>(R.id.settingsEmail).setText(email)
+        // Kullanıcı bilgilerini al
+        val username = sharedPrefs.getString("user_username", "default")
+        val name = sharedPrefs.getString("user_name", "")
+        val surname = sharedPrefs.getString("user_surname", "")
+        val email = sharedPrefs.getString("user_email", "")
 
+        // View’lara set et
+        val usernameField = view.findViewById<EditText>(R.id.settingsUsername)
+        val nameField = view.findViewById<EditText>(R.id.settingsName)
+        val surnameField = view.findViewById<EditText>(R.id.settingsSurname)
+        val emailField = view.findViewById<EditText>(R.id.settingsEmail)
+
+        usernameField.setText(username)
+        usernameField.isEnabled = false
+        usernameField.isFocusable = false
+
+        nameField.setText(name)
+        surnameField.setText(surname)
+        emailField.setText(email)
+
+        // Cancel butonu
         view.findViewById<TextView>(R.id.btnCancel).setOnClickListener {
             dismiss()
         }
 
-
+        // Save butonu
         view.findViewById<Button>(R.id.btnSave).setOnClickListener {
-            // TODO: Save işlemi yapılacak
+            val newName = nameField.text.toString()
+            val newSurname = surnameField.text.toString()
+            val newEmail = emailField.text.toString()
+
+            sharedPrefs.edit()
+                .putString("user_name", newName)
+                .putString("user_surname", newSurname)
+                .putString("user_email", newEmail)
+                .apply()
+
+            Toast.makeText(requireContext(), "Changes saved", Toast.LENGTH_SHORT).show()
             dismiss()
         }
 
+        // Logout butonu
         view.findViewById<Button>(R.id.btnLogout).setOnClickListener {
-            // TODO: Çıkış işlemi
-            dismiss()
+            sharedPrefs.edit().clear().apply()
+
+            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(requireContext(), SignInActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            requireActivity().finish()
         }
 
+        // Change password bottom sheet aç
         view.findViewById<Button>(R.id.btnChangePassword).setOnClickListener {
-            // TODO: Şifre değiştirme Bottom Sheet aç
+            val bottomSheet = ChangePasswordBottomSheetFragment()
+            bottomSheet.show(parentFragmentManager, "ChangePasswordBottomSheet")
         }
     }
 }

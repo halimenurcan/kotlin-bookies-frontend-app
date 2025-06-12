@@ -1,9 +1,11 @@
 package com.example.frontendbook.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.R
@@ -16,6 +18,11 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        // Username TextView'e SharedPreferences'ten alınan kullanıcı adını set et
+        val sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val username = sharedPrefs.getString("user_username", "default")
+        view.findViewById<TextView>(R.id.usernameText).text = username
 
         // Read
         view.findViewById<View>(R.id.btnRead).setOnClickListener {
@@ -39,7 +46,6 @@ class ProfileFragment : Fragment() {
         view.findViewById<View>(R.id.btnLists).setOnClickListener {
             findNavController().navigate(R.id.listsFragment)
         }
-
 
         // Likes
         view.findViewById<View>(R.id.btnLikes).setOnClickListener {
@@ -65,11 +71,11 @@ class ProfileFragment : Fragment() {
             }
             findNavController().navigate(R.id.userListFragment, bundle)
         }
-//settings bottom şit
+
+        // Settings BottomSheet
         view.findViewById<View>(R.id.btnSettings).setOnClickListener {
             SettingsBottomSheetFragment().show(parentFragmentManager, "SettingsBottomSheet")
         }
-
 
         return view
     }

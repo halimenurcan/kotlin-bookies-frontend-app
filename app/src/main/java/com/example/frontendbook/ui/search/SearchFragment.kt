@@ -46,8 +46,6 @@ class SearchFragment : Fragment() {
         binding.recyclerView.visibility = View.GONE
 
         binding.genreButton.setOnClickListener { showInput("genre") }
-        binding.authorButton.setOnClickListener { showInput("author") }
-        binding.countryButton.setOnClickListener { showInput("country") }
         binding.languageButton.setOnClickListener { showInput("language") }
 
         binding.mostPopularButton.setOnClickListener {
