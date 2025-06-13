@@ -13,6 +13,7 @@
     <string name="readlist">Readlist</string>
     <string name="lists">Lists</string>
     <string name="likes">Likes</string>
+    <string name="username_placeholder">Kullanıcı Adı</string>
 
 
 </resources>

@@ -1,28 +1,31 @@
 package com.example.frontendbook.ui.base.inlinestyle
 
+import com.example.frontendbook.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentUserListBinding
 import com.example.frontendbook.domain.model.UserListType
 import com.example.frontendbook.domain.model.UserSimple
 import com.example.frontendbook.ui.base.adapter.UserListAdapter
 
-class İnlineStyleListFragment : Fragment() {
+class UserListFragment : Fragment() {
 
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
 
     private var listType: UserListType? = null
+    private var userId: String? = null
 
     companion object {
         private const val ARG_TYPE = "arg_user_list_type"
 
-        fun newInstance(type: UserListType): İnlineStyleListFragment {
-            val fragment = İnlineStyleListFragment()
+        fun newInstance(type: UserListType): UserListFragment {
+            val fragment = UserListFragment()
             val args = Bundle().apply {
                 putSerializable(ARG_TYPE, type)
             }
@@ -34,6 +37,7 @@ class İnlineStyleListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listType = arguments?.getSerializable(ARG_TYPE) as? UserListType
+        userId = arguments?.getString("user_id")
     }
 
     override fun onCreateView(
@@ -58,8 +62,11 @@ class İnlineStyleListFragment : Fragment() {
         }
         binding.headerTitle.text = title
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = UserListAdapter(dummyUsers) {
-            // kullanıcıya tıklanınca yapılacaklar
+        binding.recyclerView.adapter = UserListAdapter(dummyUsers) { selectedUser -> //Bu yapı diğer kullanıcı profiline yönlendirme için doğru! ✅
+            val bundle = Bundle().apply {
+                putString("user_id", selectedUser.userId)
+            }
+            findNavController().navigate(R.id.otherUserProfileFragment, bundle)
         }
     }
 
