@@ -9,14 +9,18 @@
 
     <!-- Profil Üst Alan -->
     <androidx.constraintlayout.widget.ConstraintLayout
+
         android:id="@+id/profileHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:background="@color/headerColor"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:padding="16dp">
+
 
         <!-- Ayarlar Butonu -->
+
+
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="40dp"
@@ -25,9 +29,9 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings"
             android:src="@drawable/settings"
-            app:tint="@color/stars_rated"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/stars_rated" />
 
 
         <!-- Profil Resmi -->
@@ -35,13 +39,14 @@
             android:id="@+id/profileImage"
             android:layout_width="96dp"
             android:layout_height="96dp"
+            android:background="@drawable/circle_background"
             android:layout_marginTop="16dp"
+            android:contentDescription="@string/profile_image_desc"
             android:scaleType="centerCrop"
             android:src="@drawable/avatar"
-            android:contentDescription="@string/profile_image_desc"
-            app:layout_constraintTop_toBottomOf="@id/btnSettings"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/btnSettings" />
 
         <!-- Kullanıcı Adı -->
         <TextView
@@ -53,9 +58,9 @@
             android:textColor="@color/textPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/profileImage" />
 
         <!-- Followers -->
         <Button
@@ -63,13 +68,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:backgroundTint="@color/buttonPrimary"
             android:text="@string/followers"
             android:textColor="@color/button_textPrimary"
-            android:backgroundTint="@color/buttonPrimary"
             android:textSize="12sp"
             app:cornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/usernameText"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/usernameText" />
 
         <!-- Following -->
         <Button
@@ -77,13 +82,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:backgroundTint="@color/buttonPrimary"
             android:text="@string/following"
             android:textColor="@color/button_textPrimary"
-            android:backgroundTint="@color/buttonPrimary"
             android:textSize="12sp"
             app:cornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/usernameText"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/usernameText" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Alt Menü: Read, Readlist, Lists, Likes -->
@@ -91,8 +98,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/headerColor"
-        >
+        android:background="@color/headerColor">
 
         <!-- Read -->
         <LinearLayout
@@ -109,6 +115,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5">
 
+            <!-- "Read" yazısı -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -117,6 +124,17 @@
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
 
+            <!-- Kitap ikonu (Book 2) -->
+
+            <!-- Ok işareti -->
+            <ImageView
+                android:id="@+id/p_read"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="300dp"
+                android:src="@drawable/p_read"
+                app:tint="@color/footer_icons" />
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -124,6 +142,7 @@
                 android:src="@drawable/ok"
                 app:tint="@color/footer_icons" />
         </LinearLayout>
+
 
         <!-- Readlist -->
         <LinearLayout
@@ -144,6 +163,14 @@
                 android:text="@string/readlist"
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/p_readlist"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="280dp"
+                android:src="@drawable/p_readlist"
+                app:tint="@color/footer_icons" />
 
             <ImageView
                 android:layout_width="24dp"
@@ -174,6 +201,14 @@
                 android:textSize="16sp" />
 
             <ImageView
+                android:id="@+id/p_lists"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="300dp"
+                android:src="@drawable/p_lists"
+                app:tint="@color/footer_icons" />
+
+            <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="@string/go_icon_desc"
@@ -200,6 +235,14 @@
                 android:text="@string/likes"
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/p_like"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="300dp"
+                android:src="@drawable/p_like"
+                app:tint="@color/footer_icons" />
 
             <ImageView
                 android:layout_width="24dp"

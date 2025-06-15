@@ -1,7 +1,11 @@
 package com.example.frontendbook.ui.profile
 
+import android.view.animation.AnimationUtils
+import android.os.Handler
+
 import android.content.Context
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,11 +37,22 @@ class ProfileFragment : Fragment() {
 
         // Avatar'a tıklayınca bottom sheet aç
         profileImageView.setOnClickListener {
+            // BottomSheet açılır
             ChooseProfileImageBottomSheetFragment { selectedImageResId ->
-                profileImageView.setImageResource(selectedImageResId)
-                sharedPrefs.edit().putInt("user_avatar", selectedImageResId).apply()
+                // Kullanıcı bir avatar seçtiğinde animasyon uygulanır
+                val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
+                val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
+
+                profileImageView.startAnimation(fadeOut)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    profileImageView.setImageResource(selectedImageResId)
+                    profileImageView.startAnimation(fadeIn)
+                    sharedPrefs.edit().putInt("user_avatar", selectedImageResId).apply()
+                }, 400)
             }.show(parentFragmentManager, "ChooseProfileImageBottomSheet")
         }
+
 
         // Ayarlar BottomSheet
         view.findViewById<View>(R.id.btnSettings).setOnClickListener {

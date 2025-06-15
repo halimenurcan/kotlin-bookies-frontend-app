@@ -1,59 +1,69 @@
 package com.example.frontendbook.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import com.example.frontendbook.R
-import com.example.frontendbook.databinding.BottomSheetChooseProfileImageBinding
 
-
-// TODO: Customize parameter argument names
-const val ARG_ITEM_COUNT = "item_count"
-
-/**
- *
- * A fragment that shows a list of items as a modal bottom sheet.
- *
- * You can show this modal bottom sheet from your activity like this:
- * <pre>
- *    ChooseProfileImageBottomSheetFragment.newInstance(30).show(supportFragmentManager, "dialog")
- * </pre>
- */
 class ChooseProfileImageBottomSheetFragment(
     private val onImageSelected: (Int) -> Unit
 ) : BottomSheetDialogFragment() {
 
+    private lateinit var sharedPrefs: android.content.SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.bottom_sheet_choose_profile_image, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<ImageView>(R.id.imgAvatar1).setOnClickListener {
-            onImageSelected(R.drawable.bookworms)
-            dismiss()
+        sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val savedAvatarId = sharedPrefs.getInt("user_avatar", R.drawable.avatar)
+
+        val avatarMap = mapOf(
+            R.id.imgAvatar1 to Pair(R.drawable.bookworms, R.id.imgCheck1),
+            R.id.imgAvatar2 to Pair(R.drawable.bookfriends, R.id.imgCheck2),
+            R.id.imgAvatar3 to Pair(R.drawable.bookbibliofil, R.id.imgCheck3),
+            R.id.imgAvatar4 to Pair(R.drawable.bookcat, R.id.imgCheck4)
+        )
+
+        // --- Başlangıçta kaydedilmiş tik'i göster ---
+        for ((avatarViewId, pair) in avatarMap) {
+            val checkImageView = view.findViewById<ImageView>(pair.second)
+            checkImageView.visibility = if (pair.first == savedAvatarId) View.VISIBLE else View.GONE
         }
-        view.findViewById<ImageView>(R.id.imgAvatar2).setOnClickListener {
-            onImageSelected(R.drawable.bookfriends)
-            dismiss()
-        }
-        view.findViewById<ImageView>(R.id.imgAvatar3).setOnClickListener {
-            onImageSelected(R.drawable.bookbibliofil)
-            dismiss()
-        }
-        view.findViewById<ImageView>(R.id.imgAvatar4).setOnClickListener {
-            onImageSelected(R.drawable.bookcat)
-            dismiss()
+
+        // --- Avatar seçildiğinde ---
+        for ((avatarViewId, pair) in avatarMap) {
+            val avatarImageView = view.findViewById<ImageView>(avatarViewId)
+            val checkImageView = view.findViewById<ImageView>(pair.second)
+
+            avatarImageView.setOnClickListener {
+                // Tüm tikleri gizle
+                avatarMap.values.forEach { (_, checkId) ->
+                    view.findViewById<ImageView>(checkId).visibility = View.GONE
+                }
+
+                // Seçilenin tik'ini göster
+                checkImageView.visibility = View.VISIBLE
+
+                // Seçimi kaydet
+                sharedPrefs.edit().putInt("user_avatar", pair.first).apply()
+
+                // 300ms sonra geri bildir
+                view.postDelayed({
+                    onImageSelected(pair.first)
+                    dismiss()
+                }, 300)
+            }
         }
     }
 }

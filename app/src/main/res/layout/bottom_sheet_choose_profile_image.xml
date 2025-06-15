@@ -4,37 +4,121 @@
     android:padding="24dp"
     android:orientation="horizontal"
     android:gravity="center"
-    android:background="@color/backgroundSecondary">
+    android:background="@color/backgroundSecondary"
+    android:divider="@android:color/transparent"
+    android:showDividers="middle"
+    android:dividerPadding="8dp">
 
-    <ImageView
-        android:id="@+id/imgAvatar1"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/bookworms"
-        android:padding="8dp"
-        android:clickable="true" />
+    <!-- Avatar 1 -->
+    <FrameLayout
+        android:id="@+id/avatar1Container"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="8dp">
 
-    <ImageView
-        android:id="@+id/imgAvatar2"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/bookfriends"
-        android:padding="8dp"
-        android:clickable="true" />
+        <ImageView
+            android:id="@+id/imgAvatar1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:src="@drawable/bookworms"
+            android:background="@drawable/avatar_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/avatar_description_1" />
 
-    <ImageView
-        android:id="@+id/imgAvatar3"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/bookbibliofil"
-        android:padding="8dp"
-        android:clickable="true" />
+        <ImageView
+            android:id="@+id/imgCheck1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="4dp"
+            android:src="@drawable/check_circle"
+            android:visibility="gone" />
+    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/imgAvatar4"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/bookcat"
-        android:padding="8dp"
-        android:clickable="true" />
+    <!-- Avatar 2 -->
+    <FrameLayout
+        android:id="@+id/avatar2Container"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/imgAvatar2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:src="@drawable/bookfriends"
+            android:background="@drawable/avatar_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/avatar_description_2" />
+
+        <ImageView
+            android:id="@+id/imgCheck2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="4dp"
+            android:src="@drawable/check_circle"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Avatar 3 -->
+    <FrameLayout
+        android:id="@+id/avatar3Container"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/imgAvatar3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:src="@drawable/bookbibliofil"
+            android:background="@drawable/avatar_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/avatar_description_3" />
+
+        <ImageView
+            android:id="@+id/imgCheck3"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="4dp"
+            android:src="@drawable/check_circle"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Avatar 4 -->
+    <FrameLayout
+        android:id="@+id/avatar4Container"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/imgAvatar4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:src="@drawable/bookcat"
+            android:background="@drawable/avatar_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/avatar_description_4" />
+
+        <ImageView
+            android:id="@+id/imgCheck4"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="4dp"
+            android:src="@drawable/check_circle"
+            android:visibility="gone" />
+    </FrameLayout>
+
 </LinearLayout>
