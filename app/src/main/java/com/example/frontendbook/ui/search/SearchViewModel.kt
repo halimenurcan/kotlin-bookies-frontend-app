@@ -1,19 +1,19 @@
 package com.example.frontendbook.ui.search
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendbook.data.repository.BookRepository
 import com.example.frontendbook.domain.model.CombinedSearchResult
 import kotlinx.coroutines.launch
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val bookRepository = BookRepository()
+    private val bookRepository = BookRepository(application.applicationContext)
 
-    // Arama sonuçlarını kitap + kullanıcı olarak birleştir
     private val _combinedResults = MutableLiveData<List<CombinedSearchResult>>()
     val combinedResults: LiveData<List<CombinedSearchResult>> = _combinedResults
 
@@ -28,13 +28,13 @@ class SearchViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                Log.d("SearchDebug", "Started search with query: $query")
+                Log.d("SearchDebug", "🔍 Arama başlatıldı: $query")
 
                 val bookResults = bookRepository.searchBooks(query)
-                Log.d("SearchDebug", "Book results: ${bookResults.size}")
-
                 val userResults = bookRepository.searchUsers(query)
-                Log.d("SearchDebug", "User results: ${userResults.size}")
+
+                Log.d("SearchDebug", "📚 Kitap sayısı: ${bookResults.size}")
+                Log.d("SearchDebug", "👤 Kullanıcı sayısı: ${userResults.size}")
 
                 val combined = mutableListOf<CombinedSearchResult>()
                 combined.addAll(userResults.map { CombinedSearchResult.UserResult(it) })
@@ -43,13 +43,12 @@ class SearchViewModel : ViewModel() {
                 _combinedResults.value = combined
                 _errorMessage.value = null
             } catch (e: Exception) {
+                Log.e("SearchDebug", "❌ Arama hatası: ${e.message}", e)
                 _combinedResults.value = emptyList()
                 _errorMessage.value = "Arama başarısız: ${e.message}"
-                Log.e("SearchDebug", "Search error: ${e.message}", e)
             } finally {
                 _isLoading.value = false
             }
         }
-
     }
 }

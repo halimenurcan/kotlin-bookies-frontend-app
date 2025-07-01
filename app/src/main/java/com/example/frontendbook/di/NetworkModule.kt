@@ -1,4 +1,7 @@
 package com.example.frontendbook.di
+
+import android.content.Context
+import com.example.frontendbook.data.remote.TokenInterceptor
 import com.example.frontendbook.data.repository.AuthRepositoryImpl
 import com.example.frontendbook.domain.repository.AuthRepository
 import com.example.frontendbook.domain.usecase.RegisterUserUseCase
@@ -7,7 +10,9 @@ import com.example.frontendbook.retrofit.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -16,12 +21,30 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    // TokenInterceptor'ı sağla
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit =
+    fun provideTokenInterceptor(@ApplicationContext context: Context): TokenInterceptor {
+        return TokenInterceptor(context)
+    }
+
+    // OkHttpClient'e TokenInterceptor ekle
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(tokenInterceptor: TokenInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(tokenInterceptor)
+            .build()
+    }
+
+    // Retrofit'i OkHttpClient ile oluştur
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/") // ← burayı kendi API adresinle değiştir
+            .baseUrl("http://10.0.2.2:8080/") // 💡 Backend URL
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
 
     @Provides

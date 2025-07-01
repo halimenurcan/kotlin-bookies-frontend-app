@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface SearchApiService {
-    @GET("search")
+    @GET("/api/books")
     suspend fun searchEverything(@Query("q") query: String): CombinedSearchResponse
 }

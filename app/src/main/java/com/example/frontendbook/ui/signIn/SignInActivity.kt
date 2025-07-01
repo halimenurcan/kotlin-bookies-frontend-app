@@ -1,6 +1,7 @@
 package com.example.frontendbook.ui.signIn
 
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.frontendbook.databinding.ActivitySignInBinding
@@ -35,27 +36,32 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
     override fun handleState(state: SignInState) {
         when (state) {
             is SignInState.Loading -> {
-                // loading gösterebilirsin
+                // TODO: ProgressBar gösterilebilir
             }
-            is SignInState.Success -> goToMain(state.token)
+            is SignInState.Success -> {
+                if (!state.token.isNullOrEmpty()) {
+                    saveTokenToPrefs(state.token)
+                    goToMain()
+                } else {
+                    showToast("Giriş başarılı fakat token alınamadı.")
+                }
+            }
             is SignInState.Error -> showToast(state.message)
         }
     }
 
-    private fun goToMain(token: String?) {
-        if (!token.isNullOrEmpty()) {
-            val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-            sharedPrefs.edit()
-                .putString("token", token)
-                .putString("user_username", binding.usernameInput.text.toString()) // 🆔
-                .putString("user_password", binding.passwordInput.text.toString()) // 🔐
-                .apply()
-        }
+    private fun saveTokenToPrefs(token: String) {
+        Log.d("SignInDebug", "Gelen token: $token")
+        getSharedPreferences("auth", MODE_PRIVATE)
+            .edit()
+            .putString("jwt_token", token)
+            .apply()
+    }
 
+    private fun goToMain() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
-
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

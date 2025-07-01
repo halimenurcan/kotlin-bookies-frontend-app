@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.signIn
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,10 +21,16 @@ class SignInViewModel @Inject constructor(
 
     fun signIn(username: String, password: String) {
         viewModelScope.launch {
-            _signInState.value = SignInState.Loading
-            var params = SignInParams(username,password)
-            val result = signInUseCase.execute(params)
-            _signInState.value = result
+            try {
+                _signInState.value = SignInState.Loading
+                val params = SignInParams(username, password)
+                val result = signInUseCase.execute(params)
+                Log.d("SignInDebug", "Sign-in sonucu: $result")
+                _signInState.value = result
+            } catch (e: Exception) {
+                _signInState.value = SignInState.Error("Giriş hatası: ${e.localizedMessage}")
+                Log.e("SignInDebug", "Exception during sign-in", e)
+            }
         }
     }
 }

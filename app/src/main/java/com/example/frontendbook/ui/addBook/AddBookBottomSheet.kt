@@ -70,7 +70,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             if (isSearch || isEnter) {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
-                    viewModel.searchBooksAndUsers(query)
                     (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                         .hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }

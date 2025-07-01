@@ -1,6 +1,7 @@
 package com.example.frontendbook.domain.mapper
 
 import android.util.Log
+import com.example.frontendbook.data.remote.dto.BookCreateRequestDto
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.domain.model.googleapi.BookItem
 
@@ -29,4 +30,6 @@ object BookMapper {
             description = description
         )
     }
+
+
 }

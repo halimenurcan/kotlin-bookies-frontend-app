@@ -47,30 +47,6 @@ class SearchFragment : Fragment() {
         binding.genreButton.setOnClickListener { showInput("genre") }
         binding.languageButton.setOnClickListener { showInput("language") }
 
-        binding.mostPopularButton.setOnClickListener {
-            viewModel.searchBooksAndUsers("popular")
-            hideInput()
-        }
-
-        binding.highlyRatedButton.setOnClickListener {
-            viewModel.searchBooksAndUsers("rating")
-            hideInput()
-        }
-
-        binding.browseSubmitButton.setOnClickListener {
-            val value = binding.browseInput.text.toString()
-            if (value.isNotBlank()) {
-                viewModel.searchBooksAndUsers("$currentFilterType:$value")
-                hideInput()
-            }
-        }
-
-        binding.aiSearchButton.setOnClickListener {
-            val prompt = "bestselling books on personal development"
-            viewModel.searchBooksAndUsers(prompt)
-            hideInput()
-        }
-
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearchAction = actionId == EditorInfo.IME_ACTION_SEARCH
             val isEnterKey = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN

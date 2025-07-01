@@ -1,14 +1,15 @@
 package com.example.frontendbook.ui.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.example.frontendbook.data.repository.BookRepository
 import android.util.Log
 import com.example.frontendbook.domain.model.Book
 import kotlinx.coroutines.launch
 
-class BookViewModel : ViewModel() {
+class BookViewModel(application : Application) : AndroidViewModel(application) {
 
-    private val repository = BookRepository()
+    private val repository = BookRepository(application.applicationContext)
 
     private val _books = MutableLiveData<List<Book>>()
     val books: LiveData<List<Book>> = _books
