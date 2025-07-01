@@ -1,5 +1,5 @@
 package com.example.frontendbook.ui.search
-
+import com.example.frontendbook.ui.search.SearchViewModel
 import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentSearchBinding
-import com.example.frontendbook.ui.base.adapter.BookSearchAdapter
+import com.example.frontendbook.ui.base.adapter.CombinedSearchAdapter
 
 class SearchFragment : Fragment() {
 
@@ -21,7 +21,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: BookSearchAdapter
+    private lateinit var adapter: CombinedSearchAdapter
     private var currentFilterType: String = ""
 
     override fun onCreateView(
@@ -39,7 +39,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupViews() {
-        adapter = BookSearchAdapter()
+        adapter = CombinedSearchAdapter()
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.visibility = View.GONE
@@ -48,26 +48,26 @@ class SearchFragment : Fragment() {
         binding.languageButton.setOnClickListener { showInput("language") }
 
         binding.mostPopularButton.setOnClickListener {
-            viewModel.searchBooks("popular")
+            viewModel.searchBooksAndUsers("popular")
             hideInput()
         }
 
         binding.highlyRatedButton.setOnClickListener {
-            viewModel.searchBooks("rating")
+            viewModel.searchBooksAndUsers("rating")
             hideInput()
         }
 
         binding.browseSubmitButton.setOnClickListener {
             val value = binding.browseInput.text.toString()
             if (value.isNotBlank()) {
-                viewModel.searchBooks("$currentFilterType:$value")
+                viewModel.searchBooksAndUsers("$currentFilterType:$value")
                 hideInput()
             }
         }
 
         binding.aiSearchButton.setOnClickListener {
             val prompt = "bestselling books on personal development"
-            viewModel.searchBooks(prompt) // gerçek API çağrısı
+            viewModel.searchBooksAndUsers(prompt)
             hideInput()
         }
 
@@ -78,7 +78,7 @@ class SearchFragment : Fragment() {
             if (isSearchAction || isEnterKey) {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
-                    viewModel.searchBooks(query)
+                    viewModel.searchBooksAndUsers(query)
                     val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }
@@ -88,13 +88,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.books.observe(viewLifecycleOwner) { books ->
-            if (books.isNotEmpty()) {
+        viewModel.combinedResults.observe(viewLifecycleOwner) { results ->
+            if (results.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
-                adapter.submitList(books)
+                adapter.submitList(results)
             } else {
                 binding.recyclerView.visibility = View.GONE
-                Toast.makeText(requireContext(), "No results found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Sonuç bulunamadı", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -105,7 +105,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // TODO: ProgressBar görünürlüğü ayarlanabilir
+            binding.progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 

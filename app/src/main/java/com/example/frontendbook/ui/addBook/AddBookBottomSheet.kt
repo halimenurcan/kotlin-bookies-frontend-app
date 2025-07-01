@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.frontendbook.databinding.BottomSheetAddBookBinding
 import com.example.frontendbook.ui.base.adapter.AddBookSearchAdapter
 import com.example.frontendbook.ui.search.SearchViewModel
+import com.example.frontendbook.domain.model.CombinedSearchResult
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 
@@ -39,21 +40,16 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = AddBookSearchAdapter { selectedBook ->
-            // Başlık güncelle
             binding.addBookTitle.text = selectedBook.title
-
-            // Kartı göster
             binding.recyclerView.visibility = View.GONE
             binding.bookPreviewArea.visibility = View.VISIBLE
             binding.selectedBookDetails.visibility = View.VISIBLE
-
             binding.commentInput.setText("")
             binding.ratingBar.rating = 0f
 
-            // Kapak ve bilgiler
             Glide.with(requireContext())
                 .load(selectedBook.imageUrl)
-                .placeholder(com.example.frontendbook.R.drawable.placeholder)
+                .placeholder(R.drawable.placeholder)
                 .into(binding.bookPreviewImage)
 
             binding.bookPreviewTitle.text = selectedBook.title
@@ -66,9 +62,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             visibility = View.GONE
         }
 
-        binding.cancelButton.setOnClickListener {
-            dismiss()
-        }
+        binding.cancelButton.setOnClickListener { dismiss() }
 
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearch = actionId == EditorInfo.IME_ACTION_SEARCH
@@ -76,7 +70,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             if (isSearch || isEnter) {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
-                    viewModel.searchBooks(query)
+                    viewModel.searchBooksAndUsers(query)
                     (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                         .hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }
@@ -84,18 +78,20 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             } else false
         }
 
-        viewModel.state.observe(viewLifecycleOwner) { currentState ->
-            if (currentState.books.isNotEmpty()) {
+        viewModel.combinedResults.observe(viewLifecycleOwner) { results ->
+            val books = results.filterIsInstance<CombinedSearchResult.BookResult>().map { it.book }
+
+            if (books.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
-                adapter.submitList(currentState.books)
+                adapter.submitList(books)
             } else {
                 binding.recyclerView.visibility = View.GONE
-                if (currentState.isEmptyResult) {
-                    Toast.makeText(requireContext(), "No books found", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(requireContext(), "No books found", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            currentState.errorMessage?.let {
+        viewModel.errorMessage.observe(viewLifecycleOwner) { msg ->
+            msg?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
@@ -106,8 +102,8 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             Toast.makeText(requireContext(), "Book added! ⭐ $rating", Toast.LENGTH_SHORT).show()
             dismiss()
         }
-        var isLiked = false
 
+        var isLiked = false
         binding.likeButton.setOnClickListener {
             isLiked = !isLiked
             if (isLiked) {
