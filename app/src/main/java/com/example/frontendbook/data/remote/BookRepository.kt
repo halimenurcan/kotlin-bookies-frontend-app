@@ -1,7 +1,6 @@
 package com.example.frontendbook.data.remote
 
 import android.content.Context
-import com.example.frontendbook.data.remote.dto.BookCreateRequestDto
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.retrofit.ApiService
 import com.example.frontendbook.ui.search.SortOption

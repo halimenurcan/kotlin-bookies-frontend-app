@@ -39,6 +39,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Adapter kurulumu
         adapter = AddBookSearchAdapter { selectedBook ->
             binding.addBookTitle.text = selectedBook.title
             binding.recyclerView.visibility = View.GONE
@@ -64,12 +65,16 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
+        // Arama yapıldığında kitapları getir
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearch = actionId == EditorInfo.IME_ACTION_SEARCH
             val isEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
             if (isSearch || isEnter) {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
+                    viewModel.searchBooks(query)
+
+                    // Klavyeyi gizle
                     (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                         .hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }
@@ -77,6 +82,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             } else false
         }
 
+        // Kitap sonuçlarını gözlemle
         viewModel.combinedResults.observe(viewLifecycleOwner) { results ->
             val books = results.filterIsInstance<CombinedSearchResult.BookResult>().map { it.book }
 

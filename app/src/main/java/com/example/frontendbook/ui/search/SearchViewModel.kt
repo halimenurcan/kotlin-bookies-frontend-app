@@ -22,6 +22,23 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
+    fun searchBooks(query: String) {
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            try {
+                val bookResults = bookRepository.searchBooks(query)
+                val combined = bookResults.map { CombinedSearchResult.BookResult(it) }
+                _combinedResults.value = combined
+                _errorMessage.value = null
+            } catch (e: Exception) {
+                _combinedResults.value = emptyList()
+                _errorMessage.value = "Kitap arama hatası: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 
     fun searchBooksAndUsers(query: String) {
         _isLoading.value = true

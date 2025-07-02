@@ -2,6 +2,8 @@ package com.example.frontendbook
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.example.frontendbook.databinding.ActivitySplashBinding
 import com.example.frontendbook.ui.base.BaseSimpleActivity
 import com.example.frontendbook.ui.entry.FirstPageActivity
@@ -14,19 +16,15 @@ class SplashActivity : BaseSimpleActivity<ActivitySplashBinding>() {
     }
 
     override fun setupViews() {
-        val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val token = sharedPrefs.getString("token", null)
+        val sharedPrefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+        val token = sharedPrefs.getString("jwt_token", null)
 
         val intent = if (!token.isNullOrEmpty()) {
-            // ✅ Token varsa ana sayfaya git
             Intent(this, MainActivity::class.java)
         } else {
-            // ❌ Token yoksa giriş/kayıt sayfasına yönlendir
             Intent(this, FirstPageActivity::class.java)
         }
-
-        // 1.5 saniye bekletme sonrası yönlendir
-        binding.root.postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             startActivity(intent)
             finish()
         }, 1500)
