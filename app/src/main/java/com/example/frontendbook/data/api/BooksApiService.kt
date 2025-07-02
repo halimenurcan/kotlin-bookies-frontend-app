@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BooksApiService {
-    @GET("/api/books")
+    @GET("volumes")
     suspend fun searchBooks(
         @Query("q") query: String,
         @Query("startIndex") startIndex: Int = 0,
