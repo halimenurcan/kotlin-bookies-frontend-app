@@ -60,7 +60,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                 _combinedResults.value = combined
                 _errorMessage.value = null
             } catch (e: Exception) {
-                Log.e("SearchDebug", "❌ Arama hatası: ${e.message}", e)
+                Log.e("SearchDebug", " Arama hatası: ${e.message}", e)
                 _combinedResults.value = emptyList()
                 _errorMessage.value = "Arama başarısız: ${e.message}"
             } finally {

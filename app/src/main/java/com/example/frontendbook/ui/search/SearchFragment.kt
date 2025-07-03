@@ -2,6 +2,7 @@ package com.example.frontendbook.ui.search
 import com.example.frontendbook.ui.search.SearchViewModel
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -39,10 +40,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupViews() {
+
         adapter = CombinedSearchAdapter()
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.visibility = View.GONE
 
         binding.genreButton.setOnClickListener { showInput("genre") }
         binding.languageButton.setOnClickListener { showInput("language") }
@@ -55,18 +56,33 @@ class SearchFragment : Fragment() {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
                     viewModel.searchBooksAndUsers(query)
+
+                    binding.browseContainer.visibility = View.GONE
+                    binding.backButton.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.VISIBLE
+
                     val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }
                 true
             } else false
         }
+
+        binding.backButton.setOnClickListener {
+            binding.browseContainer.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.GONE
+            binding.backButton.visibility = View.GONE
+            binding.searchInput.text.clear()
+        }
     }
 
     private fun observeViewModel() {
         viewModel.combinedResults.observe(viewLifecycleOwner) { results ->
+
+
             if (results.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
+                binding.backButton.visibility = View.VISIBLE
                 adapter.submitList(results)
             } else {
                 binding.recyclerView.visibility = View.GONE

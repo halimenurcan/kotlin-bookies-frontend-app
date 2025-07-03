@@ -3,6 +3,8 @@ package com.example.frontendbook.ui.base.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookResultBinding
 import com.example.frontendbook.databinding.ItemUserResultBinding
 import com.example.frontendbook.domain.model.Book
@@ -49,7 +51,11 @@ class CombinedSearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(book: Book) {
             binding.title.text = book.title
             binding.author.text = book.author
-            // TODO: image yükleme (Glide/Picasso), vs.
+            Glide.with(binding.root.context)
+                .load(book.imageUrl)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error_image)
+                .into(binding.bookImageView)
         }
     }
 

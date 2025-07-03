@@ -12,6 +12,7 @@ object BookMapper {
         val author = info.authors?.firstOrNull() ?: "Unknown"
         val description = info.description ?: "No description"
 
+
         println("📘 MAPPING BOOK: $title")
         Log.d("BookMapper", "Thumbnail: ${info.imageLinks?.thumbnail}")
 
