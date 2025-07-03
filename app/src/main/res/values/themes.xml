@@ -1,12 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.FrontendBook" parent="Theme.Material3.DayNight.NoActionBar">
+
         <item name="colorPrimary">@color/backgroundPrimary</item>
         <item name="colorPrimaryVariant">@color/backgroundSecondary</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorSecondary">@color/black</item>
         <item name="colorOutline">@color/line</item>
+        <item name="colorControlHighlight">@android:color/transparent</item>
 
     </style>
 
     <style name="Theme.FrontendBook" parent="Base.Theme.FrontendBook" />
+
+
 </resources>

@@ -1,6 +1,7 @@
 package com.example.frontendbook.ui.common
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,12 +53,12 @@ class ThreeColumnFragment : Fragment() {
         _binding = FragmentThreeColumnBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 1. Adapter'ı oluştur
         adapter = BookAdapter { book ->
-            // Örneğin, BookInfoPage'e git
+            // Tıklanırsa BookInfoPage'e geç
             val fragment = BookInfoPageFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("book", book)
@@ -67,18 +68,25 @@ class ThreeColumnFragment : Fragment() {
                 .replace(R.id.innerFragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit()
-            binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),3)
-
         }
+
+        // 2. RecyclerView'a bağla
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerView.adapter = adapter
+
+        // 3. Başlığı ata
         binding.headerTitle.text = pageTitle ?: "Books"
 
+        // 4. Veriyi gözlemle
         viewModel.books.observe(viewLifecycleOwner) { books ->
+            Log.d("THREE_COLUMN", "Gelen kitap sayısı: ${books.size}")
             adapter.submitList(books)
         }
 
+        // 5. Veri iste
         viewModel.fetchBooks(type ?: "fiction")
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

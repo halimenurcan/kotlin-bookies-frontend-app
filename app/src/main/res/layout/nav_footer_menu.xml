@@ -8,6 +8,7 @@
     >
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,5 +16,13 @@
         app:itemIconTint="@color/selector_bottom_nav"
         app:itemTextColor="@color/selector_bottom_nav"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemBackground="@drawable/nav_item_background"
+
+
+
+
+
+
+        />
 </LinearLayout>
