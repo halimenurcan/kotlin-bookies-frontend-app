@@ -16,6 +16,7 @@ object BookMapper {
         Log.d("BookMapper", "Thumbnail: ${info.imageLinks?.thumbnail}")
 
         return Book(
+            id = item.id?.hashCode()?.toLong() ?: 0L, // → String ID'yi Long'a çevirmek için hash kullanıyoruz
             title = title,
             author = author,
             year = info.publishedDate?.take(4)?.toIntOrNull() ?: 0,
@@ -28,6 +29,7 @@ object BookMapper {
             pageCount = info.pageCount ?: 0,
             description = description
         )
+
     }
 
 

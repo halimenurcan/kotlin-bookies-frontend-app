@@ -55,28 +55,6 @@ class HomePageFragment : Fragment() {
             updateButtonColors(binding.header.listsButton)
         }
 
-        // 🔶 TEST AMAÇLI: Dummy kitapla BookInfoPage'e geçiş
-        val dummyBook = Book(
-            title = "Test Book",
-            author = "Author Name",
-            year = 2023,
-            genre = "Fiction",
-            country = "UK",
-            language = "English",
-            popularity = 90,
-            rating = 4.0,
-            imageUrl = null,
-            pageCount = 250,
-            description = "This is a test book used for navigation test."
-        )
-
-        binding.root.setOnLongClickListener {
-            val bundle = Bundle().apply {
-                putParcelable("book", dummyBook)
-            }
-            findNavController().navigate(R.id.bookInfoPageFragment, bundle)
-            true
-        }
     }
 
     private fun loadInnerFragment(fragment: Fragment) {

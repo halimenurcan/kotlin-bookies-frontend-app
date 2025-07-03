@@ -1,7 +1,7 @@
 package com.example.frontendbook.data.model.signIn
 
 data class SignInResponse(
-    val id: Int,
+    val id: Long,
     val createdAt: String?,
     val updatedAt: String?,
     val username: String,

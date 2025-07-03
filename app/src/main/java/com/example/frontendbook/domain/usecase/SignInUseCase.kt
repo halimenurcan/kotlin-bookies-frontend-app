@@ -17,11 +17,14 @@ class SignInUseCase @Inject constructor(
             if (response.isSuccessful) {
                 val body = response.body()
                 val token = body?.token
+                val userId = body?.id ?: -1L
 
-                if (!token.isNullOrEmpty()) {
-                    SignInState.Success(token)
+                Log.d("SignInUseCase", "Token: $token, UserId: $userId")
+
+                if (!token.isNullOrEmpty() && userId != -1L) {
+                    SignInState.Success(token, userId)
                 } else {
-                    SignInState.Error("Sunucudan geçerli token alınamadı.")
+                    SignInState.Error("Sunucudan geçerli token veya kullanıcı ID alınamadı.")
                 }
             } else {
                 SignInState.Error("Hatalı giriş: ${response.code()}")

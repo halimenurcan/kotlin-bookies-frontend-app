@@ -9,6 +9,7 @@ import com.example.frontendbook.ui.base.BaseActivity
 import com.example.frontendbook.ui.main.MainActivity
 import com.example.frontendbook.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.content.edit
 
 @AndroidEntryPoint
 class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignInBinding>() {
@@ -35,28 +36,25 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
 
     override fun handleState(state: SignInState) {
         when (state) {
-            is SignInState.Loading -> {
-                // TODO: ProgressBar gösterilebilir
-            }
+            is SignInState.Loading -> { /* Loading UI */ }
             is SignInState.Success -> {
-                if (!state.token.isNullOrEmpty()) {
-                    saveTokenToPrefs(state.token)
-                    goToMain()
-                } else {
-                    showToast("Giriş başarılı fakat token alınamadı.")
-                }
+                Log.d("SignInActivity", "Token: ${state.token}, UserId: ${state.userId}")  // Log burada
+                saveTokenToPrefs(state.token, state.userId)
+                goToMain()
             }
             is SignInState.Error -> showToast(state.message)
         }
     }
 
-    private fun saveTokenToPrefs(token: String) {
-        Log.d("SignInDebug", "Gelen token: $token")
-        getSharedPreferences("auth", MODE_PRIVATE)
-            .edit()
+
+    private fun saveTokenToPrefs(token: String, userId: Long) {
+        val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+        prefs.edit()
             .putString("jwt_token", token)
+            .putLong("user_id", userId)
             .apply()
     }
+
 
     private fun goToMain() {
         startActivity(Intent(this, MainActivity::class.java))
