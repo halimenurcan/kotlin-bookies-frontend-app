@@ -19,8 +19,5 @@ data class Book(
     val pageCount: Int =0,
     val description: String,
 ) :Parcelable {
-    override fun describeContents(): Int {
-        TODO("Not yet implemented")
-    }
 
 }

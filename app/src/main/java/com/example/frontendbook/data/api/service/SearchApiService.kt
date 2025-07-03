@@ -1,4 +1,4 @@
-package com.example.frontendbook.data.api
+package com.example.frontendbook.data.api.service
 
 import com.example.frontendbook.data.remote.dto.CombinedSearchResponse
 import retrofit2.http.GET

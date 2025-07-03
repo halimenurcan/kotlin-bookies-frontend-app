@@ -1,16 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
     android:orientation="horizontal"
+    android:padding="12dp"
     android:background="@color/boxes_background">
 
-    <!-- Kitap Görseli -->
-    <include
-        layout="@layout/item_book_grid"
+    <!-- Kitap kapağı (isterseniz burayı <include> ile de çekebilirsiniz) -->
+    <ImageView
+        android:id="@+id/reviewBookCover"
         android:layout_width="80dp"
         android:layout_height="100dp"
-        android:layout_marginEnd="12dp" /> />
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/placeholder"
+       />
 
     <!-- Sağdaki Yorum Bilgileri -->
     <LinearLayout
@@ -19,20 +23,20 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <!-- Yıldızlar (Sadece varsa görünsün diye visibility ayarlanabilir Java/Kotlin'de) -->
+        <!-- Yıldız puan -->
         <RatingBar
-            android:id="@+id/reviewRating"
+            android:id="@+id/reviewRatingBar"
+            style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="1"
             android:isIndicator="true"
-            android:layout_marginBottom="4dp"
-            style="@style/Widget.AppCompat.RatingBar.Small" />
+            android:layout_marginBottom="4dp" />
 
-        <!-- Yorum Metni -->
+        <!-- Yorum metni -->
         <TextView
-            android:id="@+id/reviewText"
+            android:id="@+id/reviewContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kitap çok güzeldi, herkese tavsiye ederim!"
@@ -40,13 +44,24 @@
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Kullanıcı Adı -->
+        <!-- Yazar kullanıcı adı -->
         <TextView
-            android:id="@+id/reviewUsername"
+            android:id="@+id/reviewAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="– kullanıcıadı123"
             android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:layout_marginBottom="2dp" />
+
+        <!-- Zaman damgası -->
+        <TextView
+            android:id="@+id/reviewTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2 saat önce"
+            android:textColor="@color/textSecondary"
             android:textSize="12sp" />
+
     </LinearLayout>
 </LinearLayout>

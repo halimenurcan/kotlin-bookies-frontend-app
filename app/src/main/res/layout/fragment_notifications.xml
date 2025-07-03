@@ -1,12 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundPrimary"
     android:orientation="vertical"
+    android:background="@color/backgroundPrimary"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.notifications.NotificationsFragment">
 
     <!-- Header -->
@@ -29,29 +29,12 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- ScrollView (içerik hemen başlar) -->
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <!-- Direkt RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notificationsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:clipToPadding="false"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:id="@+id/browseContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/notificationrecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                />
-        </LinearLayout>
-    </ScrollView>
-
+        android:padding="16dp"
+        tools:listitem="@layout/item_notification"/>
 </LinearLayout>

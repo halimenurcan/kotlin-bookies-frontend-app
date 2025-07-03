@@ -1,24 +1,48 @@
-package com.example.frontendbook.ui.base.adapter
+package com.example.frontendbook.ui.homePage.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.frontendbook.databinding.ItemReviewBinding
+import com.example.frontendbook.R
+import com.example.frontendbook.data.model.ReviewDto
 
-class ReviewsAdapter(private val reviews: List<String>) :
-    RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
+class ReviewsAdapter(
+    private var items: List<ReviewDto>,
+    private val onClick: (ReviewDto) -> Unit
+) : RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
 
-    inner class ReviewViewHolder(val binding: ItemReviewBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val ratingBar: RatingBar  = view.findViewById(R.id.reviewRatingBar)
+        private val contentTv: TextView   = view.findViewById(R.id.reviewContent)
+        private val authorTv: TextView    = view.findViewById(R.id.reviewAuthor)
+        private val timeTv: TextView      = view.findViewById(R.id.reviewTimestamp)
+
+        fun bind(item: ReviewDto) {
+            ratingBar.rating   = item.rating
+            contentTv.text     = item.content
+            authorTv.text      = item.username
+            timeTv.text        = item.timestamp
+            itemView.setOnClickListener { onClick(item) }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
-        val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ReviewViewHolder(binding)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_review, parent, false)
+        return ReviewViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
-        holder.binding.reviewText.text = reviews[position]
+        holder.bind(items[position])
     }
 
-    override fun getItemCount(): Int = reviews.size
+    override fun getItemCount(): Int = items.size
+
+    fun submitList(newItems: List<ReviewDto>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }

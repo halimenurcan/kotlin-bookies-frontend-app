@@ -1,9 +1,9 @@
 package com.example.frontendbook.ui.notifications
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,18 +29,17 @@ class NotificationsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_notifications, container, false)
 
-        recyclerView = view.findViewById(R.id.notificationrecyclerView)
+        // ID’nin XML’de de notificationsRecyclerView olduğuna emin olun
+        recyclerView = view.findViewById(R.id.notificationsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Bildirimleri sunucudan al
         fetchNotifications()
-
         return view
     }
 
     private fun fetchNotifications() {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://senin-api-adresin.com/") // <- BURAYI KENDİ API URL’İN İLE DEĞİŞTİR
+            .baseUrl("https://senin-api-adresin.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -53,6 +52,8 @@ class NotificationsFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     val notifications = response.body()!!
+
+                    // Burada adapter’ı oluşturuyoruz
                     adapter = NotificationAdapter(notifications) { notification ->
                         handleNotificationClick(notification)
                     }
@@ -62,8 +63,9 @@ class NotificationsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<Notification>>, t: Throwable) {
-                // Hata durumu
-                t.printStackTrace()
+                Toast.makeText(requireContext(),
+                    "Bildirimler yüklenirken hata: ${t.localizedMessage}",
+                    Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -74,12 +76,10 @@ class NotificationsFragment : Fragment() {
                 val userId = notification.relatedId
                 // TODO: user profil sayfasına git
             }
-
             NotificationType.LIKE_COMMENT -> {
                 val commentId = notification.relatedId
                 // TODO: yorum detay sayfasına git
             }
-
             NotificationType.FOLLOW_LIST -> {
                 val listId = notification.relatedId
                 // TODO: liste detay sayfasına git
@@ -87,9 +87,8 @@ class NotificationsFragment : Fragment() {
         }
     }
 
-
     interface NotificationApi {
-        @GET("notifications") // → örnek endpoint
+        @GET("notifications")
         fun getNotifications(): Call<List<Notification>>
     }
 }

@@ -1,28 +1,41 @@
-package com.example.frontendbook.ui.base.adapter
-
+package com.example.frontendbook.ui.homePage
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.frontendbook.databinding.ItemListBinding
+import com.example.frontendbook.R
+import com.example.frontendbook.data.model.ListDto
 
-class ListsAdapter(private val items: List<String>) :
-    RecyclerView.Adapter<ListsAdapter.ListViewHolder>() {
+class ListAdapter(
+    private var lists: List<ListDto>,
+    private val onClick: (ListDto) -> Unit
+) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
-    inner class ListViewHolder(val binding: ItemListBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class ListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val titleView: TextView = view.findViewById(R.id.listTitle)
+
+        fun bind(item: ListDto) {
+            titleView.text = item.title
+            itemView.setOnClickListener { onClick(item) }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        val binding = ItemListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ListViewHolder(binding)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_list, parent, false)
+        return ListViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.binding.listTitle.text = items[position]
-        holder.binding.listMore.setOnClickListener {
-          //  Log.d("ListsAdapter", "More clicked for: $listName")-liste oka tiklayip more gitmek icin
-        }
+        holder.bind(lists[position])
     }
-    override fun getItemCount(): Int = items.size
 
+    override fun getItemCount(): Int = lists.size
+
+    fun submitList(newLists: List<ListDto>) {
+        lists = newLists
+        notifyDataSetChanged()
+    }
 }

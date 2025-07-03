@@ -1,3 +1,4 @@
+// app/src/main/java/com/example/frontendbook/ui/base/adapter/NotificationAdapter.kt
 package com.example.frontendbook.ui.base.adapter
 
 import android.view.LayoutInflater
@@ -8,47 +9,46 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
 import com.example.frontendbook.data.model.Notification
+import com.example.frontendbook.data.model.NotificationType
 
-// Bildirimleri göstermek için RecyclerView adapter sınıfı
+/**
+ * Domain model Notification (data.model.Notification) ile çalışacak şekilde güncellendi.
+ */
 class NotificationAdapter(
-    private val notificationList: List<Notification>, // Gösterilecek bildirim listesi
-    private val onNotificationClick: (Notification) -> Unit // Tıklanınca yapılacak işlem
+    private val items: List<Notification>,
+    private val onClick: (Notification) -> Unit
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
-    // RecyclerView her bir kart (satır) için bu ViewHolder sınıfını kullanır
     inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val icon: ImageView    = view.findViewById(R.id.notificationIcon)
+        private val message: TextView  = view.findViewById(R.id.notificationMessage)
+        private val time: TextView     = view.findViewById(R.id.notificationTime)
 
-        // Bildirim kartındaki görsel ve metin bileşenleri
-        val icon: ImageView = view.findViewById(R.id.notificationIcon)
-        val message: TextView = view.findViewById(R.id.notificationMessage)
-        val time: TextView = view.findViewById(R.id.notificationTime)
-
-        // Her bir bildirimi view'a bağlayan metod
-        fun bind(notification: Notification) {
-            // Verileri ilgili UI öğelerine yerleştir
-            icon.setImageResource(notification.iconResId)
-            message.text = notification.message
-            time.text = notification.time
-
-            // Kart tıklanınca dışarıdan verilen callback çalıştırılır
-            itemView.setOnClickListener {
-                onNotificationClick(notification)
+        fun bind(item: Notification) {
+            // Türüne göre ikon seçilebilir
+            val iconRes = when(item.type) {
+                NotificationType.FOLLOW      -> R.drawable.add
+                NotificationType.LIKE_COMMENT-> R.drawable.add
+                NotificationType.FOLLOW_LIST -> R.drawable.add
             }
+            icon.setImageResource(iconRes)
+
+            message.text = item.message
+            time.text    = item.time
+
+            itemView.setOnClickListener { onClick(item) }
         }
     }
 
-    // Yeni bir ViewHolder oluşturulur (her yeni satır için çağrılır)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
-        val view = LayoutInflater.from(parent.context)
+        val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_notification, parent, false)
-        return NotificationViewHolder(view)
+        return NotificationViewHolder(v)
     }
 
-    // Belirli bir pozisyondaki veriyi ilgili ViewHolder ile bağlar
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        holder.bind(notificationList[position])
+        holder.bind(items[position])
     }
 
-    // Toplam bildirim sayısı
-    override fun getItemCount(): Int = notificationList.size
+    override fun getItemCount(): Int = items.size
 }

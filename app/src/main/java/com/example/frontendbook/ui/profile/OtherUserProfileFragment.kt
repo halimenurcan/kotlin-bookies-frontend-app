@@ -1,81 +1,144 @@
 package com.example.frontendbook.ui.profile
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.frontendbook.R
+import com.example.frontendbook.databinding.FragmentOtherUserProfileBinding
 import com.example.frontendbook.domain.model.UserListType
 
 class OtherUserProfileFragment : Fragment() {
 
-    private var userId: String? = null
+    private var _binding: FragmentOtherUserProfileBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // userId parametresi fragment'a aktarılırken alınır
-        userId = arguments?.getString("user_id")
-    }
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var followerViewModel: FollowerViewModel
+
+    private var currentUserId: Long = -1L
+    private var targetUserId: Long = -1L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_other_user_profile, container, false)
+        _binding = FragmentOtherUserProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        val usernameText = view.findViewById<TextView>(R.id.otherUsernameText)
-        val profileImage = view.findViewById<ImageView>(R.id.otherProfileImage)
-        val followersButton = view.findViewById<Button>(R.id.btnOtherFollowers)
-        val followingButton = view.findViewById<Button>(R.id.btnOtherFollowing)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Dummy veriler, backend'e bağlandığında buraya API çağrısı gelecek
-        usernameText.text = "OtherUserName"
-        profileImage.setImageResource(R.drawable.avatar) // ya da Glide ile yüklenebilir
-
-        // Buton click listener'ları
-        view.findViewById<View>(R.id.btnOtherRead).setOnClickListener {
-            navigateToThreeColumn("Read", "read")
-        }
-        view.findViewById<View>(R.id.btnOtherReadlist).setOnClickListener {
-            navigateToThreeColumn("Readlist", "readlist")
-        }
-        view.findViewById<View>(R.id.btnOtherLists).setOnClickListener {
-            findNavController().navigate(R.id.listsFragment) // veya userId ile özel listeler
-        }
-        view.findViewById<View>(R.id.btnOtherLikes).setOnClickListener {
-            navigateToThreeColumn("Likes", "likes")
+        // 1) Aktif kullanıcıyı al
+        val prefs = requireContext()
+            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        currentUserId = prefs.getLong("user_id", -1L)
+        if (currentUserId == -1L) {
+            Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        followersButton.setOnClickListener {
+        // 2) Görüntülenecek kullanıcıyı al
+        targetUserId = arguments?.getLong("user_id") ?: -1L
+        if (targetUserId == -1L) {
+            Toast.makeText(requireContext(), "Hedef kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 3) ViewModel’leri hazırla
+        userViewModel = ViewModelProvider(
+            this,
+            UserViewModelFactory(requireContext())
+        ).get(UserViewModel::class.java)
+
+        followerViewModel = ViewModelProvider(
+            this,
+            FollowerViewModelFactory(requireContext())
+        ).get(FollowerViewModel::class.java)
+
+        // 4) Kullanıcı detaylarını gözle
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            binding.otherUsernameText.text = user.username
+            user.profileImageUrl?.let {
+                Glide.with(this)
+                    .load(it)
+                    .placeholder(R.drawable.avatar)
+                    .circleCrop()
+                    .into(binding.otherProfileImage)
+            }
+        }
+        userViewModel.error.observe(viewLifecycleOwner) { msg ->
+            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+        }
+
+        // 5) Takip durumu gözle
+        followerViewModel.isFollowing.observe(viewLifecycleOwner) { following ->
+            binding.btnFollowAction.text =
+                if (following) getString(R.string.unfollow) else getString(R.string.follow)
+        }
+        followerViewModel.error.observe(viewLifecycleOwner) { msg ->
+            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+        }
+
+        // 6) İlk yükleme
+        userViewModel.loadUser(targetUserId)
+        followerViewModel.loadFollowStatus(currentUserId, targetUserId)
+
+        // 7) Takip et / bırak butonu
+        binding.btnFollowAction.setOnClickListener {
+            followerViewModel.toggleFollow(currentUserId, targetUserId)
+        }
+
+        // 8) Takipçiler ekranına geç
+        binding.btnOtherFollowers.setOnClickListener {
             val bundle = Bundle().apply {
                 putSerializable("arg_user_list_type", UserListType.FOLLOWERS)
-                putString("user_id", userId)
+                putLong("arg_profile_user_id", targetUserId)
             }
             findNavController().navigate(R.id.userListFragment, bundle)
         }
 
-        followingButton.setOnClickListener {
+        // 9) Takip Ettiklerim ekranına geç
+        binding.btnOtherFollowing.setOnClickListener {
             val bundle = Bundle().apply {
                 putSerializable("arg_user_list_type", UserListType.FOLLOWING)
-                putString("user_id", userId)
+                putLong("arg_profile_user_id", targetUserId)
             }
             findNavController().navigate(R.id.userListFragment, bundle)
         }
 
-        return view
+        // 10) Alt menü navigasyonları
+        binding.btnOtherRead.setOnClickListener {
+            navigateToThreeColumn("Read", "read")
+        }
+        binding.btnOtherReadlist.setOnClickListener {
+            navigateToThreeColumn("Readlist", "readlist")
+        }
+        binding.btnOtherLists.setOnClickListener {
+            // istersen userId=targetUserId ile kendi listelerini
+            findNavController().navigate(R.id.listsFragment)
+        }
+        binding.btnOtherLikes.setOnClickListener {
+            navigateToThreeColumn("Likes", "likes")
+        }
     }
 
     private fun navigateToThreeColumn(title: String, type: String) {
         val bundle = Bundle().apply {
             putString("arg_title", title)
             putString("arg_type", type)
-            putString("user_id", userId)
+            putLong("user_id", targetUserId)
         }
         findNavController().navigate(R.id.threeColumnFragment, bundle)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -13,13 +13,15 @@
     <string name="readlist">Readlist</string>
     <string name="lists">Lists</string>
     <string name="likes">Likes</string>
-    <string name="username_placeholder">Kullanıcı Adı</string>
-
+    <string name="username_placeholder">Username </string>
+    <string name="title_followers">Followers</string>
+    <string name="title_following">Followings </string>
     <string name="avatar_description_1">Bookworm avatar</string>
     <string name="avatar_description_2">Book friends avatar</string>
     <string name="avatar_description_3">Bibliophile avatar</string>
     <string name="avatar_description_4">Cat reading avatar</string>
-
+    <string name="unfollow">Unfollow</string>
+    <string name="follow">Follow</string>
 
 
 </resources>

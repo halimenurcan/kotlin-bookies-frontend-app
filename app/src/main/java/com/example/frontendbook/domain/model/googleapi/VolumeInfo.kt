@@ -10,6 +10,6 @@ data class VolumeInfo(
     val pageCount: Int?,
     val language: String?,
     val imageLinks: ImageLinks?,
-    val categories: List<String>?,  // ← BU ŞEKİLDE
+    val categories: List<String>?,
     val averageRating: Double?
 )

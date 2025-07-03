@@ -1,112 +1,114 @@
 package com.example.frontendbook.ui.profile
 
-import android.view.animation.AnimationUtils
-import android.os.Handler
-
 import android.content.Context
 import android.os.Bundle
-import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.frontendbook.R
+import com.example.frontendbook.databinding.FragmentProfileBinding
 import com.example.frontendbook.domain.model.UserListType
 
 class ProfileFragment : Fragment() {
 
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var viewModel: UserViewModel
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        val sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-
-        // Kullanıcı adı gösterimi
-        val username = sharedPrefs.getString("user_username", "default")
-        view.findViewById<TextView>(R.id.usernameText).text = username
-
-        // Kayıtlı avatar varsa göster
-        val savedAvatar = sharedPrefs.getInt("user_avatar", R.drawable.avatar)
-        val profileImageView = view.findViewById<ImageView>(R.id.profileImage)
-        profileImageView.setImageResource(savedAvatar)
-
-        // Avatar'a tıklayınca bottom sheet aç
-        profileImageView.setOnClickListener {
-            // BottomSheet açılır
-            ChooseProfileImageBottomSheetFragment { selectedImageResId ->
-                // Kullanıcı bir avatar seçtiğinde animasyon uygulanır
-                val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
-                val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
-
-                profileImageView.startAnimation(fadeOut)
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    profileImageView.setImageResource(selectedImageResId)
-                    profileImageView.startAnimation(fadeIn)
-                    sharedPrefs.edit().putInt("user_avatar", selectedImageResId).apply()
-                }, 400)
-            }.show(parentFragmentManager, "ChooseProfileImageBottomSheet")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // 1. SharedPrefs'tan user_id al
+        val prefs  = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val userId = prefs.getLong("user_id", -1L)
+        if (userId == -1L) {
+            Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
+            return
         }
 
+        // 2. ViewModel'i Factory ile oluştur
+        viewModel = ViewModelProvider(this, UserViewModelFactory(requireContext()))
+            .get(UserViewModel::class.java)
 
-        // Ayarlar BottomSheet
-        view.findViewById<View>(R.id.btnSettings).setOnClickListener {
-            SettingsBottomSheetFragment().show(parentFragmentManager, "SettingsBottomSheet")
+        // 3. Backend'den veriyi çek
+        viewModel.loadUser(userId)
+
+        // 4. LiveData gözlemleri
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            binding.usernameText.text = user.username
+            if (user.profileImageUrl != null) {
+                Glide.with(this)
+                    .load(user.profileImageUrl)
+                    .placeholder(R.drawable.avatar)
+                    .into(binding.profileImage)
+            } else {
+                binding.profileImage.setImageResource(R.drawable.avatar)
+            }
+        }
+        viewModel.error.observe(viewLifecycleOwner) { msg ->
+            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
         }
 
-        // Read
-        view.findViewById<View>(R.id.btnRead).setOnClickListener {
+        // 5. Mevcut avatar seçme, ayarlar ve navigasyon butonları
+        binding.profileImage.setOnClickListener {
+            ChooseProfileImageBottomSheetFragment { selectedResId ->
+                binding.profileImage.setImageResource(selectedResId)
+                // dilerseniz backend'e de güncelleme çağrısı yapabilirsiniz
+            }.show(parentFragmentManager, "ChooseProfile")
+        }
+
+        binding.btnSettings.setOnClickListener {
+            SettingsBottomSheetFragment().show(parentFragmentManager, "Settings")
+        }
+
+        binding.btnRead.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("arg_title", "Read")
-                putString("arg_type", "read")
+                putString("arg_type",  "read")
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
-
-        // Readlist
-        view.findViewById<View>(R.id.btnReadlist).setOnClickListener {
+        binding.btnReadlist.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("arg_title", "Readlist")
-                putString("arg_type", "readlist")
+                putString("arg_type",  "readlist")
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
-
-        // Lists
-        view.findViewById<View>(R.id.btnLists).setOnClickListener {
+        binding.btnLists.setOnClickListener {
             findNavController().navigate(R.id.listsFragment)
         }
-
-        // Likes
-        view.findViewById<View>(R.id.btnLikes).setOnClickListener {
+        binding.btnLikes.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("arg_title", "Likes")
-                putString("arg_type", "likes")
+                putString("arg_type",  "likes")
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
-
-        // Followers
-        view.findViewById<View>(R.id.btnFollowers).setOnClickListener {
+        binding.btnFollowers.setOnClickListener {
             val bundle = Bundle().apply {
                 putSerializable("arg_user_list_type", UserListType.FOLLOWERS)
             }
             findNavController().navigate(R.id.userListFragment, bundle)
         }
-
-        // Following
-        view.findViewById<View>(R.id.btnFollowing).setOnClickListener {
+        binding.btnFollowing.setOnClickListener {
             val bundle = Bundle().apply {
                 putSerializable("arg_user_list_type", UserListType.FOLLOWING)
             }
             findNavController().navigate(R.id.userListFragment, bundle)
         }
+    }
 
-        return view
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

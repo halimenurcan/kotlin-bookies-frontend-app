@@ -1,6 +1,6 @@
 package com.example.frontendbook.data.repository
 
-import com.example.frontendbook.data.api.ReadApiService
+import com.example.frontendbook.data.api.service.ReadApiService
 import com.example.frontendbook.data.model.ReadEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

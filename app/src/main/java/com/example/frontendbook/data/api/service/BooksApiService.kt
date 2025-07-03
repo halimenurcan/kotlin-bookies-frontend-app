@@ -1,6 +1,6 @@
-package com.example.frontendbook.data.api
-import com.example.frontendbook.domain.model.googleapi.GoogleBooksResponse
+package com.example.frontendbook.data.api.service
 
+import com.example.frontendbook.domain.model.googleapi.GoogleBooksResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

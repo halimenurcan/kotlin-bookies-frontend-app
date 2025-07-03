@@ -1,5 +1,6 @@
 package com.example.frontendbook.data.api
 
+import com.example.frontendbook.data.api.service.BooksApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

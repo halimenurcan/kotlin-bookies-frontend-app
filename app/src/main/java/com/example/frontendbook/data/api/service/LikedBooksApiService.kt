@@ -1,0 +1,33 @@
+package com.example.frontendbook.data.api.service
+
+import com.example.frontendbook.data.model.LikedBookRequest
+import com.example.frontendbook.data.model.LikedBookResponse
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
+
+interface LikedBooksApiService {
+
+    /** Yeni beğeni oluştur */
+    @POST("api/liked-books")
+    suspend fun createLikedBook(
+        @Body request: LikedBookRequest
+    ): Response<Unit>
+
+    /** Bu kitap zaten beğenilmiş mi kontrol et */
+    @GET("api/liked-books/user/{userId}/book/{bookId}")
+    suspend fun getLikedBook(
+        @Path("userId") userId: Long,
+        @Path("bookId") bookId: Long
+    ): Response<LikedBookResponse>
+
+    /** Beğeniyi sil */
+    @DELETE("api/liked-books/user/{userId}/book/{bookId}")
+    suspend fun deleteLikedBook(
+        @Path("userId") userId: Long,
+        @Path("bookId") bookId: Long
+    ): Response<Unit>
+}

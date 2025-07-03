@@ -1,36 +1,58 @@
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentReviewsBinding
-import com.example.frontendbook.ui.base.adapter.ReviewsAdapter
+import com.example.frontendbook.data.model.ReviewDto
+import com.example.frontendbook.ui.homePage.adapter.ReviewsAdapter
 
 class ReviewsFragment : Fragment() {
 
     private var _binding: FragmentReviewsBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private lateinit var viewModel: ReviewsViewModel
+    private lateinit var adapter: ReviewsAdapter
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentReviewsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // Adapter boş başlat
+        adapter = ReviewsAdapter(emptyList()) { review: ReviewDto ->
+            // tıklama işlemi
+        }
 
-        binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.reviewsRecyclerView.adapter = ReviewsAdapter(generateDummyReviews())
-    }
+        // RecyclerView ayarları
+        binding.reviewsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@ReviewsFragment.adapter
+        }
 
-    private fun generateDummyReviews(): List<String> {
-        return List(10) { "Review ${it + 1}: Bu kitap harikaydı!" }
+        // ViewModel kurulumu
+        viewModel = ViewModelProvider(this, ReviewsViewModelFactory(requireContext()))
+            .get(ReviewsViewModel::class.java)
+
+        // LiveData gözle
+        viewModel.reviews.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+        }
+        viewModel.error.observe(viewLifecycleOwner) { msg ->
+            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+        }
+
+        // Veri yükle
+        // Tüm yorumlar:
+        viewModel.loadAllReviews()
+        // veya belirli kitap:
+        // val bookId = arguments?.getLong("bookId") ?: -1L
+        // viewModel.loadReviewsForBook(bookId)
     }
 
     override fun onDestroyView() {
