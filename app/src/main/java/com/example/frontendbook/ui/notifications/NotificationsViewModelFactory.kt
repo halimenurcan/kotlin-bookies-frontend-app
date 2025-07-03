@@ -12,7 +12,7 @@ class NotificationsViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NotificationsViewModel::class.java)) {
-            val api  = RetrofitClient.notificationsApiService(context)
+            val api  = RetrofitClient.notificationApiService(context)
             val repo = NotificationsRepository(api)
             return NotificationsViewModel(repo) as T
         }
