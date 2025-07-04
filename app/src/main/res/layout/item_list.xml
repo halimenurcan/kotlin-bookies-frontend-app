@@ -38,16 +38,8 @@
             <include layout="@layout/item_book_grid" />
             <include layout="@layout/item_book_grid" />
 
-            <!-- See More Butonu -->
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/listMore"
-                android:layout_width="80dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/more"
-                android:contentDescription="See More"
-                android:background="@color/backgroundPrimary"
-                app:tint="@color/textSecondary" />
+            <include layout="@layout/see_more_card" />
+
         </LinearLayout>
     </HorizontalScrollView>
 </LinearLayout>
