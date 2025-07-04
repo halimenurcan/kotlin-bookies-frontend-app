@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomSheetRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -153,26 +153,35 @@
             android:layout_height="wrap_content"
             android:text="Add Review"
             android:textStyle="bold"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="20dp"
+            />
 
         <EditText
             android:id="@+id/commentInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:hint="Your comment..."
-            android:minLines="3"
             android:background="@color/backgroundPrimary"
-            android:textColor="@color/textPrimary"
-            android:inputType="textMultiLine" />
+            android:padding="12dp"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:layout_marginTop="8dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/saveBookButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Done"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/buttonPrimary"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:backgroundTint="@color/stars_rated"
+            app:cornerRadius="8dp" />
+
     </LinearLayout>
 
 </LinearLayout>

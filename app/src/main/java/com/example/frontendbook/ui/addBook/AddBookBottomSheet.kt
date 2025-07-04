@@ -66,7 +66,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             // Başlığı güncelle
             binding.addBookTitle.text = book.title
 
-            // Görünürlükleri ayarla
+            binding.searchInput.visibility = View.GONE
             binding.recyclerView.visibility = View.GONE
             binding.bookPreviewArea.visibility = View.VISIBLE
             binding.selectedBookDetails.visibility = View.VISIBLE
@@ -96,7 +96,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
 
         binding.cancelButton.setOnClickListener { dismiss() }
 
-        // Arama
+        // ✅ Arama yapıldığında çalışacak
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearch = actionId == EditorInfo.IME_ACTION_SEARCH
             val isEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
@@ -139,9 +139,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             false
         }
         binding.backButton.setOnClickListener {
-            // Alanları sıfırla
-            binding.searchInput.setText("")
-            binding.addBookTitle.text = "Add Book"
+            binding.searchInput.visibility = View.VISIBLE
+            binding.searchInput.setText("") // Input'u temizle
+            binding.addBookTitle.text = "Add Book" // Başlığı sıfırla
 
             // Görünürlükleri ayarla
             binding.recyclerView.visibility = View.GONE
@@ -173,7 +173,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Kaydet butonu
+        // Kaydet butonu (sadece preview alanı açıkken)
         binding.saveBookButton.setOnClickListener {
             // TODO: Buraya listeye kitap ekleme işlemi eklenecek
             Toast.makeText(requireContext(), "Kitap listeye eklenecek. Liste ID: $listId", Toast.LENGTH_SHORT).show()
@@ -183,10 +183,14 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
         // Beğeni butonu
         binding.likeButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
+
+            // Toggle UI first
             isLiked = !isLiked
             updateLikeButtonUi(isLiked)
 
-            val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            // Kullanıcı ID’sini al
+            val prefs = requireContext()
+                .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val userId = prefs.getLong("user_id", -1L)
             if (userId == -1L) return@setOnClickListener
 
@@ -199,6 +203,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                     }
                     if (!success) {
                         Toast.makeText(requireContext(), "İşlem başarısız", Toast.LENGTH_SHORT).show()
+                        // rollback UI
                         isLiked = !isLiked
                         updateLikeButtonUi(isLiked)
                     }
@@ -224,7 +229,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun hideKeyboard() {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(
+            Context.INPUT_METHOD_SERVICE
+        ) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
     }
 
