@@ -44,7 +44,7 @@ class OtherUserProfileFragment : Fragment() {
         }
 
         // 2) Görüntülenecek kullanıcıyı al
-        targetUserId = arguments?.getLong("user_id") ?: -1L
+        targetUserId = arguments?.getString("user_id")?.toLongOrNull() ?: -1L
         if (targetUserId == -1L) {
             Toast.makeText(requireContext(), "Hedef kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
             return
