@@ -29,22 +29,23 @@ class ListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1) RecyclerView ayarları
+        // 1) RecyclerView ve Adapter ayarı
         adapter = ListAdapter(emptyList()) { list ->
-            // Liste seçildiğinde detay sayfasına git
+            // Listeye tıklanınca detay ekranına git
             val bundle = Bundle().apply { putLong("listId", list.id) }
+            findNavController().navigate(R.id.action_listsFragment_to_listDetailFragment, bundle)
         }
         binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.listsRecyclerView.adapter = adapter
 
-        // 2) ViewModel’i factory ile oluştur
+        // 2) ViewModel oluştur
         viewModel = ViewModelProvider(
-            this, ListsViewModelFactory(requireContext())
+            this,
+            ListsViewModelFactory(requireContext())
         ).get(ListsViewModel::class.java)
 
         // 3) userId al ve listeleri yükle
-        val prefs  = requireContext()
-            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
         if (userId != -1L) {
             viewModel.loadUserLists(userId)
@@ -56,8 +57,9 @@ class ListsFragment : Fragment() {
         viewModel.lists.observe(viewLifecycleOwner) { lists ->
             adapter.submitList(lists)
         }
-        viewModel.error.observe(viewLifecycleOwner) { err ->
-            err?.let {
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
