@@ -62,10 +62,19 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
         // Adapter kurulumu
         adapter = AddBookSearchAdapter { book ->
             selectedBook = book
+
+            // Başlığı güncelle
             binding.addBookTitle.text = book.title
+
+            // Görünürlükleri ayarla
             binding.recyclerView.visibility = View.GONE
             binding.bookPreviewArea.visibility = View.VISIBLE
             binding.selectedBookDetails.visibility = View.VISIBLE
+
+            // Geri butonunu göster
+            binding.backButton.visibility = View.VISIBLE
+
+            // Input temizle
             binding.commentInput.setText("")
             binding.ratingBar.rating = 0f
 
@@ -73,9 +82,11 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 .load(book.imageUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(binding.bookPreviewImage)
+
             binding.bookPreviewTitle.text = book.title
             binding.bookPreviewAuthor.text = book.author
         }
+
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -98,6 +109,49 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 true
             } else false
         }
+        val closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.close)
+        binding.searchInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val isNotEmpty = !s.isNullOrEmpty()
+                val icon = if (isNotEmpty) closeIcon else null
+                binding.searchInput.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null)
+            }
+
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+        binding.searchInput.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                v.performClick()
+                val drawableEnd = binding.searchInput.compoundDrawables[2]
+                if (drawableEnd != null) {
+                    val touchAreaStart = binding.searchInput.width - binding.searchInput.paddingEnd - drawableEnd.intrinsicWidth
+                    if (event.x >= touchAreaStart) {
+                        binding.searchInput.setText("")
+                        binding.recyclerView.visibility = View.GONE
+                        binding.bookPreviewArea.visibility = View.GONE
+                        binding.selectedBookDetails.visibility = View.GONE
+                        return@setOnTouchListener true
+                    }
+                }
+            }
+            false
+        }
+        binding.backButton.setOnClickListener {
+            // Alanları sıfırla
+            binding.searchInput.setText("")
+            binding.addBookTitle.text = "Add Book"
+
+            // Görünürlükleri ayarla
+            binding.recyclerView.visibility = View.GONE
+            binding.bookPreviewArea.visibility = View.GONE
+            binding.selectedBookDetails.visibility = View.GONE
+            binding.backButton.visibility = View.GONE
+        }
+
+
+
 
         // Sonuçları göster
         searchViewModel.combinedResults.observe(viewLifecycleOwner) { results ->

@@ -24,5 +24,13 @@
     <string name="unfollow">Unfollow</string>
     <string name="follow">Follow</string>
 
+        <!-- Mevcut stringlerin altına ekleyebilirsiniz -->
+    <string name="see_more_desc">See More</string>
+    <string name="see_more_label">See More</string>
+    <string name="add_to_list_desc">Add To List</string>
+    <string name="add_to_list_label">Add To List</string>
+
+
+
 
 </resources>

@@ -30,6 +30,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
+            <include layout="@layout/add_to_list_card" />
             <!-- Kitap Kutuları -->
             <include layout="@layout/item_book_grid" />
             <include layout="@layout/item_book_grid" />

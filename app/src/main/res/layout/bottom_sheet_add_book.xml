@@ -3,32 +3,48 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottomSheetRoot"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
     android:background="@color/backgroundSecondary">
 
     <!-- Cancel button -->
-    <TextView
-        android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:textColor="@color/textSecondary"
-        android:textSize="14sp"
-        android:layout_gravity="end"
-        android:paddingBottom="12dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/addBookTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Book"
-        android:textColor="@color/textPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_back"
+            android:background="@android:color/transparent"
+            android:contentDescription="Back"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/addBookTitle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Add Book"
+            android:textColor="@color/textPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingStart="12dp" />
+
+        <TextView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/textSecondary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
 
     <!-- Search Input -->
     <EditText
@@ -43,6 +59,7 @@
         android:textSize="16sp"
         android:imeOptions="actionSearch"
         android:inputType="text"
+        android:drawableEnd="@drawable/close"
         />
 
     <!-- Scrollable suggestion list -->
@@ -64,7 +81,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_marginTop="12dp"
         android:visibility="gone" />
 
