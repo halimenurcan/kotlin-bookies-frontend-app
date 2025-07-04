@@ -5,5 +5,5 @@ package com.example.frontendbook.data.model
  */
 data class LikedReviewRequest(
     val userId: Long,
-    val reviewId: Long
+    val commentId: Long
 )

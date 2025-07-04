@@ -9,13 +9,13 @@ interface LikedReviewsApiService {
     @GET("api/liked-comments/user/{userId}/comment/{reviewId}/is-liked")
     suspend fun isReviewLiked(
         @Path("userId") userId: Long,
-        @Path("reviewId") reviewId: Long
+        @Path("commentId") reviewId: Long
     ): Response<Boolean>
 
     /** Bir incelemenin toplam beğeni sayısını al */
     @GET("api/liked-comments/comment/{reviewId}/count")
     suspend fun getReviewLikeCount(
-        @Path("reviewId") reviewId: Long
+        @Path("commentId") reviewId: Long
     ): Response<Int>
 
     /** İnceleme beğenisi oluştur (POST /api/liked-comments) */
@@ -28,6 +28,6 @@ interface LikedReviewsApiService {
     @DELETE("api/liked-comments/user/{userId}/comment/{reviewId}")
     suspend fun unlikeReview(
         @Path("userId") userId: Long,
-        @Path("reviewId") reviewId: Long
+        @Path("commentId") reviewId: Long
     ): Response<Unit>
 }
