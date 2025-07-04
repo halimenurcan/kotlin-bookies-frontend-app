@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.frontendbook.R
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.ListFollowsRepository
+import com.example.frontendbook.ui.addBook.AddBookBottomSheet
 
 class ListDetailFragment : Fragment() {
 
@@ -40,6 +41,11 @@ class ListDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val followButton = view.findViewById<Button>(R.id.followListButton)
 
+        val addBookButton = view.findViewById<Button>(R.id.addBookButton)
+        addBookButton.setOnClickListener {
+            val addBookSheet = AddBookBottomSheet.newInstance(listId) // liste id'si ile
+            addBookSheet.show(parentFragmentManager, "AddBookSheet")
+        }
 
         // ViewModel kur
         viewModel = ViewModelProvider(

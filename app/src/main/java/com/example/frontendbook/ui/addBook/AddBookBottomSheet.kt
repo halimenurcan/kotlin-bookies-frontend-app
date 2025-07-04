@@ -34,10 +34,18 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     private var selectedBook: Book? = null
     private var isLiked = false
 
+    private var listId: Long = -1L
+
     private val likedRepo by lazy {
         LikedBooksRepository(
             RetrofitClient.likedBooksApiService(requireContext())
         )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Liste ID'sini arguments'tan al
+        listId = arguments?.getLong("listId") ?: -1L
     }
 
     override fun onCreateView(
@@ -111,27 +119,23 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Kaydet butonu (sadece preview alanı açıkken)
+        // Kaydet butonu
         binding.saveBookButton.setOnClickListener {
-            // Burada sadece lokal preview; eğer istersen ek kayıt logic’i koyabilirsin
+            // TODO: Buraya listeye kitap ekleme işlemi eklenecek
+            Toast.makeText(requireContext(), "Kitap listeye eklenecek. Liste ID: $listId", Toast.LENGTH_SHORT).show()
             dismiss()
         }
 
         // Beğeni butonu
         binding.likeButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
-
-            // Toggle UI first
             isLiked = !isLiked
             updateLikeButtonUi(isLiked)
 
-            // Kullanıcı ID’sini al
-            val prefs = requireContext()
-                .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val userId = prefs.getLong("user_id", -1L)
             if (userId == -1L) return@setOnClickListener
 
-            // Gerçek API çağrısı
             lifecycleScope.launch {
                 try {
                     val success = if (isLiked) {
@@ -141,7 +145,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                     }
                     if (!success) {
                         Toast.makeText(requireContext(), "İşlem başarısız", Toast.LENGTH_SHORT).show()
-                        // rollback UI
                         isLiked = !isLiked
                         updateLikeButtonUi(isLiked)
                     }
@@ -167,9 +170,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun hideKeyboard() {
-        val imm = requireContext().getSystemService(
-            Context.INPUT_METHOD_SERVICE
-        ) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
     }
 
@@ -183,5 +184,15 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
         dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             ?.layoutParams?.height =
             (resources.displayMetrics.heightPixels * 0.85).toInt()
+    }
+
+    companion object {
+        fun newInstance(listId: Long): AddBookBottomSheet {
+            val fragment = AddBookBottomSheet()
+            val args = Bundle()
+            args.putLong("listId", listId)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

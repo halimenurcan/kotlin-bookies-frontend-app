@@ -25,4 +25,34 @@ class ListsViewModel(
             }
         }
     }
+
+    fun createList(userId: Long, title: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val success = repo.createList(userId, title)
+
+                if (success) {
+                    loadUserLists(userId) // Listeyi güncelle
+                }
+                onResult(success)
+            } catch (e: Exception) {
+                _error.value = e.message
+                onResult(false)
+            }
+        }
+    }
+
+    fun addBookToList(listId: Long, bookId: Long, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val success = repo.addBookToList(listId, bookId)
+                onResult(success)
+            } catch (e: Exception) {
+                _error.value = e.message
+                onResult(false)
+            }
+        }
+    }
+
+
 }

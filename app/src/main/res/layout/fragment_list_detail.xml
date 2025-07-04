@@ -30,4 +30,14 @@
         app:layout_constraintTop_toTopOf="@id/listDetailTitle"
         app:layout_constraintVertical_bias="0.444" />
 
+    <Button
+        android:id="@+id/addBookButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kitap Ekle"
+        app:layout_constraintTop_toBottomOf="@id/followListButton"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

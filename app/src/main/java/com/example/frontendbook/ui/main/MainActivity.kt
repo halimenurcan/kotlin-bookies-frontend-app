@@ -14,6 +14,9 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
     }
 
     override fun setupViews() {
+        // 👇 Toolbar'ı ActionBar olarak ayarla
+        setSupportActionBar(binding.mainToolbar)
+
         // 👇 NavHostFragment üzerinden güvenli şekilde navController alıyoruz
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment

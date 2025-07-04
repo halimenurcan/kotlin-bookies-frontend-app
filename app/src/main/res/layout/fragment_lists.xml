@@ -5,7 +5,17 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.homePage.ListsFragment"
+    android:background="@color/backgroundPrimary"
     >
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/listsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:title="Listeler"
+        android:titleTextColor="@android:color/white"
+        app:titleCentered="true"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/reviewsTitle"
@@ -22,6 +32,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnAddList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/addlists"
+        android:contentDescription="Liste Ekle"
+        app:tint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/listsToolbar"
+        app:layout_constraintBottom_toBottomOf="@id/listsToolbar"
+
+        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listsRecyclerView"
