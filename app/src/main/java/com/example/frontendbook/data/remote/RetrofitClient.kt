@@ -100,13 +100,13 @@ object RetrofitClient {
             .build()
             .create(LikedBooksApiService::class.java)
 
-    fun likedCommentsApiService(context: Context): LikedCommentsApiService =
+    fun likedCommentsApiService(context: Context): LikedReviewsApiService =
         Retrofit.Builder()
             .baseUrl(API_BASE_URL)
             .client(createClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(LikedCommentsApiService::class.java)
+            .create(LikedReviewsApiService::class.java)
 
     fun likedReviewsApiService(context: Context): LikedReviewsApiService =
         Retrofit.Builder()

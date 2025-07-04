@@ -24,6 +24,32 @@ class ReviewsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val singleReviewId = arguments?.getLong("review_id", -1L) ?: -1L
+
+        adapter = ReviewsAdapter(emptyList()) { review: ReviewDto -> /*...*/ }
+
+        binding.reviewsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@ReviewsFragment.adapter
+        }
+
+        viewModel = ViewModelProvider(this, ReviewsViewModelFactory(requireContext()))
+            .get(ReviewsViewModel::class.java)
+
+        viewModel.reviews.observe(viewLifecycleOwner) { list ->
+            if (singleReviewId != -1L) {
+                val filtered = list.find { it.id == singleReviewId }
+                adapter.submitList(filtered?.let { listOf(it) } ?: emptyList())
+            } else {
+                adapter.submitList(list)
+            }
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { msg ->
+            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+        }
+
+        viewModel.loadAllReviews()
         // Adapter boş başlat
         adapter = ReviewsAdapter(emptyList()) { review: ReviewDto ->
             // tıklama işlemi

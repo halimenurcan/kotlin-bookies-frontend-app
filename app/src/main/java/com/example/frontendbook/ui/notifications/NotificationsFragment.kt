@@ -1,94 +1,110 @@
 package com.example.frontendbook.ui.notifications
+
+import com.example.frontendbook.R
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.frontendbook.R
-import com.example.frontendbook.data.model.Notification
-import com.example.frontendbook.data.model.NotificationType
+import com.example.frontendbook.databinding.FragmentNotificationsBinding
 import com.example.frontendbook.ui.base.adapter.NotificationAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
+import com.example.frontendbook.ui.homePage.ReviewsFragment
+import com.example.frontendbook.ui.listdetail.ListDetailFragment
+import com.example.frontendbook.ui.profile.OtherUserProfileFragment
 
 class NotificationsFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentNotificationsBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var viewModel: NotificationsViewModel
     private lateinit var adapter: NotificationAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_notifications, container, false)
-
-        // ID’nin XML’de de notificationsRecyclerView olduğuna emin olun
-        recyclerView = view.findViewById(R.id.notificationsRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        fetchNotifications()
-        return view
+    ): View {
+        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun fetchNotifications() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://senin-api-adresin.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val api = retrofit.create(NotificationApi::class.java)
+        // ViewModel’i Factory üzerinden al
+        viewModel = ViewModelProvider(this, NotificationsViewModelFactory(requireContext()))
+            .get(NotificationsViewModel::class.java)
 
-        api.getNotifications().enqueue(object : Callback<List<Notification>> {
-            override fun onResponse(
-                call: Call<List<Notification>>,
-                response: Response<List<Notification>>
-            ) {
-                if (response.isSuccessful && response.body() != null) {
-                    val notifications = response.body()!!
+        // RecyclerView ayarları
+        binding.notificationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-                    // Burada adapter’ı oluşturuyoruz
-                    adapter = NotificationAdapter(notifications) { notification ->
-                        handleNotificationClick(notification)
-                    }
-                    recyclerView.adapter = adapter
-                    recyclerView.visibility = View.VISIBLE
-                }
+        // Bildirimler LiveData olarak gözlemleniyor
+        viewModel.notifications.observe(viewLifecycleOwner) { notifications ->
+            adapter = NotificationAdapter(notifications) { clickedNotification ->
+                viewModel.markAsRead(clickedNotification) // Bildirimi okundu olarak işaretle
+                handleNotificationClick(clickedNotification) // Türüne göre yönlendir
             }
+            binding.notificationsRecyclerView.adapter = adapter
+        }
 
-            override fun onFailure(call: Call<List<Notification>>, t: Throwable) {
-                Toast.makeText(requireContext(),
-                    "Bildirimler yüklenirken hata: ${t.localizedMessage}",
-                    Toast.LENGTH_LONG).show()
+        // Hata durumunu gözlemle
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+
+        // Veriyi yükle
+        viewModel.loadNotifications()
     }
 
-    private fun handleNotificationClick(notification: Notification) {
+    private fun handleNotificationClick(notification: com.example.frontendbook.data.model.Notification) {
         when (notification.type) {
-            NotificationType.FOLLOW -> {
+            com.example.frontendbook.data.model.NotificationType.FOLLOW -> {
                 val userId = notification.relatedId
-                // TODO: user profil sayfasına git
+                val fragment = OtherUserProfileFragment().apply {
+                    arguments = Bundle().apply {
+                        putString("user_id", userId)
+                    }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.notificationsRecyclerView, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
-            NotificationType.LIKE_COMMENT -> {
-                val commentId = notification.relatedId
-                // TODO: yorum detay sayfasına git
+            com.example.frontendbook.data.model.NotificationType.LIKE_COMMENT -> {
+                val commentId = notification.relatedId.toLongOrNull() ?: return
+                val fragment = ReviewsFragment().apply {
+                    arguments = Bundle().apply {
+                        putLong("review_id", commentId)
+                    }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, fragment) // container ID'yi doğru gir
+                    .addToBackStack(null)
+                    .commit()
             }
-            NotificationType.FOLLOW_LIST -> {
+            com.example.frontendbook.data.model.NotificationType.FOLLOW_LIST -> {
                 val listId = notification.relatedId
-                // TODO: liste detay sayfasına git
+                val fragment = ListDetailFragment().apply {
+                    arguments = Bundle().apply {
+                        putLong("listId", listId.toLong())
+                    }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.notificationsRecyclerView, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }
 
-    interface NotificationApi {
-        @GET("notifications")
-        fun getNotifications(): Call<List<Notification>>
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
