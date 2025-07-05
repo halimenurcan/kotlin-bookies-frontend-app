@@ -18,7 +18,7 @@ class ListsRepository(
     }
 
     suspend fun createList(userId: Long, title: String): Boolean {
-        val body = CreateListRequest(userId, title)
+        val body = CreateListRequest(userId = userId, name = title)
         val resp = api.createList(body)
         return resp.isSuccessful
     }

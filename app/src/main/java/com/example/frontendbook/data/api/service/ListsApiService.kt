@@ -11,17 +11,17 @@ import retrofit2.http.Path
 
 interface ListsApiService {
     /** Kullanıcının oluşturduğu tüm listeleri getirir */
-    @GET("api/lists/user/{userId}")
+    @GET("lists/user/{userId}")
     suspend fun getUserLists(
         @Path("userId") userId: Long
     ): Response<List<ListDto>>
 
-    @POST("api/lists")
+    @POST("lists")
     suspend fun createList(
         @Body listRequest: CreateListRequest
     ): Response<Void>
 
-    @POST("api/lists/{listId}/books")
+    @POST("lists/{listId}/books")
     suspend fun addBookToList(
         @Path("listId") listId: Long,
         @Body bookRequest: AddBookRequest
