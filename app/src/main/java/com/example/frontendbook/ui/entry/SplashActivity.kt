@@ -27,6 +27,6 @@ class SplashActivity : BaseSimpleActivity<ActivitySplashBinding>() {
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(intent)
             finish()
-        }, 1500)
+        }, 4000)
     }
 }

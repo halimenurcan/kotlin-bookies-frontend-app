@@ -26,15 +26,15 @@
     <!-- Animation -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loading"
-        android:layout_width="122dp"
-        android:layout_height="88dp"
-        android:layout_marginTop="304dp"
+        android:layout_width="234dp"
+        android:layout_height="226dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appName"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="loading_blue.json"
+        app:lottie_fileName="2opening.json"
         app:lottie_loop="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
