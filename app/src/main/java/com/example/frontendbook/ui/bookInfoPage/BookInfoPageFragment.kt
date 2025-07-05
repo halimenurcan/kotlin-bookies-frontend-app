@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentBookInfoPageBinding
@@ -21,7 +22,9 @@ class BookInfoPageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        book = arguments?.getParcelable("book")
+        val args: BookInfoPageFragmentArgs by navArgs()
+        val book = args.book
+
 
     }
 

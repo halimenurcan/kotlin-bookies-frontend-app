@@ -17,7 +17,11 @@
         android:id="@+id/searchFragment"
         android:name="com.example.frontendbook.ui.search.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+    <action
+        android:id="@+id/action_searchFragment_to_bookInfoPageFragment"
+        app:destination="@id/bookInfoPageFragment" />
+     </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
@@ -41,7 +45,14 @@
         android:id="@+id/bookInfoPageFragment"
         android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
         android:label="Book Info"
-        tools:layout="@layout/fragment_book_info_page" />
+        tools:layout="@layout/fragment_book_info_page">
+
+        <argument
+            android:name="book"
+            app:argType="com.example.frontendbook.domain.model.Book" />
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/threeColumnFragment"

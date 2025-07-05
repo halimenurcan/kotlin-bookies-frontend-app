@@ -12,9 +12,15 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentSearchBinding
 import com.example.frontendbook.ui.base.adapter.CombinedSearchAdapter
+import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
+import androidx.navigation.fragment.findNavController
+import com.example.frontendbook.ui.search.SearchFragmentDirections
+
 
 class SearchFragment : Fragment() {
 
@@ -41,7 +47,16 @@ class SearchFragment : Fragment() {
 
     private fun setupViews() {
 
-        adapter = CombinedSearchAdapter()
+        adapter = CombinedSearchAdapter(
+            onBookClick = { book ->
+                val action = SearchFragmentDirections.actionSearchFragmentToBookInfoPageFragment(book)
+                findNavController().navigate(action)
+            },
+            onUserClick = { user ->
+                Toast.makeText(requireContext(), "${user.username} profiline gidilecek", Toast.LENGTH_SHORT).show()
+            }
+        )
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 

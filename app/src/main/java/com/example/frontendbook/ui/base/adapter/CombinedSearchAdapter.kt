@@ -11,7 +11,10 @@ import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.domain.model.User
 import com.example.frontendbook.domain.model.CombinedSearchResult
 
-class CombinedSearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class  CombinedSearchAdapter(
+    private val onBookClick: (Book) -> Unit,
+    private val onUserClick: (User) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private val items = mutableListOf<CombinedSearchResult>()
 
@@ -31,10 +34,10 @@ class CombinedSearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 0) {
             val binding = ItemBookResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            BookViewHolder(binding)
+            BookViewHolder(binding, onBookClick)
         } else {
             val binding = ItemUserResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            UserViewHolder(binding)
+            UserViewHolder(binding, onUserClick)
         }
     }
 
@@ -47,7 +50,9 @@ class CombinedSearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    class BookViewHolder(private val binding: ItemBookResultBinding) : RecyclerView.ViewHolder(binding.root) {
+    class BookViewHolder( private val binding: ItemBookResultBinding,
+                          private val onClick: (Book) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root){
         fun bind(book: Book) {
             binding.title.text = book.title
             binding.author.text = book.author
@@ -56,13 +61,22 @@ class CombinedSearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error_image)
                 .into(binding.bookImageView)
+
+            binding.root.setOnClickListener {
+                onClick(book)
+            }
         }
     }
 
-    class UserViewHolder(private val binding: ItemUserResultBinding) : RecyclerView.ViewHolder(binding.root) {
+    class UserViewHolder(private val binding: ItemUserResultBinding,
+                         private val onClick: (User) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             binding.username.text = user.username
             binding.email.text = user.id
+            binding.root.setOnClickListener {
+                onClick(user)
+            }
         }
     }
 }
