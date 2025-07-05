@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentBookInfoPageBinding
 import com.example.frontendbook.domain.model.Book
+import com.bumptech.glide.request.target.Target
+
 
 class BookInfoPageFragment : Fragment() {
 
@@ -42,7 +44,10 @@ class BookInfoPageFragment : Fragment() {
                 .load(book.imageUrl ?: R.drawable.bookk)
                 .placeholder(R.drawable.bookk)
                 .error(R.drawable.bookk)
+                .centerCrop()
+                .override(Target.SIZE_ORIGINAL)
                 .into(binding.bookCoverImage)
+
 
             renderRatingStars(book.rating)
 
