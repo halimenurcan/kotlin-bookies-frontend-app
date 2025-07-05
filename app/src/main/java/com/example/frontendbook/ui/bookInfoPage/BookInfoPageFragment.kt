@@ -11,19 +11,20 @@ import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentBookInfoPageBinding
 import com.example.frontendbook.domain.model.Book
 import com.bumptech.glide.request.target.Target
+import androidx.navigation.fragment.navArgs
+
 
 
 class BookInfoPageFragment : Fragment() {
 
     private var _binding: FragmentBookInfoPageBinding? = null
     private val binding get() = _binding!!
-
+    private val args: BookInfoPageFragmentArgs by navArgs()
     private var book: Book? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val args: BookInfoPageFragmentArgs by navArgs()
-        val book = args.book
+        book = args.book
 
 
     }
