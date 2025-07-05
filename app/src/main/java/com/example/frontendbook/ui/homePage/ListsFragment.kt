@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -98,45 +99,55 @@ class ListsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun showAddListDialog() {
-        val editText = EditText(requireContext())
-        editText.hint = "List Name\n"
+        val context = requireContext()
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Create New List\n")
-            .setView(editText)
-            .setPositiveButton("Create\n") { dialog, _ ->
-                val listName = editText.text.toString().trim()
-                if (listName.isNotEmpty()) {
-                    val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-                    val userId = prefs.getLong("user_id", -1L)
+        // Material Design uyumlu layout oluştur
+        val inputLayout = com.google.android.material.textfield.TextInputLayout(context)
+        val editText = com.google.android.material.textfield.TextInputEditText(context)
 
-                    viewModel.createList(userId, listName) { success ->
-                        if (success) {
-                            Toast.makeText(requireContext(), "Liste oluşturuldu", Toast.LENGTH_SHORT).show()
+        inputLayout.hint = "List Name"
+        inputLayout.setPadding(50, 0, 50, 0) // iç boşluklar
+        editText.setSingleLine()
 
-                            // 👇 YENİ SATIR: Listeyi yeniden yükle
-                            viewModel.loadUserLists(userId)
+        inputLayout.addView(editText)
 
-                        } else {
-                            Toast.makeText(requireContext(), "Liste oluşturulamadı", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    Toast.makeText(requireContext(), "Liste adı boş olamaz", Toast.LENGTH_SHORT).show()
-                }
-                dialog.dismiss()
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle("Create New List")
+            .setView(inputLayout)
+            .setPositiveButton("Create", null)
+            .setNegativeButton("Cancel", null)
             .show()
+
+        // Renkleri ayarla
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(
+            ContextCompat.getColor(context, R.color.buttonSecondary)
+        )
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(
+            ContextCompat.getColor(context, R.color.button_textPrimary)
+        )
+
+        // Positive button click override
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+            val listName = editText.text.toString().trim()
+            if (listName.isNotEmpty()) {
+                val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+                val userId = prefs.getLong("user_id", -1L)
+
+                viewModel.createList(userId, listName) { success ->
+                    if (success) {
+                        Toast.makeText(context, "Liste oluşturuldu", Toast.LENGTH_SHORT).show()
+                        viewModel.loadUserLists(userId)
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(context, "Liste oluşturulamadı", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                inputLayout.error = "Liste adı boş olamaz"
+            }
+        }
     }
-
-
-
-
-
-
-
-
 
 }

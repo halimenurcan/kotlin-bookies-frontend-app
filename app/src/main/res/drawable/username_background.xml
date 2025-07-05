@@ -1,0 +1,22 @@
+<!-- res/drawable/username_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Arka plan saydam -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Daha kalın ve dikkat çekici çerçeve -->
+    <stroke
+        android:width="3dp"
+        android:color="@color/buttonSecondary" />
+
+    <!-- Kenarları daha yuvarlak -->
+    <corners android:radius="24dp" />
+
+    <!-- İç boşluk (çerçeve ile metin arası mesafe) -->
+    <padding
+        android:left="16dp"
+        android:top="8dp"
+        android:right="16dp"
+        android:bottom="8dp" />
+</shape>

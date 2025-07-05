@@ -1,8 +1,16 @@
 package com.example.frontendbook.ui.profile
 
+import android.R.attr.repeatCount
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.AnimationUtils
+import android.view.animation.ScaleAnimation
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +34,29 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val profileImage = view.findViewById<ImageView>(R.id.profileImage)
+
+        val scaleAnim = ScaleAnimation(
+            1f, 1.1f, // X ekseni: %10 büyü
+            1f, 1.1f, // Y ekseni: %10 büyü
+            Animation.RELATIVE_TO_SELF, 0.5f, // Merkezden
+            Animation.RELATIVE_TO_SELF, 0.5f
+        ).apply {
+            duration = 600 // kısa sürede büyü
+            fillAfter = false // eski haline dönsün
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+// Animasyonu başlat
+        profileImage.startAnimation(scaleAnim)
+
+
+
+        val usernameText = view.findViewById<TextView>(R.id.usernameText)
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_glow)
+        usernameText.startAnimation(animation)
+
         // 1. SharedPrefs'tan user_id al
         val prefs  = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
