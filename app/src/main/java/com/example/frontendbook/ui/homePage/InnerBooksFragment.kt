@@ -16,8 +16,13 @@ import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment
 import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
 import com.example.frontendbook.ui.viewmodel.BookViewModel
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.frontendbook.ui.base.adapter.BookAdapter
+
 
 class InnerBooksFragment : Fragment() {
+    private lateinit var exploreAdapter: BookAdapter
 
     private var _binding: FragmentInnerBooksBinding? = null
     private val binding get() = _binding!!
@@ -73,12 +78,28 @@ class InnerBooksFragment : Fragment() {
             exploreSeeAll.setOnClickListener {
                 openThreeColumnPage("Explore More", "explore")
             }
+            exploreAdapter = BookAdapter { book ->
+                parentFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.innerFragmentContainer,
+                        BookInfoPageFragment().apply {
+                            arguments = Bundle().apply {
+                                putParcelable("book", book)
+                            }
+                        }
+                    )
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            binding.exploreBooksRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+            binding.exploreBooksRecyclerView.adapter = exploreAdapter
 
             viewModel.books.observe(viewLifecycleOwner) { books ->
                 Log.d("InnerBooksFragment", "Book count: ${books.size}")
                 if (books.isNotEmpty()) {
                     inflateBooks(popularBooksContainer, books)
-                    inflateBooks(exploreBooksContainer, books)
+                    exploreAdapter.submitList(books.take(9))
                 }
             }
 
