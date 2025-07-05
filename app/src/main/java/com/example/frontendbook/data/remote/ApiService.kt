@@ -13,11 +13,11 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @POST("/auth/login")
+    @POST("/api/auth/login")
     suspend fun signIn(@Body request: SignInRequest): Response<SignInResponse>
 
 
-    @POST("/auth/register")
+    @POST("/api/auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<RegisterResponse>
 
     // 📚 BOOKS - Sıralama
