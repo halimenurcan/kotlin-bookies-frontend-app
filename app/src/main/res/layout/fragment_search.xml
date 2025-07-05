@@ -72,15 +72,23 @@
                     android:inputType="text" />
             </LinearLayout>
 
-            <!-- Filtre alanı -->
+            <!-- Filtre Alanı -->
             <LinearLayout
                 android:id="@+id/browseContainer"
                 android:layout_width="match_parent"
-                android:layout_height="509dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
 
-
+                <!-- Seçilen Filtreler ChipGroup -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupFilters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:singleLine="false"
+                    app:chipSpacing="8dp"
+                    android:layout_marginBottom="8dp" />
 
                 <!-- Genre Ana Butonu -->
                 <Button
@@ -92,7 +100,6 @@
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
 
-
                 <!-- Language -->
                 <Button
                     android:id="@+id/languageButton"
@@ -103,6 +110,17 @@
                     android:text="Language"
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
+
+                <!-- Apply Filters -->
+                <Button
+                    android:id="@+id/applyFiltersButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Apply Filters"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/buttonPrimary"
+                    android:textColor="@color/white"/>
 
                 <!-- Most Popular & Highly Rated -->
                 <LinearLayout

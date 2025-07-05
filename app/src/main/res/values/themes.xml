@@ -12,5 +12,24 @@
 
     <style name="Theme.FrontendBook" parent="Base.Theme.FrontendBook" />
 
+    <style name="MyAlertDialogTheme" parent="Theme.Material3.DayNight.Dialog.Alert">
+        <item name="android:background">@color/dialog_background</item>
+        <item name="android:textColorPrimary">@color/dialog_text</item>
+        <item name="android:textColor">@color/dialog_text</item>
+        <item name="android:buttonStyle">@style/CustomAlertDialogButton</item>
+        <item name="android:checkboxStyle">@style/CustomCheckbox</item>
+    </style>
+
+    <style name="CustomAlertDialogButton" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="CustomCheckbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:buttonTint">@color/dialog_button</item>
+    </style>
+
+
+
+
 
 </resources>
