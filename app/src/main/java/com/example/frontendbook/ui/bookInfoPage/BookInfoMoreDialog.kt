@@ -117,15 +117,6 @@ class BookInfoMoreDialog : DialogFragment() {
                         comment    = comment,
                         rating     = rating
                     )
-                    val success = repository.sendBookInteraction(
-                        userId, book.id, isLiked, isRead, isInReadList, comment, rating
-                    )
-                    Toast.makeText(
-                        requireContext(),
-                        if (success) "Kaydedildi" else "Kaydetme başarısız",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    dismiss()
 
                 } catch (e: HttpException) {
                     val code = e.code()

@@ -22,7 +22,34 @@ class InnerBooksFragment : Fragment() {
     private var _binding: FragmentInnerBooksBinding? = null
     private val binding get() = _binding!!
 
+    // ViewModel
     private val viewModel: BookViewModel by viewModels()
+
+    // Arguments
+    private var pageTitle: String? = null
+    private var type: String? = null
+
+    companion object {
+        private const val ARG_TITLE = "arg_title"
+        private const val ARG_TYPE  = "arg_type"
+
+        fun newInstance(title: String, type: String): InnerBooksFragment {
+            val fragment = InnerBooksFragment()
+            fragment.arguments = Bundle().apply {
+                putString(ARG_TITLE, title)
+                putString(ARG_TYPE, type)
+            }
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            pageTitle = it.getString(ARG_TITLE)
+            type      = it.getString(ARG_TYPE)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +61,8 @@ class InnerBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Ok tuşlarına dinleyici
+
+
         with(binding) {
             popularArrow.setOnClickListener {
                 openThreeColumnPage("Popular This Week", "popular")
@@ -46,7 +74,6 @@ class InnerBooksFragment : Fragment() {
                 openThreeColumnPage("Explore More", "explore")
             }
 
-            // Kitap listesini gözle
             viewModel.books.observe(viewLifecycleOwner) { books ->
                 Log.d("InnerBooksFragment", "Book count: ${books.size}")
                 if (books.isNotEmpty()) {
@@ -55,8 +82,8 @@ class InnerBooksFragment : Fragment() {
                 }
             }
 
-            // Başlangıçta fiction’ı yükle
-            viewModel.fetchBooks("fiction")
+            // Type parametresine göre kitapları yükle
+            viewModel.fetchBooks(type ?: "fiction")
         }
     }
 
@@ -76,16 +103,13 @@ class InnerBooksFragment : Fragment() {
 
         books.forEach { book ->
             val itemView = inflater.inflate(R.layout.item_book_grid, container, false)
-            // Başlık
             itemView.findViewById<TextView>(R.id.bookTitle).text = book.title
-            // Resim
             itemView.findViewById<ImageView>(R.id.bookImage).let { iv ->
                 Glide.with(this)
                     .load(book.coverImageUrl ?: R.drawable.bookk)
                     .placeholder(R.drawable.bookk)
                     .into(iv)
             }
-            // Tıklama → detay sayfası
             itemView.setOnClickListener {
                 parentFragmentManager.beginTransaction()
                     .replace(

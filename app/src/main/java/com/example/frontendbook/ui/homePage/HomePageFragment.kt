@@ -1,3 +1,4 @@
+// HomePageFragment.kt
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
@@ -8,10 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
-import com.example.frontendbook.domain.model.Book
 
 class HomePageFragment : Fragment() {
 
@@ -29,32 +28,30 @@ class HomePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // SystemBars padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
             insets
         }
 
-        // İlk açılışta Books fragment'ı yükle ve butonu turuncu yap
-        loadInnerFragment(InnerBooksFragment())
+        // Başlangıçta InnerBooksFragment
+        loadInnerFragment(InnerBooksFragment.newInstance("All Books", "fiction"))
         updateButtonColors(binding.header.booksButton)
 
-        // Butonlara tıklama
+        // Button click’leri
         binding.header.booksButton.setOnClickListener {
-            loadInnerFragment(InnerBooksFragment())
+            loadInnerFragment(InnerBooksFragment.newInstance("All Books", "fiction"))
             updateButtonColors(binding.header.booksButton)
         }
-
         binding.header.reviewsButton.setOnClickListener {
             loadInnerFragment(ReviewsFragment())
             updateButtonColors(binding.header.reviewsButton)
         }
-
         binding.header.listsButton.setOnClickListener {
             loadInnerFragment(ListsFragment())
             updateButtonColors(binding.header.listsButton)
         }
-
     }
 
     private fun loadInnerFragment(fragment: Fragment) {
@@ -64,19 +61,13 @@ class HomePageFragment : Fragment() {
     }
 
     private fun updateButtonColors(selectedButton: View) {
-        val context = requireContext()
-        val active = ContextCompat.getColor(context, R.color.buttonSecondary)
-        val inactive = ContextCompat.getColor(context, R.color.buttonPrimary)
-
-        val allButtons = listOf(
-            binding.header.booksButton,
-            binding.header.reviewsButton,
-            binding.header.listsButton
-        )
-
-        allButtons.forEach { button ->
-            button.setBackgroundColor(if (button == selectedButton) active else inactive)
-        }
+        val ctx = requireContext()
+        val active = ContextCompat.getColor(ctx, R.color.buttonSecondary)
+        val inactive = ContextCompat.getColor(ctx, R.color.buttonPrimary)
+        listOf(binding.header.booksButton, binding.header.reviewsButton, binding.header.listsButton)
+            .forEach { btn ->
+                btn.setBackgroundColor(if (btn == selectedButton) active else inactive)
+            }
     }
 
     override fun onDestroyView() {

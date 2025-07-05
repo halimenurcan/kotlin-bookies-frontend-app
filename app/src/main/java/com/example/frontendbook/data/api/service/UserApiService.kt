@@ -22,48 +22,48 @@ interface UserApiService {
 
     @GET("users/search")
     suspend fun searchUsers(@Query("username") username: String): List<UserDto>
-    @GET("api/users/{id}")
+    @GET("users/{id}")
     suspend fun getUserById(@Path("id") userId: Long): UserResponse
 
-    @GET("api/users")
+    @GET("users")
     suspend fun getUsers(
         @Query("page") page: Int,
         @Query("size") size: Int
     ): List<UserResponse>
 
-    @PUT("api/users/{id}")
+    @PUT("users/{id}")
     suspend fun updateUser(
         @Path("id") userId: Long,
         @Body updated: UserResponse
     ): UserResponse
 
-    @DELETE("api/users/{id}")
+    @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: Long)
-    @GET("api/users/{userId}/followers")
+    @GET("users/{userId}/followers")
     suspend fun getFollowers(
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
     /** Takip ettiklerim listesi */
-    @GET("api/users/{userId}/following")
+    @GET("users/{userId}/following")
     suspend fun getFollowing(
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
     /** Bir kullanıcıyı takip et */
-    @POST("api/users/{targetId}/follow")
+    @POST("users/{targetId}/follow")
     suspend fun followUser(
         @Path("targetId") targetUserId: Long
     ): Response<Unit>
 
     /** Bir kullanıcıyı takipten bırak */
-    @DELETE("api/users/{targetId}/follow")
+    @DELETE("users/{targetId}/follow")
     suspend fun unfollowUser(
         @Path("targetId") targetUserId: Long
     ): Response<Unit>
 
     /** İki kullanıcı arasındaki takip durumunu kontrol et */
-    @GET("api/users/{currentId}/following/{targetId}")
+    @GET("users/{currentId}/following/{targetId}")
     suspend fun isFollowing(
         @Path("currentId") currentUserId: Long,
         @Path("targetId") targetUserId: Long

@@ -4,7 +4,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="more_options">More Options</string>
     <string name="menu_add_list">Liste Ekle</string>
-
+    <string name="followers_count">%1$d Followers</string>
+    <string name="following_count">%1$d Following</string>
     <string name="settings">Settings</string>
     <string name="profile_image_desc">Profile image</string>
     <string name="go_icon_desc">Go to detail</string>

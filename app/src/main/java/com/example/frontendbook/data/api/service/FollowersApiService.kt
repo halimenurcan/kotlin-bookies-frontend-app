@@ -11,7 +11,7 @@ interface FollowersApiService {
      * Create a new follower relation
      * POST /api/followers
      */
-    @POST("/followers")
+    @POST("followers")
     suspend fun createFollower(
         @Body request: FollowerRequest
     ): Response<Unit>
@@ -20,7 +20,7 @@ interface FollowersApiService {
      * Get a follower relation by composite ID
      * GET /api/followers?userId={userId}&followerId={followerId}
      */
-    @GET("api/followers")
+    @GET("followers")
     suspend fun getFollower(
         @Query("userId") userId: Long,
         @Query("followerId") followerId: Long
@@ -30,7 +30,7 @@ interface FollowersApiService {
      * Delete a follower relation by composite ID
      * DELETE /api/followers?userId={userId}&followerId={followerId}
      */
-    @DELETE("api/followers")
+    @DELETE("followers")
     suspend fun deleteFollower(
         @Query("userId") userId: Long,
         @Query("followerId") followerId: Long

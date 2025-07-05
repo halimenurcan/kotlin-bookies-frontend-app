@@ -12,20 +12,20 @@ import retrofit2.http.Path
 interface LikedBooksApiService {
 
     /** Yeni beğeni oluştur */
-    @POST("api/liked-books")
+    @POST("liked-books")
     suspend fun createLikedBook(
         @Body request: LikedBookRequest
     ): Response<Unit>
 
     /** Bu kitap zaten beğenilmiş mi kontrol et */
-    @GET("api/liked-books/user/{userId}/book/{bookId}")
+    @GET("liked-books/user/{userId}/book/{bookId}")
     suspend fun getLikedBook(
         @Path("userId") userId: Long,
         @Path("bookId") bookId: Long
     ): Response<LikedBookResponse>
 
     /** Beğeniyi sil */
-    @DELETE("api/liked-books/user/{userId}/book/{bookId}")
+    @DELETE("liked-books/user/{userId}/book/{bookId}")
     suspend fun deleteLikedBook(
         @Path("userId") userId: Long,
         @Path("bookId") bookId: Long

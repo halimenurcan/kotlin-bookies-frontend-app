@@ -7,11 +7,11 @@ import retrofit2.http.*
 interface NotificationApiService {
 
     /** Tüm bildirimleri al */
-    @GET("api/notifications")
+    @GET("notifications")
     suspend fun getNotifications(): Response<List<NotificationDto>>
 
     /** Tek bir bildirimi “okundu” olarak işaretle */
-    @PATCH("api/notifications/{id}/read")
+    @PATCH("notifications/{id}/read")
     suspend fun markAsRead(
         @Path("id") notificationId: Long
     ): Response<Unit>

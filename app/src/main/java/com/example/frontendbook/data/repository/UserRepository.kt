@@ -1,39 +1,40 @@
 package com.example.frontendbook.data.repository
 
+import android.util.Log
 import com.example.frontendbook.data.api.service.UserApiService
 import com.example.frontendbook.data.api.dto.UserResponse
 import com.example.frontendbook.data.model.BookInteractionRequest
 
 class UserRepository(private val api: UserApiService) {
+    private val TAG = "UserRepository"
 
-    // ← your existing seven‐parameter method stays as is:
-
-    suspend fun sendBookInteraction(
-        userId: Long,
-        bookId: Long,
-        isLiked: Boolean,
-        isRead: Boolean,
-        isInReadList: Boolean,
-        comment: String? = null,
-        rating: Int = 0
-    ): Boolean {
-        val req = BookInteractionRequest(
-            userId     = userId,
-            bookId     = bookId,
-            liked      = isLiked,
-            read       = isRead,
-            inReadList = isInReadList,
-            comment    = comment,
-            rating     = rating
-        )
-        return api.sendBookInteraction(userId, req).isSuccessful
+    suspend fun fetchUser(userId: Long): UserResponse {
+        Log.d(TAG, "fetchUser() -> çağrıldı, userId=$userId")
+        val resp = api.getUserById(userId)
+        Log.d(TAG, "fetchUser() -> kullanıcı alındı: $resp")
+        return resp
     }
 
-    // ★ NEW OVERLOAD ★
-    suspend fun sendBookInteraction(request: BookInteractionRequest): Boolean {
-        return api.sendBookInteraction(request.userId, request).isSuccessful
+    suspend fun getFollowersCount(userId: Long): Int {
+        Log.d(TAG, "getFollowersCount() -> çağrıldı")
+        val resp = api.getFollowers(userId)
+        val count = if (resp.isSuccessful) resp.body()?.size ?: 0 else 0
+        Log.d(TAG, "getFollowersCount() -> count=$count (HTTP ${resp.code()})")
+        return count
     }
 
-    suspend fun fetchUser(userId: Long): UserResponse =
-        api.getUserById(userId)
+    suspend fun getFollowingCount(userId: Long): Int {
+        Log.d(TAG, "getFollowingCount() -> çağrıldı")
+        val resp = api.getFollowing(userId)
+        val count = if (resp.isSuccessful) resp.body()?.size ?: 0 else 0
+        Log.d(TAG, "getFollowingCount() -> count=$count (HTTP ${resp.code()})")
+        return count
+    }
+
+    suspend fun sendBookInteraction(userId: Long, request1: Long, request: BookInteractionRequest): Boolean {
+        Log.d(TAG, "sendBookInteraction() -> ${request}")
+        val success = api.sendBookInteraction(request.userId, request).isSuccessful
+        Log.d(TAG, "sendBookInteraction() -> success=$success")
+        return success
+    }
 }
