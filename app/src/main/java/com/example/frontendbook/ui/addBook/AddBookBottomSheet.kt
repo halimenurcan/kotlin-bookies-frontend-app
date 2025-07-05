@@ -79,7 +79,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             binding.ratingBar.rating = 0f
 
             Glide.with(requireContext())
-                .load(book.imageUrl)
+                .load(book.coverImageUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(binding.bookPreviewImage)
 

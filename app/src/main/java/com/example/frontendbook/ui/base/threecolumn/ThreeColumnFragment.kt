@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.common
+package com.example.frontendbook.ui.base.threecolumn
 
 import android.content.Context
 import android.os.Bundle
@@ -11,8 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.frontendbook.R
-import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.databinding.FragmentThreeColumnBinding
+import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.BookAdapter
 import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
 import com.example.frontendbook.ui.profile.ReadViewModel
@@ -33,27 +33,22 @@ class ThreeColumnFragment : Fragment() {
 
     companion object {
         private const val ARG_TITLE = "arg_title"
-        private const val ARG_TYPE = "arg_type"
+        private const val ARG_TYPE  = "arg_type"
 
-        /**
-         * Bu fonksiyon, bu fragment'i title ve type argümanlarıyla oluşturmak için kullanılır.
-         * InnerBooksFragment gibi yerlerden çağırılabilir.
-         */
         fun newInstance(title: String, type: String): ThreeColumnFragment {
-            val fragment = ThreeColumnFragment()
-            val args = Bundle().apply {
-                putString(ARG_TITLE, title)
-                putString(ARG_TYPE, type)
+            return ThreeColumnFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putString(ARG_TYPE, type)
+                }
             }
-            fragment.arguments = args
-            return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageTitle = arguments?.getString(ARG_TITLE)
-        type = arguments?.getString(ARG_TYPE)
+        type      = arguments?.getString(ARG_TYPE)
     }
 
     override fun onCreateView(
@@ -67,54 +62,50 @@ class ThreeColumnFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Kitap kartlarını gösterecek adapter
         adapter = BookAdapter { book ->
-            val fragment = BookInfoPageFragment().apply {
-                arguments = Bundle().apply {
+            BookInfoPageFragment().also { frag ->
+                frag.arguments = Bundle().apply {
                     putParcelable("book", book)
                 }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.innerFragmentContainer, frag)
+                    .addToBackStack(null)
+                    .commit()
             }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.innerFragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit()
         }
 
-        // RecyclerView ayarları
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter       = adapter
+        binding.headerTitle.text           = pageTitle ?: "Books"
 
-        // Başlığı ayarla
-        binding.headerTitle.text = pageTitle ?: "Books"
-
-        // SharedPreferences üzerinden kullanıcı ID'sini al
-        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        // Kullanıcı ID'si
+        val prefs  = requireContext()
+            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
 
         if (type == "read") {
-            // Eğer "read" listesi ise ReadViewModel kullan
+            // --- "Read" listesini Room'dan oku ---
             val factory = ReadViewModelFactory(requireContext())
             readViewModel = ViewModelProvider(this, factory)[ReadViewModel::class.java]
 
             readViewModel.readList.observe(viewLifecycleOwner) { entries ->
-                val books = entries.map {
+                val books = entries.map { entry ->
                     Book(
-                        id = it.id ?: 0L,
-                        title = it.bookTitle,
-                        author = "Unknown",
-                        year = 0,
-                        genre = null,
-                        country = null,
-                        language = null,
-                        popularity = 0,
-                        rating = 0.0,
-                        imageUrl = it.bookCoverUrl,
-                        pageCount = 0,
-                        description = "No description available"
+                        id            = entry.id,                           // artık non-null Long
+                        author        = entry.bookAuthor     ?: "Unknown",
+                        title         = entry.bookTitle      ?: "Untitled",
+                        isbn          = entry.bookIsbn       ?: "",
+                        description   = entry.bookDescription?: "No description available",
+                        coverImageUrl = entry.bookCoverUrl,
+                        pageCount     = entry.bookPageCount  ?: 0,
+                        publisher     = entry.bookPublisher  ?: "Unknown publisher",
+                        publishedYear = entry.bookPublishedYear ?: 0,
+                        rating = entry.rating
                     )
                 }
                 adapter.submitList(books)
             }
+
 
             readViewModel.error.observe(viewLifecycleOwner) {
                 Log.e("THREE_COLUMN", "Hata: $it")
@@ -125,7 +116,7 @@ class ThreeColumnFragment : Fragment() {
             }
 
         } else {
-            // Diğer türlerde BookViewModel kullan
+            // --- Uzaktan çekilen diğer kitaplar ---
             bookViewModel.books.observe(viewLifecycleOwner) { books ->
                 Log.d("THREE_COLUMN", "Gelen kitap sayısı: ${books.size}")
                 adapter.submitList(books)

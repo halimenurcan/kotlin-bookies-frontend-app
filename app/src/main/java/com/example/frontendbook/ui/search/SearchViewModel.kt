@@ -48,13 +48,10 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SearchDebug", "🔍 Arama başlatıldı: $query")
 
                 val bookResults = bookRepository.searchBooks(query)
-                val userResults = bookRepository.searchUsers(query)
 
                 Log.d("SearchDebug", "📚 Kitap sayısı: ${bookResults.size}")
-                Log.d("SearchDebug", "👤 Kullanıcı sayısı: ${userResults.size}")
 
                 val combined = mutableListOf<CombinedSearchResult>()
-                combined.addAll(userResults.map { CombinedSearchResult.UserResult(it) })
                 combined.addAll(bookResults.map { CombinedSearchResult.BookResult(it) })
 
                 _combinedResults.value = combined

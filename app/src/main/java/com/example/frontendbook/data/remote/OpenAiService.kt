@@ -4,7 +4,6 @@ import com.example.frontendbook.data.remote.dto.*
 import retrofit2.http.*
 
 interface OpenAiService {
-
     @POST("threads")
     suspend fun createThread(
         @Header("Authorization") token: String,

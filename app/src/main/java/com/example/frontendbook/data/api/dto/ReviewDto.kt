@@ -6,8 +6,8 @@ package com.example.frontendbook.data.model
 data class ReviewDto(
     val id: Long,
     val userId: Long,
-    val username: String,
-    val content: String,
-    val rating: Float,
-    val timestamp: String
+    val bookId: Long,
+    val score: Int,
+    val comment: String,
+    val createdAt: String
 )

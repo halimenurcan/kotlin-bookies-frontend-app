@@ -1,22 +1,20 @@
 package com.example.frontendbook.ui.homePage
 
-import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentInnerBooksBinding
 import com.example.frontendbook.domain.model.Book
+import com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment
 import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
-import com.example.frontendbook.ui.common.ThreeColumnFragment
 import com.example.frontendbook.ui.viewmodel.BookViewModel
 
 class InnerBooksFragment : Fragment() {
@@ -36,77 +34,74 @@ class InnerBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-
-        viewModel.books.observe(viewLifecycleOwner) { books ->
-            Log.d("InnerBooksFragment", "Book count: ${books.size}")
-            if (books.isNotEmpty()) {
-                inflateBooks(binding.popularBooksContainer, books)
-                inflateBooks(binding.exploreBooksContainer, books)
+        // Ok tuşlarına dinleyici
+        with(binding) {
+            popularArrow.setOnClickListener {
+                openThreeColumnPage("Popular This Week", "popular")
             }
-        }
+            exploreArrow.setOnClickListener {
+                openThreeColumnPage("Explore More", "explore")
+            }
+            exploreSeeAll.setOnClickListener {
+                openThreeColumnPage("Explore More", "explore")
+            }
 
-        viewModel.fetchBooks("fiction")
-    }
+            // Kitap listesini gözle
+            viewModel.books.observe(viewLifecycleOwner) { books ->
+                Log.d("InnerBooksFragment", "Book count: ${books.size}")
+                if (books.isNotEmpty()) {
+                    inflateBooks(popularBooksContainer, books)
+                    inflateBooks(exploreBooksContainer, books)
+                }
+            }
 
-    private fun setupListeners() {
-        binding.popularArrow.setOnClickListener {
-            openThreeColumnPage("Popular This Week", "popular")
-        }
-
-        binding.exploreArrow.setOnClickListener {
-            openThreeColumnPage("Explore More", "explore")
-        }
-
-        binding.exploreSeeAll.setOnClickListener {
-            openThreeColumnPage("Explore More", "explore")
+            // Başlangıçta fiction’ı yükle
+            viewModel.fetchBooks("fiction")
         }
     }
 
     private fun openThreeColumnPage(title: String, type: String) {
-        val fragment = ThreeColumnFragment.newInstance(title, type)
         parentFragmentManager.beginTransaction()
-            .replace(R.id.innerFragmentContainer, fragment)
+            .replace(
+                R.id.innerFragmentContainer,
+                ThreeColumnFragment.newInstance(title, type)
+            )
             .addToBackStack(null)
             .commit()
     }
 
-    @SuppressLint("MissingInflatedId")
     private fun inflateBooks(container: ViewGroup, books: List<Book>) {
-        val inflater = LayoutInflater.from(requireContext())
         container.removeAllViews()
+        val inflater = LayoutInflater.from(requireContext())
 
         books.forEach { book ->
             val itemView = inflater.inflate(R.layout.item_book_grid, container, false)
-
-            val titleView = itemView.findViewById<TextView>(R.id.bookTitle)
-            val imageView = itemView.findViewById<ImageView>(R.id.bookImage)
-
-            titleView.text = book.title
-
-            Glide.with(requireContext())
-                .load(book.imageUrl ?: R.drawable.bookk)
-                .placeholder(R.drawable.bookk)
-                .into(imageView)
-
-            // 👇 Kitaba tıklandığında BookInfoPage'e git
+            // Başlık
+            itemView.findViewById<TextView>(R.id.bookTitle).text = book.title
+            // Resim
+            itemView.findViewById<ImageView>(R.id.bookImage).let { iv ->
+                Glide.with(this)
+                    .load(book.coverImageUrl ?: R.drawable.bookk)
+                    .placeholder(R.drawable.bookk)
+                    .into(iv)
+            }
+            // Tıklama → detay sayfası
             itemView.setOnClickListener {
-                val fragment = BookInfoPageFragment().apply {
-                    arguments = Bundle().apply {
-                        putParcelable("book", book)
-                    }
-                }
-
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.innerFragmentContainer, fragment)
+                    .replace(
+                        R.id.innerFragmentContainer,
+                        BookInfoPageFragment().apply {
+                            arguments = Bundle().apply {
+                                putParcelable("book", book)
+                            }
+                        }
+                    )
                     .addToBackStack(null)
                     .commit()
             }
-
             container.addView(itemView)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

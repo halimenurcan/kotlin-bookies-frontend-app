@@ -1,4 +1,4 @@
-package com.example.frontendbook.domain.mapper
+package com.example.frontendbook.data.api.mapper
 
 import com.example.frontendbook.data.remote.dto.UserDto
 import com.example.frontendbook.domain.model.User

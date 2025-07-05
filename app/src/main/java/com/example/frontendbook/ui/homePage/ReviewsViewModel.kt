@@ -1,25 +1,29 @@
 package com.example.frontendbook.ui.homePage
 
 import androidx.lifecycle.*
+import com.example.frontendbook.data.model.ReviewCreateRequest
 import com.example.frontendbook.data.model.ReviewDto
 import com.example.frontendbook.data.repository.ReviewsRepository
 import kotlinx.coroutines.launch
+
 
 class ReviewsViewModel(
     private val repo: ReviewsRepository
 ) : ViewModel() {
 
-    private val _reviews = MutableLiveData<List<ReviewDto>>()
-    val reviews: LiveData<List<ReviewDto>> = _reviews
+    private val _comments = MutableLiveData<List<ReviewDto>>()
+    val comments: LiveData<List<ReviewDto>> = _comments
 
-    private val _error = MutableLiveData<String?>()
+    private val _single   = MutableLiveData<ReviewDto>()
+    val single: LiveData<ReviewDto> = _single
+
+    private val _error    = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    /** Tüm yorumları yükler */
-    fun loadAllReviews() {
+    fun loadCommentsForBook(bookId: Long) {
         viewModelScope.launch {
             try {
-                _reviews.value = repo.fetchAllReviews()
+                _comments.value = repo.fetchReviewsForBook(bookId)
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
@@ -27,11 +31,35 @@ class ReviewsViewModel(
         }
     }
 
-    /** Belirli bir kitaba ait yorumları yükler */
-    fun loadReviewsForBook(bookId: Long) {
+    fun loadComment(id: Long) {
         viewModelScope.launch {
             try {
-                _reviews.value = repo.fetchReviewsForBook(bookId)
+                _single.value = repo.getCommentById(id)
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
+
+    fun createComment(request: ReviewCreateRequest) {
+        viewModelScope.launch {
+            try {
+                val created = repo.createComment(request)
+                // Oluşturulanı listemize ekleyelim
+                _comments.value = listOf(created) + (_comments.value ?: emptyList())
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
+
+    fun deleteComment(id: Long) {
+        viewModelScope.launch {
+            try {
+                repo.deleteReview(id)
+                _comments.value = _comments.value?.filter { it.id != id }
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
@@ -39,3 +67,4 @@ class ReviewsViewModel(
         }
     }
 }
+

@@ -1,14 +1,20 @@
+// app/src/main/java/com/example/frontendbook/data/api/service/BooksApiService.kt
 package com.example.frontendbook.data.api.service
 
-import com.example.frontendbook.domain.model.googleapi.GoogleBooksResponse
+import com.example.frontendbook.data.api.dto.EmbeddedBooksResponse
+import com.example.frontendbook.data.remote.dto.BookDto
+import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface BooksApiService {
-    @GET("volumes")
-    suspend fun searchBooks(
-        @Query("q") query: String,
-        @Query("startIndex") startIndex: Int = 0,
-        @Query("maxResults") maxResults: Int = 40
-    ): GoogleBooksResponse
+    @GET("books")
+    suspend fun getAllBooks(): Response<EmbeddedBooksResponse>
+
+    @GET("books/{id}")
+    suspend fun getBookById(@Path("id") id: Long): Response<BookDto>
+
+    @GET("books/search")
+    suspend fun searchBooks(@Query("q") query: String): Response<EmbeddedBooksResponse>
 }

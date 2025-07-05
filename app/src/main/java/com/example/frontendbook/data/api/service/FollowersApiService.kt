@@ -11,7 +11,7 @@ interface FollowersApiService {
      * Create a new follower relation
      * POST /api/followers
      */
-    @POST("api/followers")
+    @POST("/followers")
     suspend fun createFollower(
         @Body request: FollowerRequest
     ): Response<Unit>

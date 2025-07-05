@@ -1,7 +1,9 @@
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,67 +20,50 @@ class ReviewsFragment : Fragment() {
     private lateinit var viewModel: ReviewsViewModel
     private lateinit var adapter: ReviewsAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentReviewsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val singleReviewId = arguments?.getLong("review_id", -1L) ?: -1L
+        super.onViewCreated(view, savedInstanceState)
 
-        adapter = ReviewsAdapter(emptyList()) { review: ReviewDto -> /*...*/ }
+        // bookId argument’ı alın
+        val bookId = arguments?.getLong("bookId") ?: -1L
 
-        binding.reviewsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@ReviewsFragment.adapter
-        }
-
-        viewModel = ViewModelProvider(this, ReviewsViewModelFactory(requireContext()))
-            .get(ReviewsViewModel::class.java)
-
-        viewModel.reviews.observe(viewLifecycleOwner) { list ->
-            if (singleReviewId != -1L) {
-                val filtered = list.find { it.id == singleReviewId }
-                adapter.submitList(filtered?.let { listOf(it) } ?: emptyList())
-            } else {
-                adapter.submitList(list)
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { msg ->
-            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
-        }
-
-        viewModel.loadAllReviews()
-        // Adapter boş başlat
+        // RecyclerView + Adapter
         adapter = ReviewsAdapter(emptyList()) { review: ReviewDto ->
-            // tıklama işlemi
+            // TODO: review item tıklama işlemi
         }
-
-        // RecyclerView ayarları
         binding.reviewsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ReviewsFragment.adapter
         }
 
-        // ViewModel kurulumu
-        viewModel = ViewModelProvider(this, ReviewsViewModelFactory(requireContext()))
-            .get(ReviewsViewModel::class.java)
+        // ViewModel
+        viewModel = ViewModelProvider(
+            this,
+            ReviewsViewModelFactory(requireContext())
+        ).get(ReviewsViewModel::class.java)
 
-        // LiveData gözle
-        viewModel.reviews.observe(viewLifecycleOwner) { list ->
+        // Listeyi yükle ve gözle
+        viewModel.loadCommentsForBook(bookId)
+        viewModel.comments.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
         }
         viewModel.error.observe(viewLifecycleOwner) { msg ->
-            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+            msg?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
         }
 
-        // Veri yükle
-        // Tüm yorumlar:
-        viewModel.loadAllReviews()
-        // veya belirli kitap:
-        // val bookId = arguments?.getLong("bookId") ?: -1L
-        // viewModel.loadReviewsForBook(bookId)
+        // If you want to open the BottomSheet from here, call:
+        // AddReviewBottomSheet.newInstance(bookId)
+        //   .show(parentFragmentManager, "AddReview")
     }
 
     override fun onDestroyView() {

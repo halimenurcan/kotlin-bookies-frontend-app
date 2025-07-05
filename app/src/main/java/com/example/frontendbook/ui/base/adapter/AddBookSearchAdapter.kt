@@ -22,7 +22,7 @@ class AddBookSearchAdapter(
             binding.authorTextView.text = book.author
 
             Glide.with(binding.root.context)
-                .load(book.imageUrl ?: R.drawable.placeholder)
+                .load(book.coverImageUrl ?: R.drawable.placeholder)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.search)
                 .into(binding.bookCoverImage)

@@ -6,7 +6,7 @@ import com.example.frontendbook.data.repository.AuthRepositoryImpl
 import com.example.frontendbook.domain.repository.AuthRepository
 import com.example.frontendbook.domain.usecase.RegisterUserUseCase
 import com.example.frontendbook.domain.usecase.SignInUseCase
-import com.example.frontendbook.retrofit.ApiService
+import com.example.frontendbook.data.remote.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    // TokenInterceptor'ı sağla
     @Provides
     @Singleton
     fun provideTokenInterceptor(@ApplicationContext context: Context): TokenInterceptor {

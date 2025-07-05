@@ -1,40 +1,50 @@
 package com.example.frontendbook.data.repository
 
 import android.content.Context
+import android.util.Log
+import com.example.frontendbook.data.api.mapper.BookMapper
 import com.example.frontendbook.data.remote.RetrofitClient
-import com.example.frontendbook.domain.mapper.BookMapper
-import com.example.frontendbook.domain.mapper.UserMapper
 import com.example.frontendbook.domain.model.Book
-import com.example.frontendbook.domain.model.User
+class BookRepository(context: Context) {
+    private val api = RetrofitClient.booksApiService(context)
 
-class BookRepository(private val context: Context) {
+    /** Tüm kitapları getir ve domain model’e map et */
+    suspend fun fetchAllBooks(): List<Book> {
+        val resp = api.getAllBooks()
+        return if (resp.isSuccessful) {
+            val wrapper = resp.body() ?: return emptyList()
+            wrapper.embedded.books.map { BookMapper.fromDto(it) }
+        } else {
+            val err = resp.errorBody()?.string()
+            Log.e("BookRepo", "fetchAllBooks failed: code=${resp.code()}, body=$err")
+            throw Exception("Kitaplar yüklenemedi: ${resp.code()}")
+        }
+    }
 
+    /** Tek bir kitabı getir ve domain model’e map et */
+    suspend fun fetchBookById(id: Long): Book {
+        val resp = api.getBookById(id)
+        return if (resp.isSuccessful) {
+            val dto = resp.body() ?: throw Exception("Boş yanıt")
+            BookMapper.fromDto(dto)
+        } else {
+            val err = resp.errorBody()?.string()
+            Log.e("BookRepo", "fetchBookById failed: code=${resp.code()}, body=$err")
+            throw Exception("Kitap bilgisi yüklenemedi: ${resp.code()}")
+        }
+    }
+
+    /** Arama yapmak için */
     suspend fun searchBooks(query: String): List<Book> {
-        return try {
-            val response = RetrofitClient.booksApiService.searchBooks(query)
-            val items = response.items ?: emptyList()
-            items.mapNotNull { BookMapper.fromApi(it) }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
+        val resp = api.searchBooks(query)
+        return if (resp.isSuccessful) {
+            val wrapper = resp.body() ?: return emptyList()
+            wrapper.embedded.books.map { BookMapper.fromDto(it) }
+        } else {
+            val err = resp.errorBody()?.string()
+            Log.e("BookRepo", "searchBooks failed: code=${resp.code()}, body=$err")
+            throw Exception("Arama başarısız: ${resp.code()}")
         }
     }
-
-    suspend fun searchUsers(username: String): List<User> {
-        return try {
-            val response = RetrofitClient.userApiService(context).searchUsers(username)
-            response.mapNotNull { UserMapper.fromDto(it) }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
-        }
-    }
-
-    suspend fun searchEverything(query: String): Pair<List<Book>, List<User>> {
-        val books = searchBooks(query)
-        val users = searchUsers(query)
-        return Pair(books, users)
-    }
-
-
 }
+

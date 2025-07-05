@@ -26,7 +26,7 @@ class BookAdapter(
 
         holder.binding.bookTitle.text = book.title
         Glide.with(holder.binding.root.context)
-            .load(book.imageUrl)
+            .load(book.coverImageUrl)
             .placeholder(com.example.frontendbook.R.drawable.placeholder)
             .error(com.example.frontendbook.R.drawable.bookk)             // hata durumunda
             .into(holder.binding.bookImage)

@@ -37,11 +37,11 @@ class BookInfoPageFragment : Fragment() {
         book?.let { book ->
             binding.bookTitle.text = book.title
             binding.bookAuthor.text = book.author
-            binding.bookMeta.text = "${book.year}\n${book.pageCount} pages"
+            binding.bookMeta.text = "${book.publishedYear}\n${book.pageCount} pages"
             binding.bookDescription.text = book.description
 
             Glide.with(requireContext())
-                .load(book.imageUrl ?: R.drawable.bookk)
+                .load(book.coverImageUrl ?: R.drawable.bookk)
                 .placeholder(R.drawable.bookk)
                 .error(R.drawable.bookk)
                 .centerCrop()
@@ -58,7 +58,7 @@ class BookInfoPageFragment : Fragment() {
         }
     }
 
-    private fun renderRatingStars(rating: Double) {
+    private fun renderRatingStars(rating: Int) {
         val maxStars = 5
         binding.ratingStars.removeAllViews()
         for (i in 1..maxStars) {

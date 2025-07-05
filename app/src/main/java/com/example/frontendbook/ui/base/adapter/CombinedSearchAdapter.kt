@@ -52,7 +52,7 @@ class CombinedSearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.title.text = book.title
             binding.author.text = book.author
             Glide.with(binding.root.context)
-                .load(book.imageUrl)
+                .load(book.coverImageUrl)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error_image)
                 .into(binding.bookImageView)

@@ -21,10 +21,19 @@ class ReviewsAdapter(
         private val timeTv: TextView      = view.findViewById(R.id.reviewTimestamp)
 
         fun bind(item: ReviewDto) {
-            ratingBar.rating   = item.rating
-            contentTv.text     = item.content
-            authorTv.text      = item.username
-            timeTv.text        = item.timestamp
+            // score → rating
+            ratingBar.rating = item.score.toFloat()
+
+            // yorum metni
+            contentTv.text = item.comment
+
+            // yazarı göster (sadece ID varsa ID’yi, yoksa ismi)
+            authorTv.text = "User ${item.userId}"
+
+            // zaman damgası
+            timeTv.text = item.createdAt
+
+            // tıklamayı bildir
             itemView.setOnClickListener { onClick(item) }
         }
     }
@@ -41,6 +50,7 @@ class ReviewsAdapter(
 
     override fun getItemCount(): Int = items.size
 
+    /** Yeni listeyi atar ve yeniler */
     fun submitList(newItems: List<ReviewDto>) {
         items = newItems
         notifyDataSetChanged()
