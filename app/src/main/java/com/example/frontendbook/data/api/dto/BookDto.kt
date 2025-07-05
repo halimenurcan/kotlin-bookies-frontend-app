@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/frontendbook/data/remote/dto/BookDto.kt
 package com.example.frontendbook.data.remote.dto
 
 import com.example.frontendbook.data.api.dto.AuthorDto
