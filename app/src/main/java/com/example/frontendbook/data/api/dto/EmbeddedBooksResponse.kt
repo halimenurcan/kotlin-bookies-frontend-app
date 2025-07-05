@@ -1,0 +1,7 @@
+package com.example.frontendbook.data.api.dto
+import com.google.gson.annotations.SerializedName
+
+data class EmbeddedBooksResponse(
+    @SerializedName("_embedded")
+    val embedded: BooksListWrapper
+)
