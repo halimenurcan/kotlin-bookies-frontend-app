@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
@@ -71,13 +72,14 @@
                     android:inputType="text" />
             </LinearLayout>
 
-            <!-- Filtre alanı (gizlenebilir) -->
+            <!-- Filtre alanı -->
             <LinearLayout
                 android:id="@+id/browseContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="509dp"
                 android:orientation="vertical"
                 android:padding="16dp">
+
                 <EditText
                     android:id="@+id/browseInput"
                     android:layout_width="match_parent"
@@ -85,54 +87,58 @@
                     android:layout_marginTop="12dp"
                     android:hint="Enter a value..."
                     android:visibility="gone" />
+
                 <Button
                     android:id="@+id/browseSubmitButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Search"
-                    android:layout_marginTop="8dp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
+                    android:layout_marginTop="8dp"
                     android:backgroundTint="@color/stars_rated"
+                    android:text="Search"
                     android:textColor="@color/button_textSecondary"
+                    android:visibility="gone"
                     app:cornerRadius="8dp" />
 
+                <!-- Genre Ana Butonu -->
                 <Button
                     android:id="@+id/genreButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Genre"
                     android:backgroundTint="@color/buttonPrimary"
+                    android:text="Genre"
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
 
+
+                <!-- Language -->
                 <Button
                     android:id="@+id/languageButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Language"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/buttonPrimary"
+                    android:text="Language"
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
 
-                <!-- Highly rated/Most popular -->
+                <!-- Most Popular & Highly Rated -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="16dp"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/mostPopularButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Most Popular"
-                        android:backgroundTint="@color/buttonPrimary"
-                        android:textColor="@color/button_textPrimary"
                         android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/buttonPrimary"
+                        android:text="Most Popular"
+                        android:textColor="@color/button_textPrimary"
                         app:cornerRadius="8dp" />
 
                     <Button
@@ -140,26 +146,26 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Highly Rated"
                         android:backgroundTint="@color/buttonPrimary"
+                        android:text="Highly Rated"
                         android:textColor="@color/button_textPrimary"
                         app:cornerRadius="8dp" />
                 </LinearLayout>
 
-                <!-- Yapay Zeka Arama Butonu -->
+                <!-- AI Search -->
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/aiSearchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_gravity="end"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
+                    app:backgroundTint="@color/buttonSecondary"
                     app:srcCompat="@drawable/ai_search"
-                    app:tint="@color/white"
-                    app:backgroundTint="@color/buttonSecondary" />
+                    app:tint="@color/white" />
             </LinearLayout>
 
-            <!-- Sonuç Listesi -->
+            <!-- Sonuçlar -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"

@@ -1,52 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundPrimary">
 
-
-    <!-- Arka Plan Görsel -->
-
-    <ImageButton
-        android:id="@+id/bookCoverImage"
+    <!-- Üstte büyük görsel -->
+    <FrameLayout
+        android:id="@+id/imageContainer"
         android:layout_width="match_parent"
-        android:layout_height="382dp"
-        android:alpha="0.4"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bookk"
-        />
+        android:layout_height="400dp">
 
-    <!-- More Button -->
-    <ImageButton
-        android:id="@+id/buttonMore"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/moreinfo"
-        android:contentDescription="@string/more_options"
+        <ImageView
+            android:id="@+id/bookCoverImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bookk" />
 
-        />
+        <!-- Gradient -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_gradient" />
 
-    <!-- İçerik Alanı -->
+        <!-- More button -->
+        <ImageButton
+            android:id="@+id/buttonMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/moreinfo"
+            android:contentDescription="@string/more_options" />
+    </FrameLayout>
+
+    <!-- İçerik -->
     <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_below="@id/imageContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/bookCoverImage"
-        android:layout_marginTop="-53dp"
-        android:padding="16dp"
-        >
+        android:fillViewport="true"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Başlık -->
+            <!-- Kitap bilgileri -->
             <TextView
                 android:id="@+id/bookTitle"
                 android:layout_width="wrap_content"
@@ -54,26 +57,24 @@
                 android:text="PRIDE AND PREJUDICE"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textSize="28sp" />
+                android:textSize="24sp" />
 
-            <!-- Yazar -->
             <TextView
                 android:id="@+id/bookAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jane Austen"
                 android:textColor="@color/textBookInfo"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
-            <!-- Tarih ve Sayfa -->
             <TextView
                 android:id="@+id/bookMeta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1831\n300 pages"
                 android:textColor="@color/textBookInfo"
-                android:textSize="18sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:textSize="14sp" />
 
             <!-- Ayırıcı -->
             <View
@@ -87,41 +88,60 @@
                 android:id="@+id/bookDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/textBookInfo"
                 android:textSize="16sp"
-                android:textStyle="italic"
-                android:maxLines="100"
-                android:scrollbars="vertical"
-                tools:text="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" />
-
-            <!-- Ayırıcı -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="12dp"
-                android:background="@color/line" />
+                android:textColor="@color/textBookInfo"
+                android:lineSpacingExtra="4dp"
+                android:textStyle="normal"
+                android:maxLines="100" />
 
             <!-- Butonlar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/bookInforeviewsButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Reviews"
+                    android:backgroundTint="@color/buttonSecondary"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    />
+
+                <Button
+                    android:id="@+id/bookInfolistsButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Lists"
+                    android:backgroundTint="@color/buttonSecondary"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
 
             <!-- Ratings -->
             <TextView
-                android:id="@+id/ratingsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ratings"
                 android:textColor="@color/textBookInfo"
                 android:textSize="18sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:layout_marginTop="16dp" />
 
-            <!-- Yıldızlar -->
             <LinearLayout
                 android:id="@+id/ratingStars"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
                 android:orientation="horizontal" />
         </LinearLayout>
     </ScrollView>
+
 </RelativeLayout>
