@@ -15,6 +15,6 @@ interface BooksApiService {
     @GET("books/{id}")
     suspend fun getBookById(@Path("id") id: Long): Response<BookDto>
 
-    @GET("books/search")
-    suspend fun searchBooks(@Query("q") query: String): Response<EmbeddedBooksResponse>
-}
+    @GET("books/search/{query}")
+    suspend fun searchBooks(@Path("query") query: String): Response<EmbeddedBooksResponse>}
+
