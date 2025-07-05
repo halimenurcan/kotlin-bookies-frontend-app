@@ -80,25 +80,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <EditText
-                    android:id="@+id/browseInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Enter a value..."
-                    android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/browseSubmitButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:backgroundTint="@color/stars_rated"
-                    android:text="Search"
-                    android:textColor="@color/button_textSecondary"
-                    android:visibility="gone"
-                    app:cornerRadius="8dp" />
 
                 <!-- Genre Ana Butonu -->
                 <Button
@@ -136,9 +118,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/buttonPrimary"
+                        android:backgroundTint="@color/stars_rated"
                         android:text="Most Popular"
-                        android:textColor="@color/button_textPrimary"
+                        android:textColor="@color/button_textSecondary"
                         app:cornerRadius="8dp" />
 
                     <Button
@@ -146,9 +128,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/buttonPrimary"
+                        android:backgroundTint="@color/stars_rated"
                         android:text="Highly Rated"
-                        android:textColor="@color/button_textPrimary"
+                        android:textColor="@color/button_textSecondary"
                         app:cornerRadius="8dp" />
                 </LinearLayout>
 

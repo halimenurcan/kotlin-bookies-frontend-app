@@ -60,8 +60,7 @@ class SearchFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        binding.genreButton.setOnClickListener { showInput("genre") }
-        binding.languageButton.setOnClickListener { showInput("language") }
+
 
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearchAction = actionId == EditorInfo.IME_ACTION_SEARCH
@@ -116,17 +115,9 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showInput(type: String) {
-        currentFilterType = type
-        binding.browseInput.setText("")
-        binding.browseInput.visibility = View.VISIBLE
-        binding.browseSubmitButton.visibility = View.VISIBLE
-    }
 
-    private fun hideInput() {
-        binding.browseInput.visibility = View.GONE
-        binding.browseSubmitButton.visibility = View.GONE
-    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
