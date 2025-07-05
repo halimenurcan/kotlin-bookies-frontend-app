@@ -54,5 +54,16 @@ class ListsViewModel(
         }
     }
 
+    fun loadExploreLists() {
+        viewModelScope.launch {
+            try {
+                _lists.value = repo.getAllLists()
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
+
 
 }

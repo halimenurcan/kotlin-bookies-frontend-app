@@ -38,7 +38,10 @@
             <include layout="@layout/item_book_grid" />
             <include layout="@layout/item_book_grid" />
 
-            <include layout="@layout/see_more_card" />
+            <include
+                android:id="@+id/see_more_card"
+                layout="@layout/see_more_card" />
+
 
         </LinearLayout>
     </HorizontalScrollView>

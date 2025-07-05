@@ -46,5 +46,15 @@ class BookRepository(context: Context) {
             throw Exception("Arama başarısız: ${resp.code()}")
         }
     }
+    suspend fun getBooksByListId(listId: Long): List<Book> {
+        val response = api.getBooksInList(listId)
+        if (response.isSuccessful) {
+            return response.body() ?: emptyList()
+        } else {
+            throw Exception("Liste kitapları alınamadı")
+        }
+    }
+
+
 }
 

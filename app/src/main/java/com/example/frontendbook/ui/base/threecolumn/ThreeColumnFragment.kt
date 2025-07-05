@@ -30,16 +30,19 @@ class ThreeColumnFragment : Fragment() {
 
     private var pageTitle: String? = null
     private var type: String? = null
+    private var listId: Long? = null  // 👈 Yeni: Liste ID'si
 
     companion object {
         private const val ARG_TITLE = "arg_title"
-        private const val ARG_TYPE  = "arg_type"
+        private const val ARG_TYPE = "arg_type"
+        private const val ARG_LIST_ID = "arg_list_id"
 
-        fun newInstance(title: String, type: String): ThreeColumnFragment {
+        fun newInstance(title: String, type: String? = null, listId: Long? = null): ThreeColumnFragment {
             return ThreeColumnFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
-                    putString(ARG_TYPE, type)
+                    type?.let { putString(ARG_TYPE, it) }
+                    listId?.let { putLong(ARG_LIST_ID, it) }
                 }
             }
         }
@@ -48,7 +51,8 @@ class ThreeColumnFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageTitle = arguments?.getString(ARG_TITLE)
-        type      = arguments?.getString(ARG_TYPE)
+        type = arguments?.getString(ARG_TYPE)
+        listId = arguments?.getLong(ARG_LIST_ID, -1L)?.takeIf { it != -1L }
     }
 
     override fun onCreateView(
@@ -75,37 +79,42 @@ class ThreeColumnFragment : Fragment() {
         }
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.recyclerView.adapter       = adapter
-        binding.headerTitle.text           = pageTitle ?: "Books"
+        binding.recyclerView.adapter = adapter
+        binding.headerTitle.text = pageTitle ?: "Books"
 
-        // Kullanıcı ID'si
-        val prefs  = requireContext()
-            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
 
-        if (type == "read") {
-            // --- "Read" listesini Room'dan oku ---
+        // 👇 Liste ID varsa bu özel listeye ait kitapları göster (geliştirilmeye açık)
+        if (listId != null) {
+            Log.d("THREE_COLUMN", "Liste ID ile kitaplar yüklenecek: $listId")
+            // TODO: listId'ye özel kitapları getir – ViewModel/metodun hazır olması gerekir.
+            // Örn: viewModel.loadBooksForList(listId)
+            // adapter.submitList(booksFromThatList)
+        }
+
+        // 👇 Eski "read" tipi (Room kullanımı için)
+        else if (type == "read") {
             val factory = ReadViewModelFactory(requireContext())
             readViewModel = ViewModelProvider(this, factory)[ReadViewModel::class.java]
 
             readViewModel.readList.observe(viewLifecycleOwner) { entries ->
                 val books = entries.map { entry ->
                     Book(
-                        id            = entry.id,                           // artık non-null Long
-                        author        = entry.bookAuthor     ?: "Unknown",
-                        title         = entry.bookTitle      ?: "Untitled",
-                        isbn          = entry.bookIsbn       ?: "",
-                        description   = entry.bookDescription?: "No description available",
+                        id = entry.id,
+                        author = entry.bookAuthor ?: "Unknown",
+                        title = entry.bookTitle ?: "Untitled",
+                        isbn = entry.bookIsbn ?: "",
+                        description = entry.bookDescription ?: "No description available",
                         coverImageUrl = entry.bookCoverUrl,
-                        pageCount     = entry.bookPageCount  ?: 0,
-                        publisher     = entry.bookPublisher  ?: "Unknown publisher",
+                        pageCount = entry.bookPageCount ?: 0,
+                        publisher = entry.bookPublisher ?: "Unknown publisher",
                         publishedYear = entry.bookPublishedYear ?: 0,
                         rating = entry.rating
                     )
                 }
                 adapter.submitList(books)
             }
-
 
             readViewModel.error.observe(viewLifecycleOwner) {
                 Log.e("THREE_COLUMN", "Hata: $it")
@@ -114,9 +123,10 @@ class ThreeColumnFragment : Fragment() {
             if (userId != -1L) {
                 readViewModel.loadReadList(userId)
             }
+        }
 
-        } else {
-            // --- Uzaktan çekilen diğer kitaplar ---
+        // 👇 Varsayılan: remote kitap listesi (örneğin "fiction")
+        else {
             bookViewModel.books.observe(viewLifecycleOwner) { books ->
                 Log.d("THREE_COLUMN", "Gelen kitap sayısı: ${books.size}")
                 adapter.submitList(books)

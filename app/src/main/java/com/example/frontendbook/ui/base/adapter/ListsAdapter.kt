@@ -13,19 +13,20 @@ class ListAdapter(
     private val onClick: (ListDto) -> Unit
 ) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
-    inner class ListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val titleView: TextView = view.findViewById(R.id.listTitle)
+    // ViewHolder: Her kart (list item) görünümünü temsil eder
+    inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val titleView: TextView = itemView.findViewById(R.id.listTitle)
 
-        fun bind(item: ListDto) {
-            titleView.text = item.title
-            itemView.setOnClickListener { onClick(item) }
+        fun bind(listItem: ListDto) {
+            titleView.text = listItem.title
+            itemView.setOnClickListener { onClick(listItem) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_list, parent, false)
-        return ListViewHolder(v)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_list_profile, parent, false)
+        return ListViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
@@ -34,6 +35,7 @@ class ListAdapter(
 
     override fun getItemCount(): Int = lists.size
 
+    // Listeyi dışarıdan güncellemek için çağrılır
     fun submitList(newLists: List<ListDto>) {
         lists = newLists
         notifyDataSetChanged()
