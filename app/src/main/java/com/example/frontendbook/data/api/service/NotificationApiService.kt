@@ -10,7 +10,6 @@ interface NotificationApiService {
     @GET("notifications")
     suspend fun getNotifications(): Response<List<NotificationDto>>
 
-    /** Tek bir bildirimi “okundu” olarak işaretle */
     @PATCH("notifications/{id}/read")
     suspend fun markAsRead(
         @Path("id") notificationId: Long

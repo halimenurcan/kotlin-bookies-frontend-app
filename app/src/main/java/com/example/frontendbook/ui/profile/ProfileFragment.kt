@@ -1,4 +1,3 @@
-// com/example/frontendbook/ui/profile/ProfileFragment.kt
 package com.example.frontendbook.ui.profile
 
 import android.content.Context
@@ -30,19 +29,16 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView() çağrıldı")
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated() çağrıldı")
 
         // ViewModel oluşturma
         viewModel = ViewModelProvider(this, UserViewModelFactory(requireContext()))
             .get(UserViewModel::class.java)
-        Log.d(TAG, "ViewModel örneklendi")
 
         // SharedPrefs'ten userId
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
@@ -54,7 +50,6 @@ class ProfileFragment : Fragment() {
 
         // LiveData gözlemleri
         viewModel.user.observe(viewLifecycleOwner) { user ->
-            Log.d(TAG, "observe(user) -> $user")
             binding.usernameText.text = user.username
             if (!user.profileImageUrl.isNullOrBlank()) {
                 Glide.with(this)
@@ -73,7 +68,6 @@ class ProfileFragment : Fragment() {
         }
         viewModel.error.observe(viewLifecycleOwner) { msg ->
             msg?.let {
-                Log.e(TAG, "observe(error) -> $it")
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
@@ -95,7 +89,7 @@ class ProfileFragment : Fragment() {
         // Veri yükle
         viewModel.loadUser(userId)
 
-        // Buton click listener’ları
+        // Profil resmi ve ayarlar butonları
         binding.profileImage.setOnClickListener {
             ChooseProfileImageBottomSheetFragment { selectedResId ->
                 binding.profileImage.setImageResource(selectedResId)
@@ -108,7 +102,7 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
-                    putString("arg_title", "Read")
+                    putString("arg_title", "Read") //
                     putString("arg_type",  "read")
                 }
             )
@@ -117,22 +111,23 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
-                    putString("arg_title", "Readlist")
+                    putString("arg_title", "Readlist") // "Readlist"
                     putString("arg_type",  "readlist")
                 }
             )
-        }
-        binding.btnLists.setOnClickListener {
-            findNavController().navigate(R.id.listsFragment)
         }
         binding.btnLikes.setOnClickListener {
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
-                    putString("arg_title", "Likes")
+                    putString("arg_title","Likes") // "Likes"
                     putString("arg_type",  "likes")
                 }
             )
+        }
+        // Diğer butonlar
+        binding.btnLists.setOnClickListener {
+            findNavController().navigate(R.id.listsFragment)
         }
         binding.btnFollowers.setOnClickListener {
             findNavController().navigate(

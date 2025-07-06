@@ -56,6 +56,8 @@ object RetrofitClient {
     }
     fun searchApiService(context: Context): SearchApiService =
         getRetrofit(context).create(SearchApiService::class.java)
+    fun statusApiService(context: Context): StatusApiService =
+        getRetrofit(context).create(StatusApiService::class.java)
     // API service providers
     fun userApiService(context: Context): UserApiService =
         getRetrofit(context).create(UserApiService::class.java)
