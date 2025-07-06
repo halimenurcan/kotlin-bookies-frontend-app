@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.homePage.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
-import com.example.frontendbook.data.model.ReviewDto
+import com.example.frontendbook.data.api.dto.ReviewDto
 
 class ReviewsAdapter(
     private var items: List<ReviewDto>,
@@ -20,9 +21,10 @@ class ReviewsAdapter(
         private val authorTv: TextView    = view.findViewById(R.id.reviewAuthor)
         private val timeTv: TextView      = view.findViewById(R.id.reviewTimestamp)
 
+        @SuppressLint("SetTextI18n")
         fun bind(item: ReviewDto) {
             // score → rating
-            ratingBar.rating = item.score.toFloat()
+            ratingBar.rating = item.score?.toFloat()!!
 
             // yorum metni
             contentTv.text = item.comment

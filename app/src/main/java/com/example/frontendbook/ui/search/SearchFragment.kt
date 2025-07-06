@@ -82,7 +82,7 @@ class SearchFragment : Fragment() {
                 findNavController().navigate(action)
             },
             onUserClick = { user ->
-                val clickedUserId = user.id.toLongOrNull() ?: -1L
+                val clickedUserId = user.id ?: -1L
 
                 if (clickedUserId == currentUserId) {
                     val action = SearchFragmentDirections

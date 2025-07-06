@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reviewRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="12dp"
     android:background="@color/boxes_background">
 
-    <!-- Kitap kapağı (isterseniz burayı <include> ile de çekebilirsiniz) -->
     <ImageView
         android:id="@+id/reviewBookCover"
         android:layout_width="80dp"
         android:layout_height="100dp"
         android:layout_marginEnd="12dp"
-        android:src="@drawable/placeholder"
-       />
+        android:src="@drawable/placeholder" />
 
-    <!-- Sağdaki Yorum Bilgileri -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <!-- Yıldız puan -->
         <RatingBar
             android:id="@+id/reviewRatingBar"
             style="?android:attr/ratingBarStyleSmall"
@@ -34,34 +31,27 @@
             android:isIndicator="true"
             android:layout_marginBottom="4dp" />
 
-        <!-- Yorum metni -->
         <TextView
             android:id="@+id/reviewContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kitap çok güzeldi, herkese tavsiye ederim!"
             android:textColor="@color/textPrimary"
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Yazar kullanıcı adı -->
         <TextView
             android:id="@+id/reviewAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="– kullanıcıadı123"
             android:textColor="@color/textSecondary"
             android:textSize="12sp"
             android:layout_marginBottom="2dp" />
 
-        <!-- Zaman damgası -->
         <TextView
             android:id="@+id/reviewTimestamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2 saat önce"
             android:textColor="@color/textSecondary"
             android:textSize="12sp" />
-
     </LinearLayout>
 </LinearLayout>

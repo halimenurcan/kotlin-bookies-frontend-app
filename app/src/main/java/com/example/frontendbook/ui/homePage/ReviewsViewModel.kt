@@ -2,7 +2,7 @@ package com.example.frontendbook.ui.homePage
 
 import androidx.lifecycle.*
 import com.example.frontendbook.data.model.ReviewCreateRequest
-import com.example.frontendbook.data.model.ReviewDto
+import com.example.frontendbook.data.api.dto.ReviewDto
 import com.example.frontendbook.data.repository.ReviewsRepository
 import kotlinx.coroutines.launch
 
@@ -13,22 +13,35 @@ class ReviewsViewModel(
     private val repo: ReviewsRepository
 ) : ViewModel() {
 
+    // — LIST of comments/reviews —
     private val _comments = MutableLiveData<List<ReviewDto>>(emptyList())
     val comments: LiveData<List<ReviewDto>> = _comments
 
-    private val _single = MutableLiveData<ReviewDto>()
-    val single: LiveData<ReviewDto> = _single
+    // — SINGLE comment/review —
+    private val _selectedReview = MutableLiveData<ReviewDto?>()
+    val selectedReview: LiveData<ReviewDto?> = _selectedReview
 
+    // — ERROR messages —
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
-    /** Belirli bir kitaba ait yorumları yükler */
+    /** Yorum listesini (tüm yorumlar) yükler */
+    fun loadAllComments() {
+        viewModelScope.launch {
+            try {
+                _comments.value = repo.fetchAllComments()
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
+
+    /** Bir kitaba ait yorumları yükler */
     fun loadCommentsForBook(bookId: Long) {
         viewModelScope.launch {
             try {
-                // Loglama repository içinde yapılıyor
-                val list = repo.fetchReviewsForBook(bookId)
-                _comments.value = list
+                _comments.value = repo.fetchReviewsForBook(bookId)
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
@@ -36,12 +49,11 @@ class ReviewsViewModel(
         }
     }
 
-    /** Tek bir yorumu yükler */
-    fun loadComment(id: Long) {
+    /** Tek bir yorumu yükler ve [selectedReview]’e yayınlar */
+    fun loadCommentById(id: Long) {
         viewModelScope.launch {
             try {
-                val comment = repo.getCommentById(id)
-                _single.value = comment
+                _selectedReview.value = repo.getCommentById(id)
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
@@ -49,12 +61,11 @@ class ReviewsViewModel(
         }
     }
 
-    /** Yeni yorum oluşturur */
+    /** Yeni yorum oluşturur ve liste başına ekler */
     fun createComment(request: ReviewCreateRequest) {
         viewModelScope.launch {
             try {
                 val created = repo.createComment(request)
-                // Oluşturulan yorumu liste başına ekle
                 _comments.value = listOf(created) + (_comments.value ?: emptyList())
                 _error.value = null
             } catch (e: Exception) {
@@ -75,15 +86,4 @@ class ReviewsViewModel(
             }
         }
     }
-    fun loadAllReviews() {
-        viewModelScope.launch {
-            try {
-                _comments.value = repo.fetchAllReviews()
-                _error.value = null
-            } catch (e: Exception) {
-                _error.value = e.message
-            }
-        }
-    }
 }
-

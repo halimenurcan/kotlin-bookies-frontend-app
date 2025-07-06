@@ -2,14 +2,14 @@ package com.example.frontendbook.data.remote.dto
 
 import com.example.frontendbook.domain.model.User
 data class UserDto(
-    val id: String?,
+    val id: Long?,
     val username: String?,
     val fullName: String?,
     val profileImageUrl: String?
 )
 
 fun UserDto.toDomain() = User(
-    id = this.id ?: "",                // null gelirse boş string
+    id = (this.id ?: -1),                // null gelirse boş string
     username = this.username ?: "",
     fullName = this.fullName ?: "",
     profileImageUrl = this.profileImageUrl

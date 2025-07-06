@@ -1,13 +1,15 @@
-package com.example.frontendbook.data.model
+package com.example.frontendbook.data.api.dto
 
 /**
- * Backend’den /api/reviews veya benzer endpoint’ten dönen DTO
+ * Backend’den /api/comments veya benzer endpoint’ten dönen DTO
  */
 data class ReviewDto(
     val id: Long,
-    val userId: Long,
+    val userId: Long?,
     val bookId: Long,
-    val score: Int,
+    val bookCoverUrl: String,
+    val userName: String,
+    val score: Int?,
     val comment: String,
     val createdAt: String
 )

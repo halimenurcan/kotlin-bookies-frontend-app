@@ -31,6 +31,7 @@
     <string name="add_to_list_desc">Add To List</string>
     <string name="add_to_list_label">Add To List</string>
     <string name="add_book">Add Book</string>
+    <string name="no_reviews_yet">no reviews yet\n</string>
 
 
 </resources>

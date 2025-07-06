@@ -53,7 +53,7 @@ class AllReviewsFragment : Fragment() {
         }
 
         // Tüm yorumları yükle
-        viewModel.loadAllReviews()
+        viewModel.loadAllComments()
     }
 
     override fun onDestroyView() {
