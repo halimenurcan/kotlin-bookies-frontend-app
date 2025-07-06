@@ -3,6 +3,8 @@ package com.example.frontendbook.ui.addBook
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -27,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import android.view.KeyEvent
 import android.view.MotionEvent
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class AddBookBottomSheet : BottomSheetDialogFragment() {
 
@@ -110,9 +113,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
 
         // clear-text “X” icon logic
         val closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.close)
-        binding.searchInput.addTextChangedListener(object : android.text.TextWatcher {
+        binding.searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {}
+            override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val icon = if (!s.isNullOrEmpty()) closeIcon else null
                 binding.searchInput.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null)
@@ -186,10 +189,13 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 if (comment.isNotEmpty() || rating > 0) {
                     try {
                         val req = ReviewCreateRequest(
-                            userId  = userId,
-                            bookId  = book.id.toLong(),
-                            score   = rating,
-                            comment = comment
+                            userId = userId,
+                            bookId = book.id.toLong(),
+                            score = rating,
+                            comment = comment,
+                            read = TODO(),
+                            toRead = TODO(),
+                            liked = TODO()
                         )
                         val created = reviewsRepo.createComment(req)
                         Toast.makeText(requireContext(), "Review eklendi (ID=${created.id})", Toast.LENGTH_SHORT).show()
@@ -244,12 +250,12 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
         dialog?.let { dialog ->
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
-                val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(it)
+                val behavior = BottomSheetBehavior.from(it)
                 val layoutParams = it.layoutParams
                 val displayMetrics = resources.displayMetrics
                 layoutParams.height = (displayMetrics.heightPixels * 0.8).toInt()
                 it.layoutParams = layoutParams
-                behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
     }
