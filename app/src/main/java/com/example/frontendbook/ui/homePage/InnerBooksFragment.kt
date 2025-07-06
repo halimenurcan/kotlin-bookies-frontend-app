@@ -70,6 +70,7 @@ class InnerBooksFragment : Fragment() {
         with(binding) {
             popularArrow.setOnClickListener {
                 openThreeColumnPage("Popular This Week", "popular")
+
             }
             exploreArrow.setOnClickListener {
                 openThreeColumnPage("Explore More", "explore")
@@ -92,6 +93,12 @@ class InnerBooksFragment : Fragment() {
                     exploreAdapter.submitList(books.take(9))
                 }
             }
+            viewModel.popularBooks.observe(viewLifecycleOwner) { books ->
+                if (books.isNotEmpty()) {
+                    inflateBooks(binding.popularBooksContainer, books.take(6))
+                }
+            }
+            viewModel.fetchPopularBooks()
 
             // Type parametresine göre kitapları yükle
             viewModel.fetchBooks(type ?: "fiction")

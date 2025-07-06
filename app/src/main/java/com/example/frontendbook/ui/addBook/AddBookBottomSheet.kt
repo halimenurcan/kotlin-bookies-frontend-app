@@ -147,17 +147,16 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
 
         searchViewModel.combinedResults.observe(viewLifecycleOwner) { results ->
             val books = results.filterIsInstance<CombinedSearchResult.BookResult>().map { it.book }
-            if (books.isNotEmpty()) {
-                adapter.submitList(books)
-                binding.recyclerView.visibility = View.VISIBLE
-            } else {
-                binding.recyclerView.visibility = View.GONE
+            adapter.submitList(books)
+            binding.recyclerView.visibility = if (books.isNotEmpty()) View.VISIBLE else View.GONE
+
+            // Eğer kullanıcı gerçekten arama yaptıysa ama sonuç çıkmadıysa göster
+            if (books.isEmpty() && searchViewModel.searchStarted.value == true && !binding.searchInput.text.isNullOrBlank()) {
                 Toast.makeText(requireContext(), "No books found", Toast.LENGTH_SHORT).show()
             }
+
         }
-        searchViewModel.errorMessage.observe(viewLifecycleOwner) { msg ->
-            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
-        }
+
 
         // —— 3) Save button: Add to list &/or Create review ——
         binding.saveBookButton.setOnClickListener {
@@ -222,6 +221,22 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 }
             }
         }
+        binding.cancelButton.setOnClickListener {
+            binding.searchInput.setText("")
+            adapter.submitList(emptyList())
+            searchViewModel.clearResults()
+
+            binding.bookPreviewArea.visibility = View.GONE
+            binding.selectedBookDetails.visibility = View.GONE
+            binding.recyclerView.visibility = View.GONE
+            binding.addBookTitle.text = getString(R.string.add_book)
+            binding.backButton.visibility = View.GONE
+            selectedBook = null
+            hideKeyboard()
+            dismiss()
+        }
+
+
     }
 
     override fun onStart() {

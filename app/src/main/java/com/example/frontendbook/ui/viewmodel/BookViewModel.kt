@@ -13,7 +13,8 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _books = MutableLiveData<List<Book>>(emptyList())
     val books: LiveData<List<Book>> = _books
-
+    private val _popularBooks = MutableLiveData<List<Book>>()
+    val popularBooks: LiveData<List<Book>> get() = _popularBooks
     /**
      * type:
      *  - "popular", "explore", "fiction" --> tüm kitapları getirir
@@ -55,6 +56,15 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
+    fun fetchPopularBooks() {
+        viewModelScope.launch {
+            try {
+                val books = repository.fetchPopularBooks()
+                _popularBooks.value = books
+            } catch (e: Exception) {
+                Log.e("BookViewModel", "Popüler kitaplar alınamadı: ${e.message}")
+            }
+        }
+    }
 
 }
