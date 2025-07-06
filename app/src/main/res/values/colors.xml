@@ -15,14 +15,11 @@
     <color name="boxes_small">#979797</color>
     <color name="checkboxTickColor">#ED7B14</color>
 
-
     <color name="footer_icons">#000000</color>
     <color name="footer_selected_icon">#ED7B14</color>
 
-
     <color name="textPrimary">#000000</color>
     <color name="textSecondary">#363636</color>
-
 
     <color name="buttonPrimary">#D9D9D9</color>
     <color name="button_textPrimary">#000000</color>
@@ -31,17 +28,7 @@
     <color name="textBookInfo">#363636</color>
 
 
-
     <color name="stars_rated">#363636</color>
     <color name="stars_empty">#D9D9D9</color>
-
-    <color name="dialog_background">#FEFEFE</color>
-    <color name="dialog_title">#363636</color>
-    <color name="dialog_text">#D9D9D9</color>
-    <color name="dialog_button">#ED7B14</color>
-
-
-
-
 
 </resources>

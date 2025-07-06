@@ -29,5 +29,26 @@
         <item name="colorControlNormal">@color/stars_rated</item>    <!-- yıldız rengi -->
     </style>
 
+    <style name="CustomFilterChip" parent="Widget.Material3.Chip.Assist">
+
+        <item name="chipBackgroundColor">@color/backgroundSecondary</item>
+
+
+        <item name="chipStrokeColor">@color/textSecondary</item>
+        <item name="chipStrokeWidth">1dp</item>
+
+        <item name="android:textColor">@color/black</item>
+
+
+        <item name="chipCornerRadius">8dp</item>
+
+
+        <item name="checkedIconVisible">false</item>
+        <item name="chipSurfaceColor">@color/backgroundSecondary</item>
+        <item name="chipIconTint">@color/textSecondary</item>
+        <item name="closeIconTint">@color/textSecondary</item>
+    </style>
+
+
 
 </resources>
