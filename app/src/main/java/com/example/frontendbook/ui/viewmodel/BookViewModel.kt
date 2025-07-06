@@ -44,4 +44,17 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    fun fetchBooksInList(listId: Long) {
+        viewModelScope.launch {
+            try {
+                val books = repository.getBooksByListId(listId)
+                _books.postValue(books)
+            } catch (e: Exception) {
+                Log.e("BookViewModel", "Liste kitaplarını getirme hatası", e)
+            }
+        }
+    }
+
+
 }

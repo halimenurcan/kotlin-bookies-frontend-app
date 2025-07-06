@@ -26,5 +26,9 @@ interface ListsApiService {
         @Path("listId") listId: Long,
         @Body bookRequest: AddBookRequest
     ): Response<Void>
+    /** Tüm kullanıcıların oluşturduğu listeleri getirir (Explore için) */
+
+    @GET("/api/lists")
+    suspend fun getAllLists(): List<ListDto>
 
 }

@@ -35,6 +35,13 @@
     <color name="stars_rated">#363636</color>
     <color name="stars_empty">#D9D9D9</color>
 
+    <color name="dialog_background">#FEFEFE</color>
+    <color name="dialog_title">#363636</color>
+    <color name="dialog_text">#D9D9D9</color>
+    <color name="dialog_button">#ED7B14</color>
+
+
+
 
 
 </resources>

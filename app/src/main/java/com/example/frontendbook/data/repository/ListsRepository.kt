@@ -34,4 +34,9 @@ class ListsRepository(
             false
         }
     }
+
+    suspend fun getAllLists(): List<ListDto> {
+        return api.getAllLists()
+    }
+
 }
