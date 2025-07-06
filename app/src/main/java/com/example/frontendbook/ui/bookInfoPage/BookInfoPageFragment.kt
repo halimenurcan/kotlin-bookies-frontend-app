@@ -1,6 +1,7 @@
 package com.example.frontendbook.ui.bookInfoPage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,7 @@ import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentBookInfoPageBinding
 import com.example.frontendbook.domain.model.Book
 import com.bumptech.glide.request.target.Target
-import androidx.navigation.fragment.navArgs
-
-
+import androidx.navigation.fragment.findNavController
 
 class BookInfoPageFragment : Fragment() {
 
@@ -25,8 +24,8 @@ class BookInfoPageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         book = args.book
-
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +35,9 @@ class BookInfoPageFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("BookInfoPage", "Book id: ${book?.id}")
+        Log.d("NavController", "Current destination: ${findNavController().currentDestination?.label}")
+
         book?.let { book ->
             binding.bookTitle.text = book.title
             binding.bookAuthor.text = book.author
@@ -50,12 +52,15 @@ class BookInfoPageFragment : Fragment() {
                 .override(Target.SIZE_ORIGINAL)
                 .into(binding.bookCoverImage)
 
-
             renderRatingStars(book.rating)
 
             binding.buttonMore.setOnClickListener {
                 val dialog = BookInfoMoreDialog.newInstance(book)
                 dialog.show(parentFragmentManager, "BookInfoMoreDialog")
+            }
+            binding.bookInforeviewsButton.setOnClickListener {
+                val action = BookInfoPageFragmentDirections.actionBookInfoPageToReviewsFragment(book)
+                findNavController().navigate(action)
             }
         }
     }
@@ -67,7 +72,7 @@ class BookInfoPageFragment : Fragment() {
             val star = View.inflate(context, R.layout.item_star, null)
             val imageView = star.findViewById<android.widget.ImageView>(R.id.starIcon)
             imageView.setImageResource(
-                if (i <= rating.toInt()) R.drawable.star_rated else R.drawable.star_empty
+                if (i <= rating) R.drawable.star_rated else R.drawable.star_empty
             )
             binding.ratingStars.addView(star)
         }

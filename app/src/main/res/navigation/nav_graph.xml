@@ -11,7 +11,11 @@
         android:id="@+id/homePageFragment"
         android:name="com.example.frontendbook.ui.homePage.HomePageFragment"
         android:label="Home Page"
-        tools:layout="@layout/fragment_home_page" />
+        tools:layout="@layout/fragment_home_page">
+        <action
+            android:id="@+id/action_homePageFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
+    </fragment>
 
     <!-- Arama -->
     <fragment
@@ -19,21 +23,38 @@
         android:name="com.example.frontendbook.ui.search.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search">
-
-        <!-- Kitap detayına geçiş -->
         <action
             android:id="@+id/action_searchFragment_to_bookInfoPageFragment"
             app:destination="@id/bookInfoPageFragment" />
-
-        <!-- Kendi profil ekranına geçiş -->
         <action
             android:id="@+id/action_searchFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
-
-        <!-- Başka kullanıcı profiline geçiş -->
         <action
             android:id="@+id/action_searchFragment_to_otherUserProfileFragment"
             app:destination="@id/otherUserProfileFragment" />
+    </fragment>
+
+    <!-- Kitap Detay Sayfası -->
+    <fragment
+        android:id="@+id/bookInfoPageFragment"
+        android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
+        tools:layout="@layout/fragment_book_info_page">
+        <argument
+            android:name="book"
+            app:argType="com.example.frontendbook.domain.model.Book" />
+        <action
+            android:id="@+id/action_bookInfoPage_to_reviewsFragment"
+            app:destination="@id/reviewsFragment" />
+    </fragment>
+
+    <!-- Yorumlar Listesi -->
+    <fragment
+        android:id="@+id/reviewsFragment"
+        android:name="com.example.frontendbook.ui.homePage.ReviewsFragment"
+        tools:layout="@layout/fragment_reviews">
+        <argument
+            android:name="book"
+            app:argType="com.example.frontendbook.domain.model.Book" />
     </fragment>
 
     <!-- Kendi Profil -->
@@ -54,17 +75,6 @@
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
 
-    <!-- Kitap Detay Sayfası -->
-    <fragment
-        android:id="@+id/bookInfoPageFragment"
-        android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
-        android:label="Book Info"
-        tools:layout="@layout/fragment_book_info_page">
-        <argument
-            android:name="book"
-            app:argType="com.example.frontendbook.domain.model.Book" />
-    </fragment>
-
     <!-- Üç Kolon Düzeni -->
     <fragment
         android:id="@+id/threeColumnFragment"
@@ -75,11 +85,10 @@
     <dialog
         android:id="@+id/addBookBottomSheet"
         android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
-        android:label="Add Book" >
+        android:label="Add Book">
         <argument
             android:name="listId"
-            app:argType="long"
-             />
+            app:argType="long" />
     </dialog>
 
     <!-- Kullanıcı Listesi -->
@@ -107,7 +116,7 @@
     <fragment
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
-        android:label="Lists" >
+        android:label="Lists">
         <argument
             android:name="arg_title"
             app:argType="string" />
@@ -116,17 +125,13 @@
             app:argType="string" />
         <argument
             android:name="arg_list_id"
-            app:argType="long"
-             />
+            app:argType="long" />
         <argument
             android:name="arg_user_id"
-            app:argType="long"
-           />
+            app:argType="long" />
         <argument
             android:name="profileUserId"
-            app:argType="long"
-             />
-
+            app:argType="long" />
         <action
             android:id="@+id/action_listsFragment_to_listDetailFragment"
             app:destination="@id/listDetailFragment" />

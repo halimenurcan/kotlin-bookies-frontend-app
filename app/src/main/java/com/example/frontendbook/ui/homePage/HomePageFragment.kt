@@ -1,4 +1,3 @@
-// HomePageFragment.kt
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
@@ -9,8 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
+import com.example.frontendbook.domain.model.Book
 
 class HomePageFragment : Fragment() {
 
@@ -52,6 +53,13 @@ class HomePageFragment : Fragment() {
             loadInnerFragment(ListsFragment())
             updateButtonColors(binding.header.listsButton)
         }
+
+    }
+
+    // Kitap detayına NAVIGATION ile git!
+    fun openBookDetail(book: Book) {
+        val action = HomePageFragmentDirections.actionHomePageFragmentToBookInfoPageFragment(book)
+        findNavController().navigate(action)
     }
 
     private fun loadInnerFragment(fragment: Fragment) {

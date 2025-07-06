@@ -21,9 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.databinding.FragmentSearchBinding
 import com.example.frontendbook.ui.base.adapter.CombinedSearchAdapter
-import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
-import androidx.navigation.fragment.findNavController
-import com.example.frontendbook.ui.search.SearchFragmentDirections
+
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.chip.ChipGroup

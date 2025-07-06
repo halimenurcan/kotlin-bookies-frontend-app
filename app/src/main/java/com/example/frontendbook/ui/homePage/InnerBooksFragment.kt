@@ -67,7 +67,6 @@ class InnerBooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         with(binding) {
             popularArrow.setOnClickListener {
                 openThreeColumnPage("Popular This Week", "popular")
@@ -78,25 +77,16 @@ class InnerBooksFragment : Fragment() {
             exploreSeeAll.setOnClickListener {
                 openThreeColumnPage("Explore More", "explore")
             }
+
+            // DOĞRU NAVIGATION!
             exploreAdapter = BookAdapter { book ->
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.innerFragmentContainer,
-                        BookInfoPageFragment().apply {
-                            arguments = Bundle().apply {
-                                putParcelable("book", book)
-                            }
-                        }
-                    )
-                    .addToBackStack(null)
-                    .commit()
+                (parentFragment as? HomePageFragment)?.openBookDetail(book)
             }
 
             binding.exploreBooksRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
             binding.exploreBooksRecyclerView.adapter = exploreAdapter
 
             viewModel.books.observe(viewLifecycleOwner) { books ->
-                Log.d("InnerBooksFragment", "Book count: ${books.size}")
                 if (books.isNotEmpty()) {
                     inflateBooks(popularBooksContainer, books)
                     exploreAdapter.submitList(books.take(9))
@@ -131,18 +121,9 @@ class InnerBooksFragment : Fragment() {
                     .placeholder(R.drawable.bookk)
                     .into(iv)
             }
+            // YENİ: Doğru navigation!
             itemView.setOnClickListener {
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.innerFragmentContainer,
-                        BookInfoPageFragment().apply {
-                            arguments = Bundle().apply {
-                                putParcelable("book", book)
-                            }
-                        }
-                    )
-                    .addToBackStack(null)
-                    .commit()
+                (parentFragment as? HomePageFragment)?.openBookDetail(book)
             }
             container.addView(itemView)
         }
