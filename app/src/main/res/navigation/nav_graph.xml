@@ -72,10 +72,15 @@
         android:label="three_column_fragment" />
 
     <!-- Kitap Ekle BottomSheet -->
-    <fragment
+    <dialog
         android:id="@+id/addBookBottomSheet"
         android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
-        android:label="add_book_bottom_sheet" />
+        android:label="Add Book" >
+        <argument
+            android:name="listId"
+            app:argType="long"
+             />
+    </dialog>
 
     <!-- Kullanıcı Listesi -->
     <fragment

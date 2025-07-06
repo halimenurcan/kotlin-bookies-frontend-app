@@ -1,4 +1,3 @@
-// AddBookBottomSheet.kt
 package com.example.frontendbook.ui.addBook
 
 import android.content.Context
@@ -18,21 +17,26 @@ import com.example.frontendbook.databinding.BottomSheetAddBookBinding
 import com.example.frontendbook.data.model.ReviewCreateRequest
 import com.example.frontendbook.data.repository.LikedBooksRepository
 import com.example.frontendbook.data.repository.ReviewsRepository
-import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.domain.model.CombinedSearchResult
 import com.example.frontendbook.ui.base.adapter.AddBookSearchAdapter
 import com.example.frontendbook.ui.search.SearchViewModel
+import com.example.frontendbook.ui.search.SearchViewModelFactory
+import com.example.frontendbook.data.remote.RetrofitClient
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
+import android.view.KeyEvent
+import android.view.MotionEvent
 
 class AddBookBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetAddBookBinding? = null
     private val binding get() = _binding!!
 
-    // shared search VM for finding books
-    private val searchViewModel: SearchViewModel by activityViewModels()
+    // shared search VM for finding books, now with factory
+    private val searchViewModel: SearchViewModel by activityViewModels {
+        SearchViewModelFactory(RetrofitClient.searchApiService(requireContext()))
+    }
     private lateinit var adapter: AddBookSearchAdapter
 
     // our two repositories
@@ -114,7 +118,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 binding.searchInput.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null)
             }
         })
-        binding.searchInput.setOnTouchListener { v, event ->
+        binding.searchInput.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 val drawableEnd = binding.searchInput.compoundDrawables[2]
                 if (drawableEnd != null) {
@@ -175,11 +179,8 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 // 3a) Add to list (opsiyonel)
                 if (listId != -1L) {
                     val ok = likedRepo.likeBook(listId, book.id.toLong())
-                    if (ok) {
-                        Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(requireContext(), "Listeye ekleme başarısız", Toast.LENGTH_SHORT).show()
-                    }
+                    if (ok) Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(requireContext(), "Listeye ekleme başarısız", Toast.LENGTH_SHORT).show()
                 }
 
                 // 3b) Create review (opsiyonel)
@@ -192,17 +193,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                             comment = comment
                         )
                         val created = reviewsRepo.createComment(req)
-                        Toast.makeText(
-                            requireContext(),
-                            "Review eklendi (ID=${created.id})",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "Review eklendi (ID=${created.id})", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Review ekleme hatası: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "Review ekleme hatası: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -247,8 +240,8 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     companion object {
