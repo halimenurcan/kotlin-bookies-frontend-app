@@ -7,15 +7,17 @@ class UserFollowRepository(
     private val api: UserApiService
 ) {
     suspend fun getFollowers(userId: Long): List<UserDto> {
+        // /api/users/{id}/followers
         val resp = api.getFollowers(userId)
-        if (resp.isSuccessful) return resp.body().orEmpty()
-        throw Exception("Takipçiler alınamadı: ${resp.code()}")
+        if (!resp.isSuccessful) throw Exception("Takipçiler alınamadı: ${resp.code()}")
+        return resp.body() ?: emptyList()
     }
 
     suspend fun getFollowing(userId: Long): List<UserDto> {
+        // /api/users/{id}/following
         val resp = api.getFollowing(userId)
-        if (resp.isSuccessful) return resp.body().orEmpty()
-        throw Exception("Takip ettiklerim alınamadı: ${resp.code()}")
+        if (!resp.isSuccessful) throw Exception("Takip edilenler alınamadı: ${resp.code()}")
+        return resp.body() ?: emptyList()
     }
 
     suspend fun followUser(targetUserId: Long): Boolean {
@@ -30,6 +32,6 @@ class UserFollowRepository(
 
     suspend fun isFollowing(currentUserId: Long, targetUserId: Long): Boolean {
         val resp = api.isFollowing(currentUserId, targetUserId)
-        return resp.isSuccessful && resp.body() == true
-    }
+        return resp.isSuccessful && resp.body()==true
+        }
 }

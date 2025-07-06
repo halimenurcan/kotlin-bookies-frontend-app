@@ -17,5 +17,5 @@ class FollowerViewModelFactory(
             return FollowerViewModel(repo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
-    }
+        }
 }

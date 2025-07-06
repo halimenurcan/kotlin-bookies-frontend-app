@@ -17,10 +17,6 @@ class UserListViewModel(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    /**
-     * profileUserId: o profil sayfasındaki kullanıcının ID'si
-     * type: TAKİPÇİLER mi, TAKİP ETTİKLERİM mi
-     */
     fun loadList(profileUserId: Long, type: UserListType) {
         viewModelScope.launch {
             try {
@@ -28,11 +24,10 @@ class UserListViewModel(
                     UserListType.FOLLOWERS -> repo.getFollowers(profileUserId)
                     UserListType.FOLLOWING -> repo.getFollowing(profileUserId)
                 }
-                // DTO → domain model dönüşümü
                 _users.value = dtos.map {
                     UserSimple(
                         userId    = it.id.toString(),
-                        username  = it.username.toString(),
+                        username  = it.username ?: "",
                         avatarUrl = it.profileImageUrl
                     )
                 }
@@ -40,6 +35,6 @@ class UserListViewModel(
             } catch (e: Exception) {
                 _error.value = e.message
             }
+            }
         }
-    }
 }

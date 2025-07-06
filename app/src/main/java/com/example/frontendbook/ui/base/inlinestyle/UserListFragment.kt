@@ -1,14 +1,13 @@
 package com.example.frontendbook.ui.base.inlinestyle
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import com.example.frontendbook.R
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentUserListBinding
 import com.example.frontendbook.domain.model.UserListType
 import com.example.frontendbook.ui.base.adapter.UserListAdapter
@@ -27,18 +26,6 @@ class UserListFragment : Fragment() {
     companion object {
         private const val ARG_TYPE = "arg_user_list_type"
         private const val ARG_PROFILE_USER_ID = "arg_profile_user_id"
-
-        /**
-         * Kullanırken:
-         * UserListFragment.newInstance(UserListType.FOLLOWERS, someUserId)
-         */
-        fun newInstance(type: UserListType, profileUserId: Long): UserListFragment =
-            UserListFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(ARG_TYPE, type)
-                    putLong(ARG_PROFILE_USER_ID, profileUserId)
-                }
-            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,10 +46,9 @@ class UserListFragment : Fragment() {
         adapter = UserListAdapter(emptyList()) { selectedUser ->
             // Tıklanan kullanıcının profil sayfasına git
             val bundle = Bundle().apply {
-                putString("user_id", selectedUser.userId)
+                putLong("user_id", selectedUser.userId.toLong())
             }
             findNavController().navigate(R.id.otherUserProfileFragment, bundle)
-
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
@@ -95,6 +81,6 @@ class UserListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
-    }
+        _binding=null
+        }
 }

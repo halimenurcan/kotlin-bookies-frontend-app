@@ -66,10 +66,11 @@ class OtherUserProfileFragment : Fragment() {
         followerViewModel.error.observe(viewLifecycleOwner) { it?.let { m -> Toast.makeText(requireContext(), m, Toast.LENGTH_LONG).show() } }
 
         userViewModel.loadUser(targetUserId)
-        followerViewModel.loadFollowStatus(currentUserId, targetUserId)
+        // *DİKKAT: Doğru ID SIRASI*
+        followerViewModel.loadFollowStatus(targetUserId, currentUserId)
 
         binding.btnFollowAction.setOnClickListener {
-            followerViewModel.toggleFollow(currentUserId, targetUserId)
+            followerViewModel.toggleFollow(targetUserId, currentUserId)
         }
 
         // Manuel bundle + navigate:
@@ -103,22 +104,20 @@ class OtherUserProfileFragment : Fragment() {
             val bundle = Bundle().apply {
                 putString(ThreeColumnFragment.ARG_TITLE, "Readlist")
                 putString(ThreeColumnFragment.ARG_TYPE, "readlist")
-                // kullanıcıya özel gösterimler için userId de yolluyoruz
                 putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
-        // SafeArgs action varsa:
         binding.btnOtherLists.setOnClickListener {
-                findNavController().navigate(
-                +        R.id.threeColumnFragment,
-                     Bundle().apply {
-                               putString("arg_title", "List")
-                               putString("arg_type", "List")
-                               putLong(ThreeColumnFragment.ARG_LIST_ID, targetUserId)
-                    }
-                            )
-            }
+            findNavController().navigate(
+                R.id.threeColumnFragment,
+                Bundle().apply {
+                    putString("arg_title", "List")
+                    putString("arg_type", "List")
+                    putLong(ThreeColumnFragment.ARG_LIST_ID, targetUserId)
+                }
+            )
+        }
         binding.btnOtherLikes.setOnClickListener {
             val bundle = Bundle().apply {
                 putString(ThreeColumnFragment.ARG_TITLE, "Likes")
@@ -131,6 +130,6 @@ class OtherUserProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
-    }
+        _binding=null
+        }
 }
