@@ -1,4 +1,3 @@
-// ReviewsAdapter.kt
 package com.example.frontendbook.ui.homePage
 
 import android.annotation.SuppressLint
@@ -25,28 +24,23 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val b: ItemReviewBinding)
-        : RecyclerView.ViewHolder(b.root) {
-
-        private var isLiked = false
+    inner class ViewHolder(private val b: ItemReviewBinding) : RecyclerView.ViewHolder(b.root) {
 
         @SuppressLint("SetTextI18n")
         fun bind(r: ReviewDto) {
-            // 1) load cover
+            // Kitap kapağı
             Glide.with(b.reviewBookCover.context)
                 .load(r.bookCoverUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(b.reviewBookCover)
 
-            // 2) stars
+            // Yıldızlar
             b.reviewRatingBar.rating = r.score?.toFloat() ?: 0f
 
-            // 3) content
+            // Yorum içeriği
             b.reviewContent.text = r.comment
 
-            //3.5
-            b.reviewContent.text = r.comment
-
+            // Açılma durumu
             if (expandedItems.contains(r.id)) {
                 b.reviewContent.maxLines = Int.MAX_VALUE
                 b.reviewContent.ellipsize = null
@@ -55,40 +49,32 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
                 b.reviewContent.ellipsize = android.text.TextUtils.TruncateAt.END
             }
 
+            // Yorum genişletme/küçültme
             b.reviewContent.setOnClickListener {
-                if (expandedItems.contains(r.id)) {
+                if (expandedItems.contains(r.id))
                     expandedItems.remove(r.id)
-                } else {
+                else
                     expandedItems.add(r.id)
-                }
                 notifyItemChanged(absoluteAdapterPosition)
             }
 
-
-
-            // 4) author
+            // Yorum yazarı
             b.reviewAuthor.text = "– ${r.userName}"
 
-            // 5) timestamp (you can format this with a RelativeTime util if you like)
+            // Zaman etiketi
             b.reviewTimestamp.text = r.createdAt
 
-            //6 like
+            // Like durumu ikon ayarlama
+            b.likeButton.setImageResource(
+                if (r.isLiked) R.drawable.like_filled else R.drawable.like
+            )
 
+            // Like butonu tıklama işlemi
             b.likeButton.setOnClickListener {
-                isLiked = !isLiked
-                updateLikeIcon()
+                r.isLiked = !r.isLiked
+                notifyItemChanged(absoluteAdapterPosition)
             }
-            updateLikeIcon()
-
-
         }
-        private fun updateLikeIcon() {
-            val iconRes = if (isLiked) R.drawable.like_filled else R.drawable.like
-            b.likeButton.setImageResource(iconRes)
-        }
-
-
-
     }
 
     companion object {
