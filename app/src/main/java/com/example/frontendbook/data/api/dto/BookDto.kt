@@ -19,7 +19,7 @@ data class BookDto(
 fun BookDto.toDomain() = Book(
     id = this.id,
     title = this.title,
-    author = this.author.toString(),
+    author = this.author.name, // ✔️ burada düzeltme var
     coverImageUrl = this.coverImageUrl,
     isbn = this.isbn,
     description =this.description,

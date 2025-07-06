@@ -18,6 +18,11 @@ interface BooksApiService {
     suspend fun searchBooks(@Path("query") query: String): Response<EmbeddedBooksResponse>
     @GET("lists/{listId}/books")
     suspend fun getBooksInList(@Path("listId") listId: Long): Response<List<Book>>
+
+    @GET("/api/books/popular")
+    suspend fun getPopularBooks(): List<BookDto>
+
+
 }
 
 

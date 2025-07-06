@@ -2,12 +2,15 @@ package com.example.frontendbook.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.example.frontendbook.data.api.dto.BookDto
+import com.example.frontendbook.data.api.dto.toDomain
 import com.example.frontendbook.data.api.mapper.BookMapper
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.domain.model.Book
 
 class BookRepository(context: Context) {
     private val api = RetrofitClient.booksApiService(context)
+    val apiService = RetrofitClient.booksApiService(context)
 
     /** Tüm kitapları getir ve domain model’e map et */
     suspend fun fetchAllBooks(): List<Book> {
@@ -62,6 +65,10 @@ class BookRepository(context: Context) {
             throw Exception("Liste kitapları alınamadı")
         }
     }
+    suspend fun fetchPopularBooks(): List<Book> {
+        return apiService.getPopularBooks().map { it.toDomain() }
+    }
+
 
 
 }
