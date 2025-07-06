@@ -1,5 +1,5 @@
 package com.example.frontendbook.data.api.mapper
-import com.example.frontendbook.data.remote.dto.BookDto
+import com.example.frontendbook.data.api.dto.BookDto
 import com.example.frontendbook.domain.model.Book
 object BookMapper {
     fun fromDto(dto: BookDto): Book =

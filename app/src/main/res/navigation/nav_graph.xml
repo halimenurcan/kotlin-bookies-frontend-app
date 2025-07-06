@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
@@ -12,72 +13,89 @@
         android:label="Home Page"
         tools:layout="@layout/fragment_home_page" />
 
-
+    <!-- Arama -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.frontendbook.ui.search.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search">
-    <action
-        android:id="@+id/action_searchFragment_to_bookInfoPageFragment"
-        app:destination="@id/bookInfoPageFragment" />
-     </fragment>
 
+        <!-- Kitap detayına geçiş -->
+        <action
+            android:id="@+id/action_searchFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
+
+        <!-- Kendi profil ekranına geçiş -->
+        <action
+            android:id="@+id/action_searchFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+
+        <!-- Başka kullanıcı profiline geçiş -->
+        <action
+            android:id="@+id/action_searchFragment_to_otherUserProfileFragment"
+            app:destination="@id/otherUserProfileFragment" />
+    </fragment>
+
+    <!-- Kendi Profil -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.frontendbook.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
-    <action
-        android:id="@+id/action_profileFragment_to_listsFragment"
-        app:destination="@id/listsFragment" />
-
+        <action
+            android:id="@+id/action_profileFragment_to_listsFragment"
+            app:destination="@id/listsFragment" />
     </fragment>
 
-
+    <!-- Bildirimler -->
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
 
+    <!-- Kitap Detay Sayfası -->
     <fragment
         android:id="@+id/bookInfoPageFragment"
         android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
         android:label="Book Info"
         tools:layout="@layout/fragment_book_info_page">
-
         <argument
             android:name="book"
             app:argType="com.example.frontendbook.domain.model.Book" />
     </fragment>
 
-
-
+    <!-- Üç Kolon Düzeni -->
     <fragment
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment"
         android:label="three_column_fragment" />
+
+    <!-- Kitap Ekle BottomSheet -->
     <fragment
         android:id="@+id/addBookBottomSheet"
         android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
         android:label="add_book_bottom_sheet" />
 
+    <!-- Kullanıcı Listesi -->
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.example.frontendbook.ui.base.inlinestyle.UserListFragment"
         android:label="UserListFragment"
         tools:layout="@layout/fragment_user_list" />
 
-
-
+    <!-- Diğer Kullanıcı Profili -->
     <fragment
         android:id="@+id/otherUserProfileFragment"
         android:name="com.example.frontendbook.ui.profile.OtherUserProfileFragment"
         android:label="Other User Profile"
-        tools:layout="@layout/fragment_other_user_profile" />
+        tools:layout="@layout/fragment_other_user_profile">
+        <argument
+            android:name="userId"
+            app:argType="long" />
+    </fragment>
 
-
+    <!-- Listeler -->
     <fragment
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
@@ -87,11 +105,10 @@
             app:destination="@id/listDetailFragment" />
     </fragment>
 
+    <!-- Liste Detayı -->
     <fragment
         android:id="@+id/listDetailFragment"
         android:name="com.example.frontendbook.ui.listdetail.ListDetailFragment"
         android:label="List Detail" />
-
-
 
 </navigation>

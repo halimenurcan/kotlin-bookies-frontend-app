@@ -2,81 +2,97 @@ package com.example.frontendbook.ui.base.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.ItemBookResultBinding
-import com.example.frontendbook.databinding.ItemUserResultBinding
+import com.example.frontendbook.databinding.ItemUserRowBinding
+import com.example.frontendbook.domain.model.CombinedSearchResult
+import com.example.frontendbook.domain.model.CombinedSearchResult.BookResult
+import com.example.frontendbook.domain.model.CombinedSearchResult.UserResult
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.domain.model.User
-import com.example.frontendbook.domain.model.CombinedSearchResult
 
-class  CombinedSearchAdapter(
+class CombinedSearchAdapter(
     private val onBookClick: (Book) -> Unit,
     private val onUserClick: (User) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+) : ListAdapter<CombinedSearchResult, RecyclerView.ViewHolder>(DiffCallback) {
 
-    private val items = mutableListOf<CombinedSearchResult>()
+    companion object {
+        private const val TYPE_BOOK = 1
+        private const val TYPE_USER = 2
 
-    fun submitList(list: List<CombinedSearchResult>) {
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
+        private val DiffCallback = object : DiffUtil.ItemCallback<CombinedSearchResult>() {
+            override fun areItemsTheSame(oldItem: CombinedSearchResult, newItem: CombinedSearchResult): Boolean {
+                return when {
+                    oldItem is BookResult && newItem is BookResult -> oldItem.book.id == newItem.book.id
+                    oldItem is UserResult && newItem is UserResult -> oldItem.user.id == newItem.user.id
+                    else -> false
+                }
+            }
+
+            override fun areContentsTheSame(oldItem: CombinedSearchResult, newItem: CombinedSearchResult): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (items[position]) {
-            is CombinedSearchResult.BookResult -> 0
-            is CombinedSearchResult.UserResult -> 1
+        return when (getItem(position)) {
+            is BookResult -> TYPE_BOOK
+            is UserResult -> TYPE_USER
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 0) {
-            val binding = ItemBookResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            BookViewHolder(binding, onBookClick)
-        } else {
-            val binding = ItemUserResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            UserViewHolder(binding, onUserClick)
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            TYPE_BOOK -> {
+                val binding = ItemBookResultBinding.inflate(inflater, parent, false)
+                BookViewHolder(binding, onBookClick)
+            }
+            TYPE_USER -> {
+                val binding = ItemUserRowBinding.inflate(inflater, parent, false)
+                UserViewHolder(binding, onUserClick)
+            }
+            else -> throw IllegalArgumentException("Unknown viewType $viewType")
         }
     }
-
-    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val item = items[position]) {
-            is CombinedSearchResult.BookResult -> (holder as BookViewHolder).bind(item.book)
-            is CombinedSearchResult.UserResult -> (holder as UserViewHolder).bind(item.user)
+        when (val item = getItem(position)) {
+            is BookResult -> (holder as BookViewHolder).bind(item.book)
+            is UserResult -> (holder as UserViewHolder).bind(item.user)
         }
     }
 
-    class BookViewHolder( private val binding: ItemBookResultBinding,
-                          private val onClick: (Book) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root){
+    class BookViewHolder(
+        private val binding: ItemBookResultBinding,
+        private val onClick: (Book) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(book: Book) {
             binding.title.text = book.title
             binding.author.text = book.author
-            Glide.with(binding.root.context)
-                .load(book.coverImageUrl)
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.error_image)
-                .into(binding.bookImageView)
-
-            binding.root.setOnClickListener {
-                onClick(book)
-            }
+            binding.root.setOnClickListener { onClick(book) }
         }
     }
 
-    class UserViewHolder(private val binding: ItemUserResultBinding,
-                         private val onClick: (User) -> Unit
+    class UserViewHolder(
+        private val binding: ItemUserRowBinding,
+        private val onClick: (User) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
-            binding.username.text = user.username
-            binding.email.text = user.id
-            binding.root.setOnClickListener {
-                onClick(user)
+            binding.userName.text = user.username
+            user.profileImageUrl?.let { url ->
+                Glide.with(binding.userImage.context)
+                    .load(url)
+                    .placeholder(R.drawable.avatar)  // opsiyonel
+                    .error(R.drawable.avatar)        // opsiyonel
+                    .into(binding.userImage)
             }
+            binding.root.setOnClickListener { onClick(user) }
         }
     }
 }

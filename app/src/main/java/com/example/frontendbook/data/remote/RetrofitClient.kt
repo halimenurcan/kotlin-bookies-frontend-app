@@ -54,7 +54,8 @@ object RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
+    fun searchApiService(context: Context): SearchApiService =
+        getRetrofit(context).create(SearchApiService::class.java)
     // API service providers
     fun userApiService(context: Context): UserApiService =
         getRetrofit(context).create(UserApiService::class.java)

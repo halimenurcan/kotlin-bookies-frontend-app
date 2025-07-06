@@ -7,4 +7,3 @@ plugins {
     id("androidx.navigation.safeargs") version "2.7.7" apply false
 
 }
-

@@ -1,3 +1,4 @@
+// com/example/frontendbook/ui/profile/ProfileFragment.kt
 package com.example.frontendbook.ui.profile
 
 import android.content.Context
@@ -43,6 +44,14 @@ class ProfileFragment : Fragment() {
             .get(UserViewModel::class.java)
         Log.d(TAG, "ViewModel örneklendi")
 
+        // SharedPrefs'ten userId
+        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val userId = prefs.getLong("user_id", -1L)
+        if (userId == -1L) {
+            Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         // LiveData gözlemleri
         viewModel.user.observe(viewLifecycleOwner) { user ->
             Log.d(TAG, "observe(user) -> $user")
@@ -57,19 +66,19 @@ class ProfileFragment : Fragment() {
             }
         }
         viewModel.followersCount.observe(viewLifecycleOwner) { count ->
-            Log.d(TAG, "observe(followersCount) -> $count")
             binding.btnFollowers.text = getString(R.string.followers_count, count)
         }
         viewModel.followingCount.observe(viewLifecycleOwner) { count ->
-            Log.d(TAG, "observe(followingCount) -> $count")
             binding.btnFollowing.text = getString(R.string.following_count, count)
         }
         viewModel.error.observe(viewLifecycleOwner) { msg ->
-            Log.e(TAG, "observe(error) -> $msg")
-            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            msg?.let {
+                Log.e(TAG, "observe(error) -> $it")
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
         }
 
-        // Animasyon
+        // Animasyonlar
         val scaleAnim = ScaleAnimation(
             1f, 1.1f, 1f, 1.1f,
             ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
@@ -83,73 +92,68 @@ class ProfileFragment : Fragment() {
             AnimationUtils.loadAnimation(requireContext(), R.anim.scale_glow)
         )
 
-        // SharedPrefs'ten userId
-        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-        val userId = prefs.getLong("user_id", -1L)
-        Log.d(TAG, "SharedPrefs user_id = $userId")
-        if (userId == -1L) {
-            Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         // Veri yükle
         viewModel.loadUser(userId)
 
         // Buton click listener’ları
         binding.profileImage.setOnClickListener {
-            Log.d(TAG, "profileImage clicked")
             ChooseProfileImageBottomSheetFragment { selectedResId ->
-                Log.d(TAG, "Yeni avatar seçildi: $selectedResId")
                 binding.profileImage.setImageResource(selectedResId)
             }.show(parentFragmentManager, "ChooseProfile")
         }
         binding.btnSettings.setOnClickListener {
             SettingsBottomSheetFragment().show(parentFragmentManager, "Settings")
         }
-
         binding.btnRead.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("arg_title", "Read")
-                putString("arg_type",  "read")
-            }
-            findNavController().navigate(R.id.threeColumnFragment, bundle)
+            findNavController().navigate(
+                R.id.threeColumnFragment,
+                Bundle().apply {
+                    putString("arg_title", "Read")
+                    putString("arg_type",  "read")
+                }
+            )
         }
         binding.btnReadlist.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("arg_title", "Readlist")
-                putString("arg_type",  "readlist")
-            }
-            findNavController().navigate(R.id.threeColumnFragment, bundle)
+            findNavController().navigate(
+                R.id.threeColumnFragment,
+                Bundle().apply {
+                    putString("arg_title", "Readlist")
+                    putString("arg_type",  "readlist")
+                }
+            )
         }
         binding.btnLists.setOnClickListener {
             findNavController().navigate(R.id.listsFragment)
         }
         binding.btnLikes.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("arg_title", "Likes")
-                putString("arg_type",  "likes")
-            }
-            findNavController().navigate(R.id.threeColumnFragment, bundle)
+            findNavController().navigate(
+                R.id.threeColumnFragment,
+                Bundle().apply {
+                    putString("arg_title", "Likes")
+                    putString("arg_type",  "likes")
+                }
+            )
         }
         binding.btnFollowers.setOnClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("arg_user_list_type", UserListType.FOLLOWERS)
-            }
-            findNavController().navigate(R.id.userListFragment, bundle)
+            findNavController().navigate(
+                R.id.userListFragment,
+                Bundle().apply {
+                    putSerializable("arg_user_list_type", UserListType.FOLLOWERS)
+                }
+            )
         }
         binding.btnFollowing.setOnClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("arg_user_list_type", UserListType.FOLLOWING)
-            }
-            findNavController().navigate(R.id.userListFragment, bundle)
+            findNavController().navigate(
+                R.id.userListFragment,
+                Bundle().apply {
+                    putSerializable("arg_user_list_type", UserListType.FOLLOWING)
+                }
+            )
         }
     }
 
-    // ... diğer butonlar için de benzer Log ekleyebilirsiniz ...
-
-override fun onDestroyView() {
-    _binding = null
-    super.onDestroyView()
-}}
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

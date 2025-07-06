@@ -75,5 +75,15 @@ class ReviewsViewModel(
             }
         }
     }
+    fun loadAllReviews() {
+        viewModelScope.launch {
+            try {
+                _comments.value = repo.fetchAllReviews()
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
 }
 

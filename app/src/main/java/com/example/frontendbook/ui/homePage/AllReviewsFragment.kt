@@ -1,30 +1,26 @@
-// ReviewsFragment.kt
+// ui/homePage/AllReviewsFragment.kt
+
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentReviewsBinding
 
-class ReviewsFragment : Fragment() {
+class AllReviewsFragment : Fragment() {
 
     private var _binding: FragmentReviewsBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        private const val ARG_BOOK_ID = "arg_book_id"
-        fun newInstance(bookId: Long) = ReviewsFragment().apply {
-            arguments = Bundle().apply { putLong(ARG_BOOK_ID, bookId) }
-        }
+    private val viewModel: ReviewsViewModel by viewModels {
+        ReviewsViewModelFactory(requireContext())
     }
-
-    private val viewModel: ReviewsViewModel by viewModels { ReviewsViewModelFactory(requireContext()) }
-    private lateinit var adapter: ReviewsAdapter
+    private lateinit var reviewsAdapter: ReviewsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentReviewsBinding.inflate(inflater, container, false)
@@ -34,24 +30,30 @@ class ReviewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // RecyclerView + Adapter
-        adapter = ReviewsAdapter()
-        binding.reviewsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@ReviewsFragment.adapter
+        // SystemBars padding (isterseniz kopyalayın)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
+            insets
         }
 
-        // Observe LiveData
-        viewModel.comments.observe(viewLifecycleOwner) { comments ->
-            adapter.submitList(comments)
+        // RecyclerView + Adapter
+        reviewsAdapter = ReviewsAdapter()
+        binding.reviewsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = reviewsAdapter
+        }
+
+        // LiveData gözlemleri
+        viewModel.comments.observe(viewLifecycleOwner) { list ->
+            reviewsAdapter.submitList(list)
         }
         viewModel.error.observe(viewLifecycleOwner) { msg ->
             msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
         }
 
-        // Load comments
-        val bookId = requireArguments().getLong(ARG_BOOK_ID)
-        viewModel.loadCommentsForBook(bookId)
+        // Tüm yorumları yükle
+        viewModel.loadAllReviews()
     }
 
     override fun onDestroyView() {

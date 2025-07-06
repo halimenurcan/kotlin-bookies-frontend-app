@@ -1,6 +1,6 @@
-package com.example.frontendbook.data.remote.dto
+package com.example.frontendbook.data.api.dto
 
-import com.example.frontendbook.data.api.dto.AuthorDto
+import com.example.frontendbook.domain.model.Book
 import com.google.gson.annotations.SerializedName
 
 data class BookDto(
@@ -14,4 +14,17 @@ data class BookDto(
     @SerializedName("publishedYear")  val publishedYear: Int?,
     @SerializedName("author")         val author: AuthorDto,
     @SerializedName("rating")         val rating: Int
+
+)
+fun BookDto.toDomain() = Book(
+    id = this.id,
+    title = this.title,
+    author = this.author.toString(),
+    coverImageUrl = this.coverImageUrl,
+    isbn = this.isbn,
+    description =this.description,
+    pageCount = this.pageCount,
+    publisher = this.publisher,
+    publishedYear = this.publishedYear,
+    rating = this.rating
 )

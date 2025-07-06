@@ -1,18 +1,16 @@
 package com.example.frontendbook.ui.search
-
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.frontendbook.data.repository.BookRepository
+
+import com.example.frontendbook.data.repository.SearchRepository
 import com.example.frontendbook.domain.model.CombinedSearchResult
 import kotlinx.coroutines.launch
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val bookRepository = BookRepository(application.applicationContext)
+class SearchViewModel(
+    private val repo: SearchRepository
+) : ViewModel() {
 
     private val _combinedResults = MutableLiveData<List<CombinedSearchResult>>()
     val combinedResults: LiveData<List<CombinedSearchResult>> = _combinedResults
@@ -20,46 +18,18 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> = _errorMessage
-    fun searchBooks(query: String) {
-        _isLoading.value = true
-
-        viewModelScope.launch {
-            try {
-                val bookResults = bookRepository.searchBooks(query)
-                val combined = bookResults.map { CombinedSearchResult.BookResult(it) }
-                _combinedResults.value = combined
-                _errorMessage.value = null
-            } catch (e: Exception) {
-                _combinedResults.value = emptyList()
-                _errorMessage.value = "Kitap arama hatası: ${e.message}"
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
+    private val _error = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _error
 
     fun searchBooksAndUsers(query: String) {
-        _isLoading.value = true
-
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                Log.d("SearchDebug", "🔍 Arama başlatıldı: $query")
-
-                val bookResults = bookRepository.searchBooks(query)
-
-                Log.d("SearchDebug", "📚 Kitap sayısı: ${bookResults.size}")
-
-                val combined = mutableListOf<CombinedSearchResult>()
-                combined.addAll(bookResults.map { CombinedSearchResult.BookResult(it) })
-
-                _combinedResults.value = combined
-                _errorMessage.value = null
+                _combinedResults.value = repo.searchAll(query)
+                _error.value = null
             } catch (e: Exception) {
-                Log.e("SearchDebug", " Arama hatası: ${e.message}", e)
                 _combinedResults.value = emptyList()
-                _errorMessage.value = "Arama başarısız: ${e.message}"
+                _error.value = e.message
             } finally {
                 _isLoading.value = false
             }

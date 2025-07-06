@@ -1,8 +1,7 @@
 package com.example.frontendbook.ui.search
-import com.example.frontendbook.ui.search.SearchViewModel
+
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -14,22 +13,29 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.frontendbook.R
+import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.databinding.FragmentSearchBinding
 import com.example.frontendbook.ui.base.adapter.CombinedSearchAdapter
-import com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment
-import androidx.navigation.fragment.findNavController
-import com.example.frontendbook.ui.search.SearchFragmentDirections
-
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SearchViewModel by viewModels()
+    // artık direkt Long, default -1L
+    private val currentUserId: Long by lazy {
+        requireContext()
+            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            .getLong("user_id", -1L)
+    }
+
+    private val factory by lazy {
+        SearchViewModelFactory(
+            RetrofitClient.searchApiService(requireContext())
+        )
+    }
+    private val viewModel: SearchViewModel by viewModels { factory }
     private lateinit var adapter: CombinedSearchAdapter
-    private var currentFilterType: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,37 +52,45 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupViews() {
-
         adapter = CombinedSearchAdapter(
             onBookClick = { book ->
-                val action = SearchFragmentDirections.actionSearchFragmentToBookInfoPageFragment(book)
+                val action = SearchFragmentDirections
+                    .actionSearchFragmentToBookInfoPageFragment(book)
                 findNavController().navigate(action)
             },
             onUserClick = { user ->
-                Toast.makeText(requireContext(), "${user.username} profiline gidilecek", Toast.LENGTH_SHORT).show()
-            }
-        )
+                val clickedUserId = user.id.toLongOrNull() ?: -1L
+
+                if (clickedUserId == currentUserId) {
+                    // Kendi profilinize
+                    val action = SearchFragmentDirections
+                        .actionSearchFragmentToProfileFragment()
+                    findNavController().navigate(action)
+                } else {
+                    // Başka bir kullanıcının profiline — burada SafeArgs Directions kullanıyoruz!
+                    val action = SearchFragmentDirections
+                        .actionSearchFragmentToOtherUserProfileFragment(clickedUserId)
+                    findNavController().navigate(action)
+                }
+            })
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-
-
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
-            val isSearchAction = actionId == EditorInfo.IME_ACTION_SEARCH
-            val isEnterKey = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
+            val isSearch = actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
 
-            if (isSearchAction || isEnterKey) {
+            if (isSearch) {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
                     viewModel.searchBooksAndUsers(query)
-
                     binding.browseContainer.visibility = View.GONE
                     binding.backButton.visibility = View.VISIBLE
                     binding.recyclerView.visibility = View.VISIBLE
-
-                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
+                    (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE)
+                            as InputMethodManager)
+                        .hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }
                 true
             } else false
@@ -86,17 +100,14 @@ class SearchFragment : Fragment() {
             binding.browseContainer.visibility = View.VISIBLE
             binding.recyclerView.visibility = View.GONE
             binding.backButton.visibility = View.GONE
-            binding.searchInput.text.clear()
+            binding.searchInput.text?.clear()
         }
     }
 
     private fun observeViewModel() {
         viewModel.combinedResults.observe(viewLifecycleOwner) { results ->
-
-
             if (results.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
-                binding.backButton.visibility = View.VISIBLE
                 adapter.submitList(results)
             } else {
                 binding.recyclerView.visibility = View.GONE
@@ -111,13 +122,9 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
-
-
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

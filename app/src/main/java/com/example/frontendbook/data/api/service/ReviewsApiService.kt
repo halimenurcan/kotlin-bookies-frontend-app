@@ -9,7 +9,7 @@ interface ReviewsApiService {
     @GET("comments/{id}")
     suspend fun getCommentById(@Path("id") commentId: Long): Response<ReviewDto>
     /** Tüm yorumları getirir */
-    @GET("reviews")
+    @GET("comments")
     suspend fun getAllReviews(): Response<List<ReviewDto>>
     @DELETE("comments/{id}")
     suspend fun deleteComment(@Path("id") commentId: Long): Response<Unit>

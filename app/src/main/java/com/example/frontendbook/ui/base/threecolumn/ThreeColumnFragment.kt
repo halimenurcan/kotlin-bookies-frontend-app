@@ -91,14 +91,14 @@ class ThreeColumnFragment : Fragment() {
             readViewModel.readList.observe(viewLifecycleOwner) { entries ->
                 val books = entries.map { entry ->
                     Book(
-                        id            = entry.id,                           // artık non-null Long
-                        author        = entry.bookAuthor     ?: "Unknown",
-                        title         = entry.bookTitle      ?: "Untitled",
-                        isbn          = entry.bookIsbn       ?: "",
-                        description   = entry.bookDescription?: "No description available",
+                        id = entry.id,                           // artık non-null Long
+                        author = entry.bookAuthor     ?: "Unknown",
+                        title = entry.bookTitle      ?: "Untitled",
+                        isbn = entry.bookIsbn       ?: "",
+                        description = entry.bookDescription?: "No description available",
                         coverImageUrl = entry.bookCoverUrl,
-                        pageCount     = entry.bookPageCount  ?: 0,
-                        publisher     = entry.bookPublisher  ?: "Unknown publisher",
+                        pageCount = entry.bookPageCount  ?: 0,
+                        publisher = entry.bookPublisher  ?: "Unknown publisher",
                         publishedYear = entry.bookPublishedYear ?: 0,
                         rating = entry.rating
                     )

@@ -2,7 +2,7 @@ package com.example.frontendbook.data.api.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class BooksListWrapper(
+data class BookEmbedded(
     @SerializedName("bookResponseDTOList")
-    val books: List<BookDto>
+    val books: List<BookDto> = emptyList()
 )

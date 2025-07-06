@@ -2,11 +2,10 @@
 package com.example.frontendbook.data.api.service
 
 import com.example.frontendbook.data.api.dto.EmbeddedBooksResponse
-import com.example.frontendbook.data.remote.dto.BookDto
+import com.example.frontendbook.data.api.dto.BookDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface BooksApiService {
     @GET("books")

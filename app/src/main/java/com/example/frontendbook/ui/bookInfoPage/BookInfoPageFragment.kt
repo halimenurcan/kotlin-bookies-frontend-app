@@ -26,9 +26,7 @@ class BookInfoPageFragment : Fragment() {
         super.onCreate(savedInstanceState)
         book = args.book
 
-
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
