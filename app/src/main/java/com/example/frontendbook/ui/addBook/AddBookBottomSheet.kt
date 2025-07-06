@@ -224,10 +224,25 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.let { dialog ->
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(it)
+                val layoutParams = it.layoutParams
+                val displayMetrics = resources.displayMetrics
+                layoutParams.height = (displayMetrics.heightPixels * 0.8).toInt()
+                it.layoutParams = layoutParams
+                behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+    }
+
     private fun updateLikeUi(liked: Boolean) {
         if (liked) {
             binding.likeButton.setImageResource(R.drawable.like_filled)
-            binding.likeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.buttonSecondary))
+            binding.likeButton.setBackgroundColor(Color.TRANSPARENT)
         } else {
             binding.likeButton.setImageResource(R.drawable.like)
             binding.likeButton.setBackgroundColor(Color.TRANSPARENT)
