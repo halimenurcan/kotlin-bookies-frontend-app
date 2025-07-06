@@ -14,6 +14,8 @@ import com.example.frontendbook.databinding.ItemReviewBinding
 
 class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
 
+    private val expandedItems = mutableSetOf<Long>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -25,6 +27,8 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
 
     inner class ViewHolder(private val b: ItemReviewBinding)
         : RecyclerView.ViewHolder(b.root) {
+
+        private var isLiked = false
 
         @SuppressLint("SetTextI18n")
         fun bind(r: ReviewDto) {
@@ -40,12 +44,51 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
             // 3) content
             b.reviewContent.text = r.comment
 
+            //3.5
+            b.reviewContent.text = r.comment
+
+            if (expandedItems.contains(r.id)) {
+                b.reviewContent.maxLines = Int.MAX_VALUE
+                b.reviewContent.ellipsize = null
+            } else {
+                b.reviewContent.maxLines = 2
+                b.reviewContent.ellipsize = android.text.TextUtils.TruncateAt.END
+            }
+
+            b.reviewContent.setOnClickListener {
+                if (expandedItems.contains(r.id)) {
+                    expandedItems.remove(r.id)
+                } else {
+                    expandedItems.add(r.id)
+                }
+                notifyItemChanged(absoluteAdapterPosition)
+            }
+
+
+
             // 4) author
             b.reviewAuthor.text = "– ${r.userName}"
 
             // 5) timestamp (you can format this with a RelativeTime util if you like)
             b.reviewTimestamp.text = r.createdAt
+
+            //6 like
+
+            b.likeButton.setOnClickListener {
+                isLiked = !isLiked
+                updateLikeIcon()
+            }
+            updateLikeIcon()
+
+
         }
+        private fun updateLikeIcon() {
+            val iconRes = if (isLiked) R.drawable.like_filled else R.drawable.like
+            b.likeButton.setImageResource(iconRes)
+        }
+
+
+
     }
 
     companion object {
