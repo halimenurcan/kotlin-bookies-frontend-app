@@ -20,8 +20,12 @@ class SearchViewModel(
 
     private val _error = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _error
+    private val _searchStarted = MutableLiveData(false)
 
+
+    val searchStarted: LiveData<Boolean> = _searchStarted
     fun searchBooksAndUsers(query: String) {
+        _searchStarted.value = true
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -35,4 +39,12 @@ class SearchViewModel(
             }
         }
     }
+
+    // SearchViewModel.kt içine ekle
+    fun clearResults() {
+        _combinedResults.value = emptyList()
+        _searchStarted.value = false
+    }
+
+
 }
