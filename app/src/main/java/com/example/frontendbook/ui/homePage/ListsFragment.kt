@@ -1,5 +1,7 @@
 package com.example.frontendbook.ui.homePage
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -9,32 +11,30 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentListsBinding
-import com.example.frontendbook.domain.model.UserListType
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.example.frontendbook.ui.base.adapter.ExploreListAdapter
+import com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment
 
 class ListsFragment : Fragment() {
 
     private var _binding: FragmentListsBinding? = null
     private val binding get() = _binding!!
 
-    private val args: ListsFragmentArgs by navArgs()
-    private val profileUserId: Long get() = args.profileUserId
-
     private lateinit var viewModel: ListsViewModel
     private lateinit var adapter: ListAdapter
 
+    private lateinit var listAdapter: ListAdapter
+    private lateinit var exploreListAdapter: ExploreListAdapter
+
+    private var showUserLists: Boolean = true
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListsBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,105 +43,154 @@ class ListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Add-list butonunu sadece kendi profilinizde göster (isteğe bağlı)
-        if (profileUserId == getCurrentUserId()) {
-            binding.btnAddList.visibility = View.VISIBLE
-            binding.btnAddList.setOnClickListener { showAddListDialog() }
+        showUserLists = arguments?.getBoolean("showUserLists", true) ?: true
+        binding.btnAddList.visibility = if (showUserLists) View.VISIBLE else View.GONE
+
+        // 2) ViewModel oluştur
+        viewModel = ViewModelProvider(
+            this,
+            ListsViewModelFactory(requireContext())
+        ).get(ListsViewModel::class.java)
+
+        if (showUserLists) {
+            // Profil sayfası için adapter
+            listAdapter = ListAdapter(emptyList()) { list ->
+                val bundle = Bundle().apply { putLong("listId", list.id) }
+                findNavController().navigate(R.id.action_listsFragment_to_listDetailFragment, bundle)
+            }
+            binding.listsRecyclerView.adapter = listAdapter
         } else {
-            binding.btnAddList.visibility = View.GONE
+            // Keşfet (homepage->lists) için adapter – SEE MORE tıklanınca yönlendir
+            exploreListAdapter = ExploreListAdapter(emptyList()) { list ->
+                // "See More" butonuna basınca ThreeColumnFragment'a yönlendir
+                val fragment = ThreeColumnFragment.newInstance(
+                    title = list.title ?: "List",
+                    listId = list.id  // 👈 Liste ID’sini geçiriyoruz
+                )
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.innerFragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            binding.listsRecyclerView.adapter = exploreListAdapter
         }
 
-        // RecyclerView ve Adapter ayarı
-        adapter = ListAdapter(emptyList()) { list ->
-            val bundle = Bundle().apply { putLong("listId", list.id) }
-            findNavController().navigate(
-                R.id.action_listsFragment_to_listDetailFragment,
-                bundle
-            )
-        }
         binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.listsRecyclerView.adapter = adapter
 
-        // ViewModel oluştur
-        viewModel = viewModels<ListsViewModel> { ListsViewModelFactory(requireContext()) }.value
+        binding.btnAddList.setOnClickListener {
+            if (showUserLists) showAddListDialog()
+        }
 
-        // Options menu (isteğe bağlı: tekrar add dialog)
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-                inflater.inflate(R.menu.lists_menu, menu)
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.lists_menu, menu)
             }
-            override fun onMenuItemSelected(item: MenuItem) =
-                if (item.itemId == R.id.action_add_list) {
-                    showAddListDialog()
-                    true
-                } else false
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_add_list -> {
+                        if (showUserLists) showAddListDialog()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        // userId parametresiyle listeleri yükle
-        val userIdToLoad = if (profileUserId != -1L) profileUserId else getCurrentUserId()
-        if (userIdToLoad != -1L) {
-            viewModel.loadUserLists(userIdToLoad)
-        } else {
-            Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
-        }
-
-        // LiveData gözlemleri
-        viewModel.lists.observe(viewLifecycleOwner) { lists ->
-            adapter.submitList(lists)
-        }
-        viewModel.error.observe(viewLifecycleOwner) { msg ->
-            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
-        }
-    }
-
-    private fun getCurrentUserId(): Long =
-        requireContext()
-            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-            .getLong("user_id", -1L)
-
-    private fun showAddListDialog() {
-        val context = requireContext()
-        val inputLayout = TextInputLayout(context).apply {
-            hint = "List Name"
-            setPadding(50, 0, 50, 0)
-        }
-        val editText = TextInputEditText(context).apply { isSingleLine = true }
-        inputLayout.addView(editText)
-
-        val dialog = MaterialAlertDialogBuilder(context)
-            .setTitle("Create New List")
-            .setView(inputLayout)
-            .setPositiveButton("Create", null)
-            .setNegativeButton("Cancel", null)
-            .show()
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.buttonSecondary))
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.button_textPrimary))
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val listName = editText.text.toString().trim()
-            if (listName.isNotEmpty()) {
-                val userId = getCurrentUserId()
-                viewModel.createList(userId, listName) { success ->
-                    if (success) {
-                        Toast.makeText(context, "Liste oluşturuldu", Toast.LENGTH_SHORT).show()
-                        viewModel.loadUserLists(userId)
-                        dialog.dismiss()
-                    } else {
-                        Toast.makeText(context, "Liste oluşturulamadı", Toast.LENGTH_SHORT).show()
-                    }
+            if (showUserLists) {
+                val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+                val userId = prefs.getLong("user_id", -1L)
+                if (userId != -1L) {
+                    viewModel.loadUserLists(userId)
+                } else {
+                    Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                inputLayout.error = "Liste adı boş olamaz"
+                viewModel.loadExploreLists()
+            }
+
+            // 4) LiveData gözlemleri
+            viewModel.lists.observe(viewLifecycleOwner) { lists ->
+                if (showUserLists) {
+                    listAdapter.submitList(lists)
+                } else {
+                    exploreListAdapter.submitList(lists)
+                }
+            }
+
+            viewModel.error.observe(viewLifecycleOwner) { error ->
+                error?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+
+
+        private fun showAddListDialog() {
+            val context = requireContext()
+
+            // Material Design uyumlu layout oluştur
+            val inputLayout = com.google.android.material.textfield.TextInputLayout(context)
+            val editText = com.google.android.material.textfield.TextInputEditText(context)
+
+            inputLayout.hint = "List Name"
+            inputLayout.setPadding(50, 0, 50, 0)
+            editText.setSingleLine()
+
+            inputLayout.addView(editText)
+
+            val dialog = MaterialAlertDialogBuilder(context)
+                .setTitle("Create New List")
+                .setView(inputLayout)
+                .setPositiveButton("Create", null)
+                .setNegativeButton("Cancel", null)
+                .show()
+
+            // Renkleri ayarla
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(
+                ContextCompat.getColor(context, R.color.buttonSecondary)
+            )
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(
+                ContextCompat.getColor(context, R.color.button_textPrimary)
+            )
+
+            // Positive button click override
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+                val listName = editText.text.toString().trim()
+                if (listName.isNotEmpty()) {
+                    val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+                    val userId = prefs.getLong("user_id", -1L)
+
+                    viewModel.createList(userId, listName) { success ->
+                        if (success) {
+                            Toast.makeText(context, "Liste oluşturuldu", Toast.LENGTH_SHORT).show()
+                            viewModel.loadUserLists(userId)
+                            dialog.dismiss()
+                        } else {
+                            Toast.makeText(context, "Liste oluşturulamadı", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    inputLayout.error = "Liste adı boş olamaz"
+                }
+            }
+        }
+
+        override fun onDestroyView() {
+            super.onDestroyView()
+            _binding = null
+        }
+
+        companion object {
+            fun newInstance(showUserLists: Boolean): ListsFragment {
+                val fragment = ListsFragment()
+                fragment.arguments = Bundle().apply {
+                    putBoolean("showUserLists", showUserLists)
+                }
+                return fragment
             }
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-}
