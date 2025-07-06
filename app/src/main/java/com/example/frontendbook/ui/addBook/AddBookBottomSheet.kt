@@ -219,9 +219,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     private fun updateLikeButtonUi(liked: Boolean) {
         if (liked) {
             binding.likeButton.setImageResource(R.drawable.like_filled)
-            binding.likeButton.setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.buttonSecondary)
-            )
+            binding.likeButton.setBackgroundColor(Color.TRANSPARENT)
         } else {
             binding.likeButton.setImageResource(R.drawable.like)
             binding.likeButton.setBackgroundColor(Color.TRANSPARENT)
