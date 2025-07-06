@@ -108,7 +108,20 @@
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
         android:label="Lists" >
-
+        <argument
+            android:name="arg_title"
+            app:argType="string" />
+        <argument
+            android:name="arg_type"
+            app:argType="string" />
+        <argument
+            android:name="arg_list_id"
+            app:argType="long"
+             />
+        <argument
+            android:name="arg_user_id"
+            app:argType="long"
+           />
         <argument
             android:name="profileUserId"
             app:argType="long"

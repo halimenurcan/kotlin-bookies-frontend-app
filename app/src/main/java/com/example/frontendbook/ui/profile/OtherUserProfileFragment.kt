@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentOtherUserProfileBinding
 import com.example.frontendbook.domain.model.UserListType
+import com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment
 
 class OtherUserProfileFragment : Fragment() {
 
@@ -91,40 +92,40 @@ class OtherUserProfileFragment : Fragment() {
             )
         }
         binding.btnOtherRead.setOnClickListener {
-            findNavController().navigate(
-                R.id.threeColumnFragment,
-                Bundle().apply {
-                    putString("arg_title", "Read")
-                    putString("arg_type", "read")
-                    putLong("user_id", targetUserId)
-                }
-            )
+            val bundle = Bundle().apply {
+                putString(ThreeColumnFragment.ARG_TITLE, "Read")
+                putString(ThreeColumnFragment.ARG_TYPE, "read")
+                putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
         binding.btnOtherReadlist.setOnClickListener {
-            findNavController().navigate(
-                R.id.threeColumnFragment,
-                Bundle().apply {
-                    putString("arg_title", "Readlist")
-                    putString("arg_type", "readlist")
-                    putLong("user_id", targetUserId)
-                }
-            )
+            val bundle = Bundle().apply {
+                putString(ThreeColumnFragment.ARG_TITLE, "Readlist")
+                putString(ThreeColumnFragment.ARG_TYPE, "readlist")
+                // kullanıcıya özel gösterimler için userId de yolluyoruz
+                putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
         // SafeArgs action varsa:
         binding.btnOtherLists.setOnClickListener {
-            val action = OtherUserProfileFragmentDirections
-                .actionOtherUserProfileFragmentToListsFragment(targetUserId)
-            findNavController().navigate(action)
-        }
+                findNavController().navigate(
+                +        R.id.threeColumnFragment,
+                     Bundle().apply {
+                               putString("arg_title", "List")
+                               putString("arg_type", "List")
+                               putLong(ThreeColumnFragment.ARG_LIST_ID, targetUserId)
+                    }
+                            )
+            }
         binding.btnOtherLikes.setOnClickListener {
-            findNavController().navigate(
-                R.id.threeColumnFragment,
-                Bundle().apply {
-                    putString("arg_title", "Likes")
-                    putString("arg_type", "likes")
-                    putLong("user_id", targetUserId)
-                }
-            )
+            val bundle = Bundle().apply {
+                putString(ThreeColumnFragment.ARG_TITLE, "Likes")
+                putString(ThreeColumnFragment.ARG_TYPE, "likes")
+                putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
+            }
+            findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
     }
 

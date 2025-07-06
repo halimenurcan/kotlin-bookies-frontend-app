@@ -33,16 +33,23 @@ class ThreeColumnFragment : Fragment() {
     private var listId: Long? = null  // 👈 Yeni: Liste ID'si
 
     companion object {
-        private const val ARG_TITLE = "arg_title"
-        private const val ARG_TYPE = "arg_type"
-        private const val ARG_LIST_ID = "arg_list_id"
+        internal const val ARG_TITLE = "arg_title"
+        internal const val ARG_TYPE = "arg_type"
+        internal const val ARG_LIST_ID = "arg_list_id"
+        const val ARG_USER_ID = "arg_user_id"
 
-            fun newInstance(title: String, type: String? = null, listId: Long? = null): ThreeColumnFragment {
+
+        fun newInstance( title: String,
+                         type: String? = null,
+                         listId: Long?  = null,
+                         userId: Long?  = null): ThreeColumnFragment {
+
                 return ThreeColumnFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_TITLE, title)
-                        type?.let { putString(ARG_TYPE, it) }
+                        type?.let  { putString(ARG_TYPE, it) }
                         listId?.let { putLong(ARG_LIST_ID, it) }
+                        userId?.let { putLong(ARG_USER_ID, it) }
                     }
                 }
             }
@@ -91,7 +98,6 @@ class ThreeColumnFragment : Fragment() {
 
                 }
 
-                // 👇 Eski "read" tipi (Room kullanımı için)
                 else if (type == "read") {
                     val factory = ReadViewModelFactory(requireContext())
                     readViewModel = ViewModelProvider(this, factory)[ReadViewModel::class.java]
