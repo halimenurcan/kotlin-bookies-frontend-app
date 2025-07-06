@@ -1,6 +1,7 @@
 package com.example.frontendbook.data.model
 
-import com.example.frontendbook.data.remote.dto.BookDto
+import com.example.frontendbook.data.api.dto.BookDto
+
 
 /**
  * Backend’den /api/lists/user/{userId} ile dönecek JSON nesnesi

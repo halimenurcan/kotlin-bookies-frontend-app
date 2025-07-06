@@ -1,3 +1,4 @@
+// HomePageFragment.kt
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
@@ -43,17 +44,14 @@ class HomePageFragment : Fragment() {
             loadInnerFragment(InnerBooksFragment.newInstance("All Books", "fiction"))
             updateButtonColors(binding.header.booksButton)
         }
-
         binding.header.reviewsButton.setOnClickListener {
             loadInnerFragment(AllReviewsFragment())
             updateButtonColors(binding.header.reviewsButton)
         }
-
         binding.header.listsButton.setOnClickListener {
-            loadInnerFragment(ListsFragment.newInstance(showUserLists = false)) // 👈 BURASI
+            loadInnerFragment(ListsFragment())
             updateButtonColors(binding.header.listsButton)
         }
-
     }
 
     private fun loadInnerFragment(fragment: Fragment) {

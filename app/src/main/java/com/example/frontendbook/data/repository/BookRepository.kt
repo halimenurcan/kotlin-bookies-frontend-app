@@ -2,7 +2,6 @@ package com.example.frontendbook.data.repository
 
 import android.content.Context
 import android.util.Log
-import com.example.frontendbook.data.api.dto.EmbeddedBooksResponse
 import com.example.frontendbook.data.api.mapper.BookMapper
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.domain.model.Book
