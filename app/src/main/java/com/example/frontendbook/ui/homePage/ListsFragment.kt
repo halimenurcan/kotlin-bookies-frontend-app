@@ -1,34 +1,40 @@
 package com.example.frontendbook.ui.homePage
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentListsBinding
+import com.example.frontendbook.domain.model.UserListType
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class ListsFragment : Fragment() {
 
     private var _binding: FragmentListsBinding? = null
     private val binding get() = _binding!!
 
+    private val args: ListsFragmentArgs by navArgs()
+    private val profileUserId: Long get() = args.profileUserId
+
     private lateinit var viewModel: ListsViewModel
     private lateinit var adapter: ListAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListsBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,80 +43,70 @@ class ListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnAddList.setOnClickListener {
-            showAddListDialog()
+        // Add-list butonunu sadece kendi profilinizde göster (isteğe bağlı)
+        if (profileUserId == getCurrentUserId()) {
+            binding.btnAddList.visibility = View.VISIBLE
+            binding.btnAddList.setOnClickListener { showAddListDialog() }
+        } else {
+            binding.btnAddList.visibility = View.GONE
         }
 
-        // 1) RecyclerView ve Adapter ayarı
+        // RecyclerView ve Adapter ayarı
         adapter = ListAdapter(emptyList()) { list ->
-            // Listeye tıklanınca detay ekranına git
             val bundle = Bundle().apply { putLong("listId", list.id) }
-            findNavController().navigate(R.id.action_listsFragment_to_listDetailFragment, bundle)
+            findNavController().navigate(
+                R.id.action_listsFragment_to_listDetailFragment,
+                bundle
+            )
         }
         binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.listsRecyclerView.adapter = adapter
 
-        // 2) ViewModel oluştur
-        viewModel = ViewModelProvider(
-            this,
-            ListsViewModelFactory(requireContext())
-        ).get(ListsViewModel::class.java)
+        // ViewModel oluştur
+        viewModel = viewModels<ListsViewModel> { ListsViewModelFactory(requireContext()) }.value
 
+        // Options menu (isteğe bağlı: tekrar add dialog)
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.lists_menu, menu)
+            override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+                inflater.inflate(R.menu.lists_menu, menu)
             }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.action_add_list -> {
-                        showAddListDialog()
-                        true
-                    }
-                    else -> false
-                }
-            }
+            override fun onMenuItemSelected(item: MenuItem) =
+                if (item.itemId == R.id.action_add_list) {
+                    showAddListDialog()
+                    true
+                } else false
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-
-        // 3) userId al ve listeleri yükle
-        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-        val userId = prefs.getLong("user_id", -1L)
-        if (userId != -1L) {
-            viewModel.loadUserLists(userId)
+        // userId parametresiyle listeleri yükle
+        val userIdToLoad = if (profileUserId != -1L) profileUserId else getCurrentUserId()
+        if (userIdToLoad != -1L) {
+            viewModel.loadUserLists(userIdToLoad)
         } else {
             Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
         }
 
-        // 4) LiveData gözlemleri
+        // LiveData gözlemleri
         viewModel.lists.observe(viewLifecycleOwner) { lists ->
             adapter.submitList(lists)
         }
-
-        viewModel.error.observe(viewLifecycleOwner) { error ->
-            error?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            }
+        viewModel.error.observe(viewLifecycleOwner) { msg ->
+            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    private fun getCurrentUserId(): Long =
+        requireContext()
+            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            .getLong("user_id", -1L)
 
     private fun showAddListDialog() {
         val context = requireContext()
-
-        // Material Design uyumlu layout oluştur
-        val inputLayout = com.google.android.material.textfield.TextInputLayout(context)
-        val editText = com.google.android.material.textfield.TextInputEditText(context)
-
-        inputLayout.hint = "List Name"
-        inputLayout.setPadding(50, 0, 50, 0) // iç boşluklar
-        editText.setSingleLine()
-
+        val inputLayout = TextInputLayout(context).apply {
+            hint = "List Name"
+            setPadding(50, 0, 50, 0)
+        }
+        val editText = TextInputEditText(context).apply { isSingleLine = true }
         inputLayout.addView(editText)
 
         val dialog = MaterialAlertDialogBuilder(context)
@@ -120,21 +116,15 @@ class ListsFragment : Fragment() {
             .setNegativeButton("Cancel", null)
             .show()
 
-        // Renkleri ayarla
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(
-            ContextCompat.getColor(context, R.color.buttonSecondary)
-        )
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(
-            ContextCompat.getColor(context, R.color.button_textPrimary)
-        )
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(ContextCompat.getColor(context, R.color.buttonSecondary))
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(ContextCompat.getColor(context, R.color.button_textPrimary))
 
-        // Positive button click override
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val listName = editText.text.toString().trim()
             if (listName.isNotEmpty()) {
-                val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-                val userId = prefs.getLong("user_id", -1L)
-
+                val userId = getCurrentUserId()
                 viewModel.createList(userId, listName) { success ->
                     if (success) {
                         Toast.makeText(context, "Liste oluşturuldu", Toast.LENGTH_SHORT).show()
@@ -150,4 +140,8 @@ class ListsFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

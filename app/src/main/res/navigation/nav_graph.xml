@@ -93,6 +93,9 @@
         <argument
             android:name="userId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_otherUserProfileFragment_to_listsFragment"
+            app:destination="@id/listsFragment" />
     </fragment>
 
     <!-- Listeler -->
@@ -100,6 +103,12 @@
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
         android:label="Lists" >
+
+        <argument
+            android:name="profileUserId"
+            app:argType="long"
+             />
+
         <action
             android:id="@+id/action_listsFragment_to_listDetailFragment"
             app:destination="@id/listDetailFragment" />
