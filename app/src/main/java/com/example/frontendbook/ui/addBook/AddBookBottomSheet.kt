@@ -179,7 +179,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                             bookId = book.id.toLong(),
                             score = rating,
                             comment = comment,
-                            read = false,
+                            read = false, // true donucek done tusuna basinca okundu listesine gidicegi zaman
                             toRead = false,
                             liked = isLiked
                         )

@@ -79,6 +79,8 @@ class CombinedSearchAdapter(
             Glide.with(binding.bookImageView.context)
                 .load(book.coverImageUrl) //
                 .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(binding.bookImageView)
             binding.root.setOnClickListener { onClick(book) }
         }
     }
