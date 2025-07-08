@@ -14,7 +14,10 @@
         android:layout_alignParentStart="true"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="12dp"
-        android:src="@drawable/placeholder" />
+        android:src="@drawable/placeholder"
+        android:clickable="true"
+        android:focusable="true"
+        />
 
     <!-- Like Button -->
     <ImageButton

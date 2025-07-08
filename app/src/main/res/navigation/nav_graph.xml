@@ -32,6 +32,10 @@
         <action
             android:id="@+id/action_searchFragment_to_otherUserProfileFragment"
             app:destination="@id/otherUserProfileFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_threeColumnFragment"
+            app:destination="@id/threeColumnFragment" />
+
     </fragment>
 
     <!-- Kitap Detay Sayfası -->
@@ -54,7 +58,11 @@
         tools:layout="@layout/fragment_reviews">
         <argument
             android:name="book"
-            app:argType="com.example.frontendbook.domain.model.Book" />
+            app:argType="com.example.frontendbook.domain.model.Book"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_reviewsFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
     <!-- Kendi Profil -->
@@ -79,7 +87,15 @@
     <fragment
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment"
-        android:label="three_column_fragment" />
+        android:label="three_column_fragment">
+    <argument
+        android:name="title"
+        app:argType="string" />
+    <argument
+        android:name="type"
+        app:argType="string"
+        app:nullable="true" />
+    </fragment>
 
     <!-- Kitap Ekle BottomSheet -->
     <dialog
@@ -142,5 +158,14 @@
         android:id="@+id/listDetailFragment"
         android:name="com.example.frontendbook.ui.listdetail.ListDetailFragment"
         android:label="List Detail" />
+    <fragment
+        android:id="@+id/allReviewsFragment"
+        android:name="com.example.frontendbook.ui.homePage.AllReviewsFragment"
+        tools:layout="@layout/fragment_reviews">
+        <action
+            android:id="@+id/action_allReviewsFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
+    </fragment>
+
 
 </navigation>

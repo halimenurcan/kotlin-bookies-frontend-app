@@ -1,6 +1,7 @@
 package com.example.frontendbook.ui.homePage
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,9 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ReviewDto
+import com.example.frontendbook.data.api.dto.toDomain
+import com.example.frontendbook.data.repository.BookRepository
 import com.example.frontendbook.databinding.ItemReviewBinding
+import com.example.frontendbook.domain.model.Book
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
+class ReviewsAdapter(
+    private val onClick: ((Book) -> Unit)? = null
+) : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
 
     private val expandedItems = mutableSetOf<Long>()
 
@@ -24,6 +34,7 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
         holder.bind(getItem(position))
     }
 
+
     inner class ViewHolder(private val b: ItemReviewBinding) : RecyclerView.ViewHolder(b.root) {
 
         @SuppressLint("SetTextI18n")
@@ -33,6 +44,27 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
                 .load(r.bookCoverUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(b.reviewBookCover)
+
+            b.reviewBookCover.setOnClickListener {
+                r.bookId?.let { id ->
+                    Log.d("ImageClick", "Clicked bookId: $id")
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val repo = BookRepository(b.root.context)
+                            val book = repo.fetchBookById(id)
+                            Log.d("ImageClick", "Fetched book: ${book.title}")
+
+                            withContext(Dispatchers.Main) {
+                                onClick?.invoke(book)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("ImageClick", "Book fetch failed: ${e.message}")
+                        }
+                    }
+                } ?: Log.e("ImageClick", "ReviewDto.bookId is NULL")
+            }
+
 
             // Yıldızlar
             b.reviewRatingBar.rating = r.score?.toFloat() ?: 0f
@@ -74,6 +106,7 @@ class ReviewsAdapter : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
                 r.isLiked = !r.isLiked
                 notifyItemChanged(absoluteAdapterPosition)
             }
+
         }
     }
 

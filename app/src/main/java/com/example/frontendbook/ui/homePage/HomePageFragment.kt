@@ -13,11 +13,15 @@ import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentHomePageBinding
 import com.example.frontendbook.domain.model.Book
 
-class HomePageFragment : Fragment() {
+class HomePageFragment : Fragment(), AllReviewsFragment.BookClickListener {
 
     private var _binding: FragmentHomePageBinding? = null
     private val binding get() = _binding!!
-
+    override fun onBookClicked(book: Book) {
+        val action = HomePageFragmentDirections
+            .actionHomePageFragmentToBookInfoPageFragment(book)
+        findNavController().navigate(action)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -26,7 +26,7 @@ interface ReviewsApiService {
     ): Response<Unit>
 
     /** Bir kitaba ait yorumları düz liste olarak döner (ReviewDto shape’inde) */
-    @GET("books/{bookId}/reviews")
+    @GET("comments/book/{bookId}")
     suspend fun getReviewsForBook(
         @Path("bookId") bookId: Long
     ): Response<List<CommentResponseDTO>>

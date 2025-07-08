@@ -12,6 +12,8 @@ data class ReviewDto(
     val score: Int?,
     val comment: String,
     val createdAt: String,
-    var isLiked: Boolean
+    var isLiked: Boolean,
+
+    val book: BookDto? = null
 
 )

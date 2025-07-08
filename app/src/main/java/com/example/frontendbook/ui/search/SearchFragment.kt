@@ -121,6 +121,21 @@ class SearchFragment : Fragment() {
             binding.backButton.visibility = View.GONE
             binding.searchInput.text.clear()
         }
+        binding.mostPopularButton.setOnClickListener {
+            val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
+                title = "Most Popular",
+                type = "popular"
+            )
+            findNavController().navigate(action)
+        }
+
+        binding.highlyRatedButton.setOnClickListener {
+            val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
+                title = "Highly Rated",
+                type = "rated"
+            )
+            findNavController().navigate(action)
+        }
 
         binding.genreButton.setOnClickListener {
             showMultiSelectDialog(
@@ -160,6 +175,7 @@ class SearchFragment : Fragment() {
             minimumHeight = 0
             setPadding(32, 16, 32, 16)
         }
+
     }
 
     private fun showMultiSelectDialog(

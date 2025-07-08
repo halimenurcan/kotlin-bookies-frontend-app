@@ -2,6 +2,7 @@
 
 package com.example.frontendbook.ui.homePage
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -11,9 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentReviewsBinding
+import androidx.navigation.fragment.findNavController
+import com.example.frontendbook.domain.model.Book
+
 
 class AllReviewsFragment : Fragment() {
-
+    interface BookClickListener {
+        fun onBookClicked(book: Book)
+    }
     private var _binding: FragmentReviewsBinding? = null
     private val binding get() = _binding!!
 
@@ -21,6 +27,17 @@ class AllReviewsFragment : Fragment() {
         ReviewsViewModelFactory(requireContext())
     }
     private lateinit var reviewsAdapter: ReviewsAdapter
+    private var listener: BookClickListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = when {
+            context is BookClickListener -> context
+            parentFragment is BookClickListener -> parentFragment as BookClickListener
+            else -> null
+        }
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentReviewsBinding.inflate(inflater, container, false)
@@ -38,7 +55,12 @@ class AllReviewsFragment : Fragment() {
         }
 
         // RecyclerView + Adapter
-        reviewsAdapter = ReviewsAdapter()
+        reviewsAdapter = ReviewsAdapter { book ->
+            listener?.onBookClicked(book)
+        }
+
+
+
         binding.reviewsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = reviewsAdapter
