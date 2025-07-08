@@ -46,4 +46,21 @@ class UserViewModel(
             }
         }
     }
+
+    // 🔧 EKLENDİ
+    fun updateAvatar(userId: Int, avatarId: String) {
+        Log.d("UserViewModel", "updateAvatar() çağrıldı -> userId=$userId, avatarId=$avatarId")
+        viewModelScope.launch {
+            try {
+                repository.updateAvatar(userId, avatarId)
+                loadUser(userId.toLong()) // güncel veriyi çek
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "updateAvatar() -> hata: ${e.message}", e)
+                _error.value = e.message ?: "Avatar güncellenirken hata oluştu"
+            }
+        }
+    }
+
 }
+
+
