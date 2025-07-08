@@ -1,6 +1,7 @@
 package com.example.frontendbook.data.api.service
 
 import com.example.frontendbook.data.api.dto.UserResponse
+import com.example.frontendbook.data.model.AvatarRequest
 import com.example.frontendbook.data.model.BookInteractionRequest
 import com.example.frontendbook.data.remote.dto.UserDto
 import retrofit2.Response
@@ -13,6 +14,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserApiService {
+
+    @PUT("users/{id}/avatar")
+    suspend fun updateAvatar(
+        @Path("id") userId: Int,
+        @Body avatarRequest: AvatarRequest
+    ): Response<Unit>
 
     @POST("users/{userId}/books/interact")
     suspend fun sendBookInteraction(

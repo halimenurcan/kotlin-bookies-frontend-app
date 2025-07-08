@@ -2,11 +2,13 @@ package com.example.frontendbook.ui.profile
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.activityViewModels
 import com.example.frontendbook.R
 
 class ChooseProfileImageBottomSheetFragment(
@@ -14,6 +16,7 @@ class ChooseProfileImageBottomSheetFragment(
 ) : BottomSheetDialogFragment() {
 
     private lateinit var sharedPrefs: android.content.SharedPreferences
+    private val viewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +60,19 @@ class ChooseProfileImageBottomSheetFragment(
 
                 // Seçimi kaydet
                 sharedPrefs.edit().putInt("user_avatar", pair.first).apply()
+
+                val avatarId = when (pair.first) {
+                    R.drawable.bookworms -> "avatar_1"
+                    R.drawable.bookfriends -> "avatar_2"
+                    R.drawable.bookbibliofil -> "avatar_3"
+                    R.drawable.bookcat -> "avatar_4"
+                    else -> "avatar_default"
+                }
+                val userId = sharedPrefs.getLong("user_id", -1L).toInt()
+                Log.d("ChooseProfile", "Avatar seçildi → userId=$userId, avatarId=$avatarId")
+                if (userId != -1) {
+                    viewModel.updateAvatar(userId, avatarId)
+                }
 
                 // 300ms sonra geri bildir
                 view.postDelayed({

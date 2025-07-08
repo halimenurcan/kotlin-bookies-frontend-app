@@ -3,10 +3,27 @@ package com.example.frontendbook.data.repository
 import android.util.Log
 import com.example.frontendbook.data.api.service.UserApiService
 import com.example.frontendbook.data.api.dto.UserResponse
+import com.example.frontendbook.data.model.AvatarRequest
 import com.example.frontendbook.data.model.BookInteractionRequest
 
 class UserRepository(private val api: UserApiService) {
     private val TAG = "UserRepository"
+
+    suspend fun updateAvatar(userId: Int, avatarId: String) {
+        val request = AvatarRequest(avatarId)
+        try {
+            Log.d("UserRepository", "updateAvatar() -> gönderiliyor: userId=$userId, avatarId=$avatarId")
+            val response = api.updateAvatar(userId, request)
+            if (response.isSuccessful) {
+                Log.d("UserRepository", "updateAvatar() -> başarıyla güncellendi. HTTP ${response.code()}")
+            } else {
+                Log.e("UserRepository", "updateAvatar() -> başarısız! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "updateAvatar() -> hata oluştu: ${e.message}", e)
+        }
+    }
+
 
     suspend fun fetchUser(userId: Long): UserResponse {
         Log.d(TAG, "fetchUser() -> çağrıldı, userId=$userId")
