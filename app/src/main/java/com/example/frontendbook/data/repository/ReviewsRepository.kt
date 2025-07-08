@@ -27,14 +27,15 @@ class ReviewsRepository(
 
         return dtoList.map { dto ->
             ReviewDto(
-                id           = dto.id,
-                userId       = dto.user.id,
-                bookId       = dto.book.id,
-                score        = dto.score,
-                comment      = dto.content,
-                createdAt    = dto.createdAt.orEmpty(),
+                id = dto.id,
+                userId = dto.user.id,
+                bookId = dto.book.id,
+                score = dto.score,
+                comment = dto.content,
+                createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = dto.book.coverImageUrl.toString(),
-                userName     = dto.user.username.toString()
+                userName = dto.user.username.toString(),
+                isLiked = false,
             )
         }
     }
@@ -71,14 +72,15 @@ class ReviewsRepository(
         val dtoList: List<CommentResponseDTO> = resp.body().orEmpty()
         return dtoList.map { dto ->
             ReviewDto(
-                id           = dto.id,
-                userId       = dto.user.id,
-                bookId       = dto.book.id,
-                score        = dto.score,
-                comment      = dto.content,
-                createdAt    = dto.createdAt.orEmpty(),
+                id = dto.id,
+                userId = dto.user.id,
+                bookId = dto.book.id,
+                score = dto.score,
+                comment = dto.content,
+                createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = dto.book.coverImageUrl.toString(),
-                userName     = dto.user.username.toString()
+                userName = dto.user.username.toString(),
+                isLiked = false
             )
         }
     }
@@ -93,14 +95,15 @@ class ReviewsRepository(
         if (resp.isSuccessful) {
             val dto = resp.body()!!  // CommentResponseDTO
             val review = ReviewDto(
-                id           = dto.id,
-                userId       = dto.user.id,
-                bookId       = dto.book.id,
-                score        = dto.score,
-                comment      = dto.content,
-                createdAt    = dto.createdAt.orEmpty(),
+                id = dto.id,
+                userId = dto.user.id,
+                bookId = dto.book.id,
+                score = dto.score,
+                comment = dto.content,
+                createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = dto.book.coverImageUrl.toString(),
-                userName     = dto.user.username.toString()
+                userName = dto.user.username.toString(),
+                isLiked = false
             )
             return review
         } else {
@@ -127,14 +130,15 @@ class ReviewsRepository(
 
         val dto = resp.body()!!  // CommentResponseDTO
         val review = ReviewDto(
-            id           = dto.id,
-            userId       = dto.user.id,
-            bookId       = dto.book.id,
-            score        = dto.score,
-            comment      = dto.content,
-            createdAt    = dto.createdAt ?: "",
+            id = dto.id,
+            userId = dto.user.id,
+            bookId = dto.book.id,
+            score = dto.score,
+            comment = dto.content,
+            createdAt = dto.createdAt ?: "",
             bookCoverUrl = dto.book.coverImageUrl.toString(),
-            userName     = dto.user.username.toString()
+            userName = dto.user.username.toString(),
+            isLiked = false
         )
         return review
     }

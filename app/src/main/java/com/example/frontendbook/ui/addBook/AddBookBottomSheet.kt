@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -36,13 +37,11 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetAddBookBinding? = null
     private val binding get() = _binding!!
 
-    // shared search VM for finding books, now with factory
     private val searchViewModel: SearchViewModel by activityViewModels {
         SearchViewModelFactory(RetrofitClient.searchApiService(requireContext()))
     }
     private lateinit var adapter: AddBookSearchAdapter
 
-    // our two repositories
     private val likedRepo by lazy {
         LikedBooksRepository(RetrofitClient.likedBooksApiService(requireContext()))
     }
@@ -69,7 +68,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // —— 1) Book Search Adapter & RecyclerView ——
+        // 1) Book Search Adapter & RecyclerView
         adapter = AddBookSearchAdapter { book ->
             selectedBook = book
             binding.addBookTitle.text = book.title
@@ -97,7 +96,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             visibility = View.GONE
         }
 
-        // —— 2) Search flow ——
+        // 2) Search flow
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearch = actionId == EditorInfo.IME_ACTION_SEARCH
             val isEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
@@ -153,39 +152,26 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             adapter.submitList(books)
             binding.recyclerView.visibility = if (books.isNotEmpty()) View.VISIBLE else View.GONE
 
-            // Eğer kullanıcı gerçekten arama yaptıysa ama sonuç çıkmadıysa göster
             if (books.isEmpty() && searchViewModel.searchStarted.value == true && !binding.searchInput.text.isNullOrBlank()) {
                 Toast.makeText(requireContext(), "No books found", Toast.LENGTH_SHORT).show()
             }
-
         }
 
-
-        // —— 3) Save button: Add to list &/or Create review ——
+        // 3) Save button: Add to list &/or Create review
         binding.saveBookButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
             val comment = binding.commentInput.text.toString().trim()
-            val rating  = binding.ratingBar.rating.toInt()
+            val rating = binding.ratingBar.rating.toInt()
 
-            // Kullanıcı ID’si
-            val prefs  = requireContext()
-                .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val userId = prefs.getLong("user_id", -1L)
             if (userId == -1L) {
                 Toast.makeText(requireContext(), "Oturum açılmamış", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Hepsini tek coroutine içinde yürüt
             lifecycleScope.launch {
-                // 3a) Add to list (opsiyonel)
-                if (listId != -1L) {
-                    val ok = likedRepo.likeBook(listId, book.id.toLong())
-                    if (ok) Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
-                    else Toast.makeText(requireContext(), "Listeye ekleme başarısız", Toast.LENGTH_SHORT).show()
-                }
-
-                // 3b) Create review (opsiyonel)
+                // Sadece review
                 if (comment.isNotEmpty() || rating > 0) {
                     try {
                         val req = ReviewCreateRequest(
@@ -193,9 +179,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                             bookId = book.id.toLong(),
                             score = rating,
                             comment = comment,
-                            read = TODO(),
-                            toRead = TODO(),
-                            liked = TODO()
+                            read = false,
+                            toRead = false,
+                            liked = isLiked
                         )
                         val created = reviewsRepo.createComment(req)
                         Toast.makeText(requireContext(), "Review eklendi (ID=${created.id})", Toast.LENGTH_SHORT).show()
@@ -203,23 +189,29 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                         Toast.makeText(requireContext(), "Review ekleme hatası: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                // Tüm işlemler tamamlandıktan sonra fragment’ı kapat
+                // Sadece beğeni
+                if (listId != -1L) {
+                    val ok = likedRepo.likeBook(listId, book.id.toLong())
+                    if (ok) Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(requireContext(), "Listeye ekleme başarısız", Toast.LENGTH_SHORT).show()
+                }
                 dismiss()
             }
         }
 
-        // —— 4) Like/unlike ——
+        // 4) Like/unlike
         binding.likeButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
             isLiked = !isLiked
             updateLikeUi(isLiked)
             lifecycleScope.launch {
-                val prefs  = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+                val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
                 val userId = prefs.getLong("user_id", -1L)
                 if (userId == -1L) return@launch
+
                 val success = if (isLiked) likedRepo.likeBook(userId, book.id.toLong())
                 else likedRepo.unlikeBook(userId, book.id.toLong())
+
                 if (!success) {
                     isLiked = !isLiked
                     updateLikeUi(isLiked)
@@ -227,11 +219,11 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 }
             }
         }
+
         binding.cancelButton.setOnClickListener {
             binding.searchInput.setText("")
             adapter.submitList(emptyList())
             searchViewModel.clearResults()
-
             binding.bookPreviewArea.visibility = View.GONE
             binding.selectedBookDetails.visibility = View.GONE
             binding.recyclerView.visibility = View.GONE
@@ -241,8 +233,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             hideKeyboard()
             dismiss()
         }
-
-
     }
 
     override fun onStart() {
