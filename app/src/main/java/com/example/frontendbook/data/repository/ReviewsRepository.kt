@@ -10,7 +10,11 @@ import com.example.frontendbook.data.model.ReviewCreateRequest
 class ReviewsRepository(
     private val api: ReviewsApiService
 ) {
-
+    suspend fun getReviewsForBook(bookId: Long): List<ReviewDto> {
+        val response = api.getReviewsForBook(bookId)
+        if (!response.isSuccessful) throw Exception("Reviewlar çekilemedi: ${response.code()}")
+        return (response.body() ?: emptyList()) as List<ReviewDto>
+    }
     suspend fun fetchAllComments(): List<ReviewDto> {
         val resp = api.getAllReviews()
         if (!resp.isSuccessful) {

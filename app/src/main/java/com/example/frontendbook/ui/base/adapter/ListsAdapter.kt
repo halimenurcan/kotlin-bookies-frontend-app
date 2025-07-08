@@ -1,4 +1,4 @@
-package com.example.frontendbook.ui.homePage
+package com.example.frontendbook.ui.base.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,6 @@ class ListAdapter(
     private val onClick: (ListDto) -> Unit
 ) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
-    // ViewHolder: Her kart (list item) görünümünü temsil eder
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.listTitle)
 

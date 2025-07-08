@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.base.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -32,7 +33,6 @@ class CombinedSearchAdapter(
                     else -> false
                 }
             }
-
             override fun areContentsTheSame(oldItem: CombinedSearchResult, newItem: CombinedSearchResult): Boolean {
                 return oldItem == newItem
             }
@@ -72,9 +72,13 @@ class CombinedSearchAdapter(
         private val binding: ItemBookResultBinding,
         private val onClick: (Book) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("CheckResult")
         fun bind(book: Book) {
             binding.title.text = book.title
             binding.author.text = book.author
+            Glide.with(binding.bookImageView.context)
+                .load(book.coverImageUrl) //
+                .placeholder(R.drawable.placeholder)
             binding.root.setOnClickListener { onClick(book) }
         }
     }
@@ -85,13 +89,11 @@ class CombinedSearchAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             binding.userName.text = user.username
-            user.profileImageUrl?.let { url ->
-                Glide.with(binding.userImage.context)
-                    .load(url)
-                    .placeholder(R.drawable.avatar)  // opsiyonel
-                    .error(R.drawable.avatar)        // opsiyonel
-                    .into(binding.userImage)
-            }
+            Glide.with(binding.userImage.context)
+                .load(user.profileImageUrl)
+                .placeholder(R.drawable.avatar)
+                .error(R.drawable.avatar)
+                .into(binding.userImage)
             binding.root.setOnClickListener { onClick(user) }
         }
     }

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.R
 import com.example.frontendbook.databinding.FragmentListsBinding
 import com.example.frontendbook.ui.base.adapter.ExploreListAdapter
+import com.example.frontendbook.ui.base.adapter.ListAdapter
 import com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment
 
 class ListsFragment : Fragment() {
@@ -56,7 +57,10 @@ class ListsFragment : Fragment() {
             // Profil sayfası için adapter
             listAdapter = ListAdapter(emptyList()) { list ->
                 val bundle = Bundle().apply { putLong("listId", list.id) }
-                findNavController().navigate(R.id.action_listsFragment_to_listDetailFragment, bundle)
+                findNavController().navigate(
+                    R.id.action_listsFragment_to_listDetailFragment,
+                    bundle
+                )
             }
             binding.listsRecyclerView.adapter = listAdapter
         } else {
