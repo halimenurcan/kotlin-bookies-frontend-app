@@ -48,12 +48,19 @@ class ReviewsFragment : Fragment() {
             msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
         }
         val book = args.book
-
+        Log.d("ReviewsFragment", "Gelen kitap id: ${book?.id}, title: ${book?.title}")
         if (book != null && book.id != 0L && book.id != -1L) {
             viewModel.loadCommentsForBook(book.id)
         } else {
+            Log.d("ReviewsFragment", "Kitap ID geçersiz, tüm yorumlar yükleniyor.")
             viewModel.loadAllComments()
         }
+        viewModel.error.observe(viewLifecycleOwner) { msg ->
+            msg?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
+        }
+
 
     }
 

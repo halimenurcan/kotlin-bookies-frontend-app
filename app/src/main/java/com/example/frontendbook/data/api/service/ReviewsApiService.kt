@@ -29,11 +29,13 @@ interface ReviewsApiService {
     @GET("comments/book/{bookId}")
     suspend fun getReviewsForBook(
         @Path("bookId") bookId: Long
-    ): Response<List<CommentResponseDTO>>
+    ): Response<CommentsResponse>
 
     /** Yeni yorum yaratır, geriye HAL‐DTO olarak CommentResponseDTO döner */
     @POST("comments")
     suspend fun createComment(
         @Body request: ReviewCreateRequest
     ): Response<CommentResponseDTO>
+
+
 }

@@ -90,7 +90,7 @@ class BookInfoPageFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val repo = ReviewsRepository(RetrofitClient.reviewsApiService(requireContext()))
-                val reviews: List<ReviewDto> = repo.getReviewsForBook(bookId)
+                val reviews: List<ReviewDto> = repo.fetchReviewsForBook(bookId)
                 Log.d("BookInfoPage", "Gelen review sayısı: ${reviews.size}")
                 reviews.forEachIndexed { i, r ->
                     Log.d("BookInfoPage", "Review $i: score=${r.score}")

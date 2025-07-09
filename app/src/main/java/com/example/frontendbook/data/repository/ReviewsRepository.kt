@@ -10,49 +10,6 @@ import com.example.frontendbook.data.model.ReviewCreateRequest
 class ReviewsRepository(
     private val api: ReviewsApiService
 ) {
-    suspend fun getReviewsForBook(bookId: Long): List<ReviewDto> {
-        val response = api.getReviewsForBook(bookId)
-        if (!response.isSuccessful) throw Exception("Reviewlar çekilemedi: ${response.code()}")
-        return (response.body() ?: emptyList()) as List<ReviewDto>
-    }
-    suspend fun fetchAllComments(): List<ReviewDto> {
-        val resp = api.getAllReviews()
-        if (!resp.isSuccessful) {
-            throw Exception("Yüklenemedi: ${resp.code()}")
-        }
-
-        // HAL envelope
-        val wrapper = resp.body()!!                      // CommentsResponse
-        val dtoList = wrapper.embedded.comments         // List<CommentResponseDTO>
-
-        return dtoList.map { dto ->
-            ReviewDto(
-                id = dto.id,
-                userId = dto.user.id,
-                bookId = dto.book.id,
-                score = dto.score,
-                comment = dto.content,
-                createdAt = dto.createdAt.orEmpty(),
-                bookCoverUrl = dto.book.coverImageUrl.toString(),
-                userName = dto.user.username.toString(),
-                isLiked = false,
-            )
-        }
-    }
-
-    /** Belirli bir yorumu siler */
-    suspend fun deleteReview(id: Long) {
-        Log.d("ReviewsRepo", "→ deleteReview(id=$id) called")
-        val resp = api.deleteComment(id)
-        Log.d(
-            "ReviewsRepo", "← deleteReview response: code=${resp.code()}, url=${resp.raw().request.url}"
-        )
-        if (!resp.isSuccessful) {
-            val err = resp.errorBody()?.string()
-            Log.e("ReviewsRepo", "!! deleteReview failed: body=$err")
-            throw Exception("Yorum silme hatası: ${resp.code()}")
-        }
-    }
 
     /** Bir kitaba ait yorumları getirir */
     suspend fun fetchReviewsForBook(bookId: Long): List<ReviewDto> {
@@ -66,10 +23,16 @@ class ReviewsRepository(
         if (!resp.isSuccessful) {
             val err = resp.errorBody()?.string()
             Log.e("ReviewsRepo", "!! fetchReviewsForBook failed: body=$err")
-            throw Exception("Kitap yorumları yüklenemedi: ${resp.code()}")
+            throw Exception("Book reviews could not be loaded: ${resp.code()}")
         }
 
-        val dtoList: List<CommentResponseDTO> = resp.body().orEmpty()
+        val wrapper = resp.body()
+        val dtoList = wrapper?.embedded?.comments
+
+        if (dtoList.isNullOrEmpty()) {
+            throw Exception("No reviews found for this book.")
+        }
+
         return dtoList.map { dto ->
             ReviewDto(
                 id = dto.id,
@@ -80,21 +43,23 @@ class ReviewsRepository(
                 createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = dto.book.coverImageUrl.toString(),
                 userName = dto.user.username.toString(),
-                isLiked = false
+                isLiked = false,
+                book = dto.book
             )
         }
     }
 
-    /** Tek bir yorumu getirir */
-    suspend fun getCommentById(id: Long): ReviewDto {
-        Log.d("ReviewsRepo", "→ getCommentById(id=$id) called")
-        val resp = api.getCommentById(id)
-        Log.d(
-            "ReviewsRepo", "← getCommentById response: code=${resp.code()}, url=${resp.raw().request.url}"
-        )
-        if (resp.isSuccessful) {
-            val dto = resp.body()!!  // CommentResponseDTO
-            val review = ReviewDto(
+    suspend fun fetchAllComments(): List<ReviewDto> {
+        val resp = api.getAllReviews()
+        if (!resp.isSuccessful) {
+            throw Exception("Yüklenemedi: ${resp.code()}")
+        }
+
+        val wrapper = resp.body()!!
+        val dtoList = wrapper.embedded.comments
+
+        return dtoList.map { dto ->
+            ReviewDto(
                 id = dto.id,
                 userId = dto.user.id,
                 bookId = dto.book.id,
@@ -103,24 +68,52 @@ class ReviewsRepository(
                 createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = dto.book.coverImageUrl.toString(),
                 userName = dto.user.username.toString(),
-                isLiked = false
+                isLiked = false,
+                book = dto.book
             )
-            return review
-        } else {
+        }
+    }
+
+    suspend fun deleteReview(id: Long) {
+        Log.d("ReviewsRepo", "→ deleteReview(id=$id) called")
+        val resp = api.deleteComment(id)
+        Log.d("ReviewsRepo", "← deleteReview response: code=${resp.code()}, url=${resp.raw().request.url}")
+        if (!resp.isSuccessful) {
+            val err = resp.errorBody()?.string()
+            Log.e("ReviewsRepo", "!! deleteReview failed: body=$err")
+            throw Exception("Yorum silme hatası: ${resp.code()}")
+        }
+    }
+
+    suspend fun getCommentById(id: Long): ReviewDto {
+        Log.d("ReviewsRepo", "→ getCommentById(id=$id) called")
+        val resp = api.getCommentById(id)
+        Log.d("ReviewsRepo", "← getCommentById response: code=${resp.code()}, url=${resp.raw().request.url}")
+        if (!resp.isSuccessful) {
             val err = resp.errorBody()?.string()
             Log.e("ReviewsRepo", "!! getCommentById failed: body=$err")
             throw Exception("Yorum getirilemedi: ${resp.code()}")
         }
+
+        val dto = resp.body()!!
+        return ReviewDto(
+            id = dto.id,
+            userId = dto.user.id,
+            bookId = dto.book.id,
+            score = dto.score,
+            comment = dto.content,
+            createdAt = dto.createdAt.orEmpty(),
+            bookCoverUrl = dto.book.coverImageUrl.toString(),
+            userName = dto.user.username.toString(),
+            isLiked = false,
+            book = dto.book
+        )
     }
 
-    /** Yeni yorum oluşturur */
     suspend fun createComment(request: ReviewCreateRequest): ReviewDto {
         Log.d("ReviewsRepo", "→ createComment(request=$request) called")
         val resp = api.createComment(request)
-        Log.d(
-            "ReviewsRepo",
-            "← createComment response: code=${resp.code()}, url=${resp.raw().request.url}"
-        )
+        Log.d("ReviewsRepo", "← createComment response: code=${resp.code()}, url=${resp.raw().request.url}")
 
         if (!resp.isSuccessful) {
             val err = resp.errorBody()?.string()
@@ -128,8 +121,8 @@ class ReviewsRepository(
             throw Exception("Yorum oluşturulamadı: ${resp.code()}")
         }
 
-        val dto = resp.body()!!  // CommentResponseDTO
-        val review = ReviewDto(
+        val dto = resp.body()!!
+        return ReviewDto(
             id = dto.id,
             userId = dto.user.id,
             bookId = dto.book.id,
@@ -138,8 +131,8 @@ class ReviewsRepository(
             createdAt = dto.createdAt ?: "",
             bookCoverUrl = dto.book.coverImageUrl.toString(),
             userName = dto.user.username.toString(),
-            isLiked = false
+            isLiked = false,
+            book = dto.book
         )
-        return review
     }
 }
