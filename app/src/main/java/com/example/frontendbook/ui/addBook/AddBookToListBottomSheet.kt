@@ -29,7 +29,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import android.view.KeyEvent
 import android.view.MotionEvent
+import com.example.frontendbook.ui.homePage.ListsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.example.frontendbook.ui.homePage.ListsViewModelFactory
+
 
 class AddBookToListBottomSheet : BottomSheetDialogFragment() {
 
@@ -40,16 +43,12 @@ class AddBookToListBottomSheet : BottomSheetDialogFragment() {
         SearchViewModelFactory(RetrofitClient.searchApiService(requireContext()))
     }
     private lateinit var adapter: AddBookSearchAdapter
+    private val listsViewModel: ListsViewModel by activityViewModels {
+        ListsViewModelFactory(requireContext())
+    }
 
-    private val likedRepo by lazy {
-        LikedBooksRepository(RetrofitClient.likedBooksApiService(requireContext()))
-    }
-    private val reviewsRepo by lazy {
-        ReviewsRepository(RetrofitClient.reviewsApiService(requireContext()))
-    }
 
     private var selectedBook: Book? = null
-    private var isLiked = false
     private var listId: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,9 +72,6 @@ class AddBookToListBottomSheet : BottomSheetDialogFragment() {
             binding.bookPreviewArea.visibility = View.VISIBLE
             binding.selectedBookDetails.visibility = View.VISIBLE
             binding.backButton.visibility = View.VISIBLE
-
-            binding.commentInput.setText("")
-            binding.ratingBar.rating = 0f
 
             Glide.with(requireContext())
                 .load(book.coverImageUrl)
@@ -153,8 +149,6 @@ class AddBookToListBottomSheet : BottomSheetDialogFragment() {
 
         binding.saveBookButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
-            val comment = binding.commentInput.text.toString().trim()
-            val rating = binding.ratingBar.rating.toInt()
 
             val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val userId = prefs.getLong("user_id", -1L)
@@ -164,51 +158,25 @@ class AddBookToListBottomSheet : BottomSheetDialogFragment() {
             }
 
             lifecycleScope.launch {
-                if (comment.isNotEmpty() || rating > 0) {
-                    try {
-                        val req = ReviewCreateRequest(
-                            userId = userId,
-                            bookId = book.id.toLong(),
-                            score = rating,
-                            comment = comment,
-                            read = false,
-                            toRead = false,
-                            liked = isLiked
-                        )
-                        val created = reviewsRepo.createComment(req)
-                        Toast.makeText(requireContext(), "Review added (ID=${created.id})", Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(requireContext(), "Failed to add review: ${e.message}", Toast.LENGTH_SHORT).show()
+
+                if (listId != -1L) {
+                    listsViewModel.addBookToList(listId, book.id) { success ->
+                        if (success) {
+                            if (isAdded) {
+                                Toast.makeText(requireContext(), "Book added to list", Toast.LENGTH_SHORT).show()
+                            }
+                            listsViewModel.refreshLists()
+                        } else {
+                            if (isAdded) {
+                                Toast.makeText(requireContext(), "Failed to add to list", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        if (isAdded) dismiss() // ⬅ dismiss burada, callback'in *içinde* ve `isAdded` kontrolü ile
                     }
                 }
-                if (listId != -1L) {
-                    val ok = likedRepo.likeBook(listId, book.id.toLong())
-                    if (ok) Toast.makeText(requireContext(), "Book added to list", Toast.LENGTH_SHORT).show()
-                    else Toast.makeText(requireContext(), "Failed to add to list", Toast.LENGTH_SHORT).show()
-                }
-                dismiss()
             }
         }
 
-        binding.likeButton.setOnClickListener {
-            val book = selectedBook ?: return@setOnClickListener
-            isLiked = !isLiked
-            updateLikeUi(isLiked)
-            lifecycleScope.launch {
-                val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-                val userId = prefs.getLong("user_id", -1L)
-                if (userId == -1L) return@launch
-
-                val success = if (isLiked) likedRepo.likeBook(userId, book.id.toLong())
-                else likedRepo.unlikeBook(userId, book.id.toLong())
-
-                if (!success) {
-                    isLiked = !isLiked
-                    updateLikeUi(isLiked)
-                    Toast.makeText(requireContext(), "Operation failed", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
         binding.cancelButton.setOnClickListener {
             binding.searchInput.setText("")
@@ -240,10 +208,6 @@ class AddBookToListBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun updateLikeUi(liked: Boolean) {
-        binding.likeButton.setImageResource(if (liked) R.drawable.like_filled else R.drawable.like)
-        binding.likeButton.setBackgroundColor(Color.TRANSPARENT)
-    }
 
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

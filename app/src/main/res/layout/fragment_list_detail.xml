@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <!-- Başlık -->
+    <!-- Silinecek kod -->
     <TextView
         android:id="@+id/listDetailTitle"
         android:layout_width="wrap_content"

@@ -123,13 +123,7 @@
                 android:textColor="@color/textSecondary" />
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/likeButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/like"
-            android:background="@android:color/transparent"
-            android:contentDescription="Like button" />
+
     </LinearLayout>
 
     <!-- Alt Form Alanı -->
@@ -141,31 +135,6 @@
         android:paddingTop="12dp"
         android:visibility="gone">
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Review"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            />
-
-        <EditText
-            android:id="@+id/commentInput"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:hint="Your comment..."
-            android:background="@color/backgroundPrimary"
-            android:padding="12dp"
-            android:gravity="top|start"
-            android:inputType="textMultiLine"
-            android:layout_marginTop="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveBookButton"

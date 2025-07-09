@@ -1,6 +1,6 @@
 package com.example.frontendbook.data.api.service
 
-import com.example.frontendbook.data.model.AddBookRequest
+import com.example.frontendbook.data.model.AddBookToListRequest
 import com.example.frontendbook.data.model.CreateListRequest
 import com.example.frontendbook.data.model.ListDto
 import retrofit2.Response
@@ -16,17 +16,22 @@ interface ListsApiService {
         @Path("userId") userId: Long
     ): Response<List<ListDto>>
 
+    @GET("lists/user/{id}")
+    suspend fun getListWithBooksById(
+        @Path("id") listId: Long
+    ): Response<ListDto>
+
+
     @POST("lists")
     suspend fun createList(
         @Body listRequest: CreateListRequest
     ): Response<Void>
 
-    @POST("lists/{listId}/books")
+    @POST("books-in-list")
     suspend fun addBookToList(
-        @Path("listId") listId: Long,
-        @Body bookRequest: AddBookRequest
+        @Body request: AddBookToListRequest
     ): Response<Void>
-    /** Tüm kullanıcıların oluşturduğu listeleri getirir (Explore için) */
+
 
     @GET("/api/lists")
     suspend fun getAllLists(): List<ListDto>

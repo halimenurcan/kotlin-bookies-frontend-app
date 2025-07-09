@@ -1,13 +1,13 @@
 package com.example.frontendbook.ui.homePage
 
+import android.content.Context
 import androidx.lifecycle.*
 import com.example.frontendbook.data.model.ListDto
 import com.example.frontendbook.data.repository.ListsRepository
 import kotlinx.coroutines.launch
 
-class ListsViewModel(
-    private val repo: ListsRepository
-) : ViewModel() {
+class ListsViewModel(private val context: Context,private val repo: ListsRepository) : ViewModel()
+{
 
     private val _lists = MutableLiveData<List<ListDto>>()
     val lists: LiveData<List<ListDto>> = _lists
@@ -22,6 +22,15 @@ class ListsViewModel(
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
+            }
+        }
+    }
+    fun refreshLists() {
+        viewModelScope.launch {
+            val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val userId = prefs.getLong("user_id", -1L)
+            if (userId != -1L) {
+                loadUserLists(userId)
             }
         }
     }
@@ -50,6 +59,20 @@ class ListsViewModel(
             } catch (e: Exception) {
                 _error.value = e.message
                 onResult(false)
+            }
+        }
+    }
+    private val _listWithBooks = MutableLiveData<ListDto>()
+    val listWithBooks: LiveData<ListDto> = _listWithBooks
+
+    fun loadListWithBooks(listId: Long) {
+        viewModelScope.launch {
+            try {
+                val list = repo.getListWithBooks(listId)
+                _listWithBooks.value = list
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
             }
         }
     }
