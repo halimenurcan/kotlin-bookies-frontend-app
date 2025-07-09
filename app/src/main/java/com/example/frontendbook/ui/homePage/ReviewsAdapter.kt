@@ -89,6 +89,22 @@ class ReviewsAdapter(
                     expandedItems.add(r.id)
                 notifyItemChanged(absoluteAdapterPosition)
             }
+            b.reviewBookTitle.text = "Yükleniyor..."
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val repo = BookRepository(b.root.context)
+                    val book = repo.fetchBookById(r.bookId)
+                    withContext(Dispatchers.Main) {
+                        b.reviewBookTitle.text = book.title
+                    }
+                } catch (e: Exception) {
+                    Log.e("TitleFetch", "Book title fetch failed: ${e.message}")
+                    withContext(Dispatchers.Main) {
+                        b.reviewBookTitle.text = "Bilinmeyen Kitap"
+                    }
+                }
+            }
 
             // Yorum yazarı
             b.reviewAuthor.text = "– ${r.userName}"

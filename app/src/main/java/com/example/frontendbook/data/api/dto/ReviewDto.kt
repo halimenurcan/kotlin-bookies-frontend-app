@@ -14,6 +14,6 @@ data class ReviewDto(
     val createdAt: String,
     var isLiked: Boolean,
 
-    val book: BookDto? = null
+
 
 )
