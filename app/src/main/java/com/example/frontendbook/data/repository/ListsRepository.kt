@@ -3,7 +3,8 @@ package com.example.frontendbook.data.repository
 import com.example.frontendbook.data.api.service.ListsApiService
 import com.example.frontendbook.data.model.AddBookToListRequest
 import com.example.frontendbook.data.model.CreateListRequest
-import com.example.frontendbook.data.model.ListDto
+import com.example.frontendbook.data.api.dto.ListDto
+import com.example.frontendbook.data.remote.dto.ListWithBooksDto
 
 class ListsRepository(
     private val api: ListsApiService
@@ -36,13 +37,9 @@ class ListsRepository(
         }
     }
     suspend fun getListWithBooks(listId: Long): ListDto {
-        val resp = api.getListWithBooksById(listId)
-        if (resp.isSuccessful) {
-            return resp.body() ?: throw Exception("Liste içeriği boş")
-        } else {
-            throw Exception("Liste getirilemedi: ${resp.code()}")
-        }
+        return api.getListWithBooks(listId)
     }
+
 
     suspend fun getAllLists(): List<ListDto> {
         return api.getAllLists()

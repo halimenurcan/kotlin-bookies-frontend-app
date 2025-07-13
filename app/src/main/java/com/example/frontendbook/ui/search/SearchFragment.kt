@@ -124,7 +124,8 @@ class SearchFragment : Fragment() {
         binding.mostPopularButton.setOnClickListener {
             val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
                 title = "Most Popular",
-                type = "popular"
+                type = "popular",
+                listId = 0
             )
             findNavController().navigate(action)
         }
@@ -132,7 +133,8 @@ class SearchFragment : Fragment() {
         binding.highlyRatedButton.setOnClickListener {
             val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
                 title = "Highly Rated",
-                type = "rated"
+                type = "rated",
+                listId = 0
             )
             findNavController().navigate(action)
         }

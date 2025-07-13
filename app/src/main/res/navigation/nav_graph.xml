@@ -88,13 +88,20 @@
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment"
         android:label="three_column_fragment">
+
     <argument
         android:name="title"
         app:argType="string" />
+        <argument
+            android:name="listId"
+            app:argType="long" />
     <argument
         android:name="type"
         app:argType="string"
         app:nullable="true" />
+        <action
+            android:id="@+id/action_threeColumnFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
     <!-- Kitap Ekle BottomSheet -->
@@ -133,6 +140,7 @@
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
         android:label="Lists">
+
         <argument
             android:name="arg_title"
             app:argType="string" />
@@ -148,9 +156,22 @@
         <argument
             android:name="profileUserId"
             app:argType="long" />
+
         <action
-            android:id="@+id/action_listsFragment_to_listDetailFragment"
-            app:destination="@id/listDetailFragment" />
+            android:id="@+id/actionListsFragmentToThreeColumnFragment"
+            app:destination="@id/threeColumnFragment">
+            <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
+                android:name="listId"
+                app:argType="long"
+               />
+            <argument
+                android:name="type"
+                app:argType="string"
+                app:nullable="true" />
+        </action>
     </fragment>
 
     <!-- Liste Detayı -->

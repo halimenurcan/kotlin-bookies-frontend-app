@@ -1,4 +1,4 @@
-package com.example.frontendbook.data.model
+package com.example.frontendbook.data.api.dto
 
 import com.example.frontendbook.data.api.dto.BookDto
 import com.example.frontendbook.domain.model.Book
@@ -11,6 +11,6 @@ data class ListDto(
     val id: Long,
     val title: String,
     val description: String?,
-    val books: List<Book> // her listenin kitapları
+    val books: List<BookDto> // her listenin kitapları
 
 )

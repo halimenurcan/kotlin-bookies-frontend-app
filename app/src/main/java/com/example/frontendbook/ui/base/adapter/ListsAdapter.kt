@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
-import com.example.frontendbook.data.model.ListDto
+import com.example.frontendbook.data.api.dto.ListDto
 import com.example.frontendbook.ui.addBook.AddBookToListBottomSheet
 import com.google.android.material.button.MaterialButton
 

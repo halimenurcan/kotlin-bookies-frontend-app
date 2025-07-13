@@ -2,7 +2,7 @@ package com.example.frontendbook.ui.homePage
 
 import android.content.Context
 import androidx.lifecycle.*
-import com.example.frontendbook.data.model.ListDto
+import com.example.frontendbook.data.api.dto.ListDto
 import com.example.frontendbook.data.repository.ListsRepository
 import kotlinx.coroutines.launch
 

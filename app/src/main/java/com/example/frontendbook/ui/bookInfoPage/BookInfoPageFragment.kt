@@ -58,7 +58,7 @@ class BookInfoPageFragment : Fragment() {
                 .override(Target.SIZE_ORIGINAL)
                 .into(binding.bookCoverImage)
             fetchAndRenderAverageRating(book.id)
-            renderRatingStars(book.rating)
+            book.rating?.let { renderRatingStars(it) }
 
             binding.buttonMore.setOnClickListener {
                 val dialog = BookInfoMoreDialog.newInstance(book)

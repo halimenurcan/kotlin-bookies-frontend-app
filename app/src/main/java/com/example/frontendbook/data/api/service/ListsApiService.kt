@@ -2,7 +2,8 @@ package com.example.frontendbook.data.api.service
 
 import com.example.frontendbook.data.model.AddBookToListRequest
 import com.example.frontendbook.data.model.CreateListRequest
-import com.example.frontendbook.data.model.ListDto
+import com.example.frontendbook.data.api.dto.ListDto
+import com.example.frontendbook.data.remote.dto.ListWithBooksDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,7 +22,8 @@ interface ListsApiService {
         @Path("id") listId: Long
     ): Response<ListDto>
 
-
+    @GET("lists/{listId}")
+    suspend fun getListWithBooks(@Path("listId") listId: Long): ListDto
     @POST("lists")
     suspend fun createList(
         @Body listRequest: CreateListRequest
