@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 
 class ListsViewModel(private val context: Context,private val repo: ListsRepository) : ViewModel()
 {
-
+    val deleteResult = MutableLiveData<Boolean>()
     private val _lists = MutableLiveData<List<ListDto>>()
     val lists: LiveData<List<ListDto>> = _lists
 
@@ -34,7 +34,16 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
             }
         }
     }
+    fun deleteList(listId: Long) {
+        viewModelScope.launch {
+            val success = repo.deleteListById(listId)
+            deleteResult.postValue(success)
 
+            if (success) {
+                refreshLists() // ✅ Başarılıysa listeyi güncelle
+            }
+        }
+    }
     fun createList(userId: Long, title: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {

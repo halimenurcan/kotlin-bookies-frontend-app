@@ -54,10 +54,16 @@ class ListsFragment : Fragment() {
             ListsViewModelFactory(requireContext())
         ).get(ListsViewModel::class.java)
 
-        listAdapter = ListAdapter(emptyList()) { list ->
-            val bundle = Bundle().apply { putLong("listId", list.id) }
-            findNavController().navigate(R.id.actionListsFragmentToThreeColumnFragment, bundle)
-        }
+        listAdapter = ListAdapter(
+            emptyList(),
+            onClick = { list ->
+                val bundle = Bundle().apply { putLong("listId", list.id) }
+                findNavController().navigate(R.id.actionListsFragmentToThreeColumnFragment, bundle)
+            },
+            onDeleteClick = { listId ->
+                viewModel.deleteList(listId) // ✅ API çağrısı
+            }
+        )
         binding.listsRecyclerView.adapter = listAdapter
 
         binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())

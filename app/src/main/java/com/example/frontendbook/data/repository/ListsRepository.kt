@@ -9,7 +9,14 @@ import com.example.frontendbook.data.remote.dto.ListWithBooksDto
 class ListsRepository(
     private val api: ListsApiService
 ) {
-
+    suspend fun deleteListById(listId: Long): Boolean {
+        return try {
+            val response = api.deleteListById(listId)
+            response.isSuccessful
+        } catch (e: Exception) {
+            false
+        }
+    }
     suspend fun getUserLists(userId: Long): List<ListDto> {
         val resp = api.getUserLists(userId)
         if (resp.isSuccessful) {

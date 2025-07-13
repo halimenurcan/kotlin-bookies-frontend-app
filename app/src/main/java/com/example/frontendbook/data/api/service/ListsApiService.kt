@@ -6,6 +6,7 @@ import com.example.frontendbook.data.api.dto.ListDto
 import com.example.frontendbook.data.remote.dto.ListWithBooksDto
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -34,7 +35,10 @@ interface ListsApiService {
         @Body request: AddBookToListRequest
     ): Response<Void>
 
-
+    @DELETE("/api/lists/{id}")
+    suspend fun deleteListById(
+        @Path("id") listId: Long
+    ): Response<Void>
     @GET("/api/lists")
     suspend fun getAllLists(): List<ListDto>
 

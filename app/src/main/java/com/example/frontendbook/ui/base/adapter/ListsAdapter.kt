@@ -14,6 +14,7 @@ import com.google.android.material.button.MaterialButton
 
 class ListAdapter(
     private var lists: List<ListDto>,
+    private val onDeleteClick: (Long) -> Unit,
     private val onClick: (ListDto) -> Unit
 ) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
@@ -28,6 +29,10 @@ class ListAdapter(
                 AddBookToListBottomSheet.newInstance(listItem.id)
                     .show((itemView.context as FragmentActivity).supportFragmentManager, "AddBookToList")
             }
+            val deleteButton = itemView.findViewById<MaterialButton>(R.id.deleteButton)
+            deleteButton.setOnClickListener {
+                onDeleteClick(listItem.id)
+            }
         }
     }
 
@@ -40,22 +45,12 @@ class ListAdapter(
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         holder.bind(lists[position])
         val listItem = lists[position]
-        val followButton = holder.itemView.findViewById<MaterialButton>(R.id.followButton)
-        followButton.setOnClickListener {
-            val isFollowing = followButton.text == "Follow"
+        val deleteButton = holder.itemView.findViewById<MaterialButton>(R.id.deleteButton
+        )
+        deleteButton.setOnClickListener {
+            onDeleteClick(listItem.id) // ✅
+        }
 
-            if (isFollowing) {
-                followButton.text = "Following"
-                followButton.setBackgroundTintList(
-                    ContextCompat.getColorStateList(holder.itemView.context, R.color.buttonSecondary)
-                )
-            } else {
-                followButton.text = "Follow"
-                followButton.setBackgroundTintList(
-                    ContextCompat.getColorStateList(holder.itemView.context, R.color.stars_rated)
-                )
-            }
-    }
         holder.itemView.setOnClickListener {
             onClick(listItem)
     }
