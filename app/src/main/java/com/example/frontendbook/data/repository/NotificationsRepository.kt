@@ -8,10 +8,11 @@ class NotificationsRepository(
 ) {
     suspend fun fetchAll(): List<NotificationDto> {
         val resp = api.getNotifications()
-        if (resp.isSuccessful) return resp.body().orEmpty()
+        if (resp.isSuccessful) {
+            return resp.body()?.embedded?.notifications ?: emptyList()
+        }
         throw Exception("Bildirimler yüklenemedi: ${resp.code()}")
     }
-
     suspend fun markRead(id: Long): Boolean {
         val resp = api.markAsRead(id)
         return resp.isSuccessful
