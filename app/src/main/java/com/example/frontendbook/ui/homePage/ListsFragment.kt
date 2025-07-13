@@ -24,6 +24,7 @@ import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ListDto
 import com.example.frontendbook.databinding.FragmentListsBinding
 import com.example.frontendbook.ui.base.adapter.ListAdapter
+import com.example.frontendbook.ui.base.adapter.OtherListAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -33,6 +34,8 @@ class ListsFragment : Fragment() {
 
     private lateinit var viewModel: ListsViewModel
     private lateinit var listAdapter: ListAdapter
+    private lateinit var otherListAdapter: OtherListAdapter
+
 
     private var showUserLists: Boolean = true
 
@@ -52,8 +55,25 @@ class ListsFragment : Fragment() {
         viewModel = ViewModelProvider(
             this,
             ListsViewModelFactory(requireContext())
-        ).get(ListsViewModel::class.java)
+        )[ListsViewModel::class.java]
+        viewModel.otherLists.observe(viewLifecycleOwner) { otherLists ->
+            otherListAdapter.submitList(otherLists)
 
+            binding.otherListsRecyclerView.post {
+                otherLists.forEachIndexed { index, listDto ->
+                    val recyclerViewItem = binding.otherListsRecyclerView
+                        .layoutManager?.findViewByPosition(index)
+                    recyclerViewItem?.let {
+                        val bookContainer = it.findViewById<LinearLayout>(R.id.bookContainer)
+                        populateBooks(listDto, bookContainer)
+                    }
+                }
+            }
+        }
+        if (!showUserLists) {
+            viewModel.loadOtherLists()
+        }
+        // Adapterleri tanımla
         listAdapter = ListAdapter(
             emptyList(),
             onClick = { list ->
@@ -61,17 +81,29 @@ class ListsFragment : Fragment() {
                 findNavController().navigate(R.id.actionListsFragmentToThreeColumnFragment, bundle)
             },
             onDeleteClick = { listId ->
-                viewModel.deleteList(listId) // ✅ API çağrısı
+                viewModel.deleteList(listId)
             }
         )
-        binding.listsRecyclerView.adapter = listAdapter
 
+        otherListAdapter = OtherListAdapter(
+            lists = emptyList(),
+            onFollowClick = { listDto ->
+                Toast.makeText(requireContext(), "Followed ${listDto.title}", Toast.LENGTH_SHORT).show()
+            },
+            onBookClick = { bookId ->
+                Toast.makeText(requireContext(), "Clicked bookId: $bookId", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        // Doğru adapteri ata
+        binding.listsRecyclerView.adapter = if (showUserLists) listAdapter else otherListAdapter
         binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         binding.btnAddList.setOnClickListener {
             if (showUserLists) showAddListDialog()
         }
 
+        // Menü
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -89,26 +121,24 @@ class ListsFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
+        // SharedPreferences ile userId al
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
 
+        // Gözlemleme ve veri yükleme
         if (showUserLists && userId != -1L) {
             viewModel.loadUserLists(userId)
-        } else if (!showUserLists) {
+
+            viewModel.lists.observe(viewLifecycleOwner) { lists ->
+                listAdapter.submitList(lists)
+                populateBookCards(lists)
+            }
+        } else {
             viewModel.loadExploreLists()
-        }
 
-        viewModel.lists.observe(viewLifecycleOwner) { lists ->
-            listAdapter.submitList(lists) // 👈 Bu satırı ekledim (Hatanın sebebi buydu)
-
-            binding.listsRecyclerView.post {
-                lists.forEachIndexed { index, listDto ->
-                    val recyclerViewItem = binding.listsRecyclerView.layoutManager?.findViewByPosition(index)
-                    recyclerViewItem?.let {
-                        val bookContainer = it.findViewById<LinearLayout>(R.id.bookContainer)
-                        populateBooks(listDto, bookContainer)
-                    }
-                }
+            viewModel.lists.observe(viewLifecycleOwner) { lists ->
+                otherListAdapter.submitList(lists)
+                populateBookCards(lists)
             }
         }
 
@@ -118,6 +148,18 @@ class ListsFragment : Fragment() {
             }
         }
     }
+    private fun populateBookCards(lists: List<ListDto>) {
+        binding.listsRecyclerView.post {
+            lists.forEachIndexed { index, listDto ->
+                val itemView = binding.listsRecyclerView.layoutManager?.findViewByPosition(index)
+                itemView?.let {
+                    val bookContainer = it.findViewById<LinearLayout>(R.id.bookContainer)
+                    populateBooks(listDto, bookContainer)
+                }
+            }
+        }
+    }
+
 
     private fun populateBooks(listDto: ListDto, container: LinearLayout) {
         container.removeViews(1, container.childCount - 2)

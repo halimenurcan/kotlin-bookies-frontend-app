@@ -113,7 +113,15 @@
             android:name="listId"
             app:argType="long" />
     </dialog>
+    <fragment
+        android:id="@+id/otherListsFragment"
+        android:name="com.example.frontendbook.ui.homePage.OtherListsFragment"
+        android:label="Other Lists">
 
+        <action
+            android:id="@+id/actionOtherListsFragmentToThreeColumnFragment"
+            app:destination="@id/threeColumnFragment" />
+    </fragment>
     <!-- Kullanıcı Listesi -->
     <fragment
         android:id="@+id/userListFragment"

@@ -56,7 +56,8 @@
             <!-- Dinamik Kitaplar RecyclerView ile değil, burada programatik eklenecek -->
 
             <!-- Sabit Son Kartı -->
-            <include layout="@layout/see_more_card" />
-        </LinearLayout>
+            <include
+                layout="@layout/see_more_card"
+                android:id="@+id/seeMoreCard" />        </LinearLayout>
     </HorizontalScrollView>
 </LinearLayout>

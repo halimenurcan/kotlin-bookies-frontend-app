@@ -54,9 +54,13 @@ class HomePageFragment : Fragment(), AllReviewsFragment.BookClickListener {
             updateButtonColors(binding.header.reviewsButton)
         }
         binding.header.listsButton.setOnClickListener {
-            loadInnerFragment(ListsFragment())
+            loadInnerFragment(OtherListsFragment())
             updateButtonColors(binding.header.listsButton)
+
+
+
         }
+
 
     }
 
