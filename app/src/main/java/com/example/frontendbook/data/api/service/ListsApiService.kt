@@ -39,6 +39,7 @@ interface ListsApiService {
     suspend fun deleteListById(
         @Path("id") listId: Long
     ): Response<Void>
+
     @GET("/api/lists")
     suspend fun getAllLists(): List<ListDto>
 

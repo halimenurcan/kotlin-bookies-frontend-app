@@ -63,4 +63,20 @@
         app:layout_constraintTop_toBottomOf="@id/reviewsTitle"
         tools:itemCount="6"
         tools:listitem="@layout/item_list" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/otherListsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="96dp"
+        app:layout_constraintTop_toBottomOf="@id/listsRecyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_list_other" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

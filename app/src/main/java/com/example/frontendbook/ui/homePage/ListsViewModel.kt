@@ -15,6 +15,29 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private val _otherLists = MutableLiveData<List<ListDto>>()
+    val otherLists: LiveData<List<ListDto>> = _otherLists
+
+    fun loadOtherLists() {
+        viewModelScope.launch {
+            try {
+                val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+                val currentUserId = prefs.getLong("user_id", -1L)
+
+                val allLists = repo.getAllLists()
+
+                // 👇 owner.id'yi doğrudan kullan
+                val filtered = allLists.filter { it.owner.id != currentUserId }
+
+                _otherLists.value = filtered
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
+
+
     fun loadUserLists(userId: Long) {
         viewModelScope.launch {
             try {
