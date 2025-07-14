@@ -13,6 +13,9 @@
         android:label="Home Page"
         tools:layout="@layout/fragment_home_page">
         <action
+            android:id="@+id/action_threeColumnFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment"/>
+        <action
             android:id="@+id/action_homePageFragment_to_threeColumnFragment"
             app:destination="@id/threeColumnFragment" />
         <action

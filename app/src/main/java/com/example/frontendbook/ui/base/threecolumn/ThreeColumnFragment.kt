@@ -82,8 +82,11 @@ class ThreeColumnFragment : Fragment() {
         adapter = BookAdapter { book ->
             val action = ThreeColumnFragmentDirections
                 .actionThreeColumnFragmentToBookInfoPageFragment(book)
-            findNavController().navigate(action)
+            requireParentFragment()
+                .findNavController()
+                .navigate(action)
         }
+
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerView.adapter = adapter
