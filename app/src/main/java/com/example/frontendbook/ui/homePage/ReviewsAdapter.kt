@@ -4,14 +4,15 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ReviewDto
-import com.example.frontendbook.data.api.dto.toDomain
 import com.example.frontendbook.data.repository.BookRepository
+import com.example.frontendbook.data.repository.LikedReviewsRepository
 import com.example.frontendbook.databinding.ItemReviewBinding
 import com.example.frontendbook.domain.model.Book
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ReviewsAdapter(
+    private val likedRepo: LikedReviewsRepository,
+    private val userId: Long,
     private val onClick: ((Book) -> Unit)? = null
 ) : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
 
@@ -34,7 +37,6 @@ class ReviewsAdapter(
         holder.bind(getItem(position))
     }
 
-
     inner class ViewHolder(private val b: ItemReviewBinding) : RecyclerView.ViewHolder(b.root) {
 
         @SuppressLint("SetTextI18n")
@@ -47,14 +49,10 @@ class ReviewsAdapter(
 
             b.reviewBookCover.setOnClickListener {
                 r.bookId?.let { id ->
-                    Log.d("ImageClick", "Clicked bookId: $id")
-
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             val repo = BookRepository(b.root.context)
                             val book = repo.fetchBookById(id)
-                            Log.d("ImageClick", "Fetched book: ${book.title}")
-
                             withContext(Dispatchers.Main) {
                                 onClick?.invoke(book)
                             }
@@ -62,9 +60,8 @@ class ReviewsAdapter(
                             Log.e("ImageClick", "Book fetch failed: ${e.message}")
                         }
                     }
-                } ?: Log.e("ImageClick", "ReviewDto.bookId is NULL")
+                }
             }
-
 
             // Yıldızlar
             b.reviewRatingBar.rating = r.score?.toFloat() ?: 0f
@@ -91,6 +88,7 @@ class ReviewsAdapter(
             }
             b.reviewBookTitle.text = "Yükleniyor..."
 
+            // Kitap başlığı getir (opsiyonel)
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val repo = BookRepository(b.root.context)
@@ -99,7 +97,6 @@ class ReviewsAdapter(
                         b.reviewBookTitle.text = book.title
                     }
                 } catch (e: Exception) {
-                    Log.e("TitleFetch", "Book title fetch failed: ${e.message}")
                     withContext(Dispatchers.Main) {
                         b.reviewBookTitle.text = "Bilinmeyen Kitap"
                     }
@@ -119,10 +116,30 @@ class ReviewsAdapter(
 
             // Like butonu tıklama işlemi
             b.likeButton.setOnClickListener {
-                r.isLiked = !r.isLiked
+                val isNowLiked = !r.isLiked
+                r.isLiked = isNowLiked
                 notifyItemChanged(absoluteAdapterPosition)
-            }
 
+                CoroutineScope(Dispatchers.IO).launch {
+                    val result = if (isNowLiked) {
+                        likedRepo.like(userId, r.id)
+                    } else {
+                        likedRepo.unlike(userId, r.id)
+                    }
+                    withContext(Dispatchers.Main) {
+                        if (!result) {
+                            // Hata olduysa geri al
+                            r.isLiked = !isNowLiked
+                            notifyItemChanged(absoluteAdapterPosition)
+                            Toast.makeText(
+                                b.root.context,
+                                "İşlem başarısız oldu!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
         }
     }
 

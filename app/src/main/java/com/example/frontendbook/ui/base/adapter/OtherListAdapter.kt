@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.BookDto
@@ -14,7 +15,7 @@ import com.google.android.material.button.MaterialButton
 class OtherListAdapter(
     private var lists: List<ListDto>,
     private val onFollowClick: (ListDto) -> Unit,
-    private val onBookClick: (BookDto) -> Unit // listeye tıklanınca
+    private val onBookClick: (BookDto) -> Unit
 ) : RecyclerView.Adapter<OtherListAdapter.OtherListViewHolder>() {
 
     inner class OtherListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,9 +28,9 @@ class OtherListAdapter(
 
             followButton.setOnClickListener {
                 onFollowClick(listItem)
+                Toast.makeText(itemView.context, "Follow toggled for ${listItem.title}", Toast.LENGTH_SHORT).show()
             }
 
-            // Kitapları dinamik olarak ekle
             bookContainer.removeAllViews()
 
             listItem.books.forEach { book ->
@@ -45,8 +46,6 @@ class OtherListAdapter(
 
                 bookContainer.addView(bookView)
             }
-
-            // See more kartı otomatik XML'de var zaten (include edilmiş)
         }
     }
 

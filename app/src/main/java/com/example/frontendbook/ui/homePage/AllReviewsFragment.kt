@@ -13,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentReviewsBinding
 import androidx.navigation.fragment.findNavController
+import com.example.frontendbook.data.remote.RetrofitClient
+import com.example.frontendbook.data.repository.LikedReviewsRepository
 import com.example.frontendbook.domain.model.Book
 
 
@@ -47,19 +49,25 @@ class AllReviewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // SystemBars padding (isterseniz kopyalayın)
+        // SystemBars padding (opsiyonel)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
             insets
         }
 
-        // RecyclerView + Adapter
-        reviewsAdapter = ReviewsAdapter { book ->
-            listener?.onBookClicked(book)
-        }
+        // Like işlemleri için repo ve userId
+        val likedRepo = LikedReviewsRepository(RetrofitClient.likedReviewsApiService(requireContext()))
+        val CURRENT_USER_ID = 123L // Gerçek ID'ni buraya yaz, login ile alıyorsan oradan çek
 
-
+        // GÜNCEL: Adapter'a tüm parametreleri ver!
+        reviewsAdapter = ReviewsAdapter(
+            likedRepo = likedRepo,
+            userId = CURRENT_USER_ID,
+            onClick = { book ->
+                listener?.onBookClicked(book)
+            }
+        )
 
         binding.reviewsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

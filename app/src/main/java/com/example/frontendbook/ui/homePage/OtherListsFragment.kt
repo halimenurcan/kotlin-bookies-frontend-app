@@ -14,11 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ListDto
+import com.example.frontendbook.data.remote.RetrofitClient
+import com.example.frontendbook.data.repository.ListFollowsRepository
 import com.example.frontendbook.databinding.FragmentListsBinding
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.OtherListAdapter
+import com.example.frontendbook.ui.listdetail.ListFollowViewModel
 
 class OtherListsFragment : Fragment() {
+    private lateinit var followViewModel: ListFollowViewModel
 
     private var _binding: FragmentListsBinding? = null
     private val binding get() = _binding!!
@@ -47,7 +51,9 @@ class OtherListsFragment : Fragment() {
         otherListAdapter = OtherListAdapter(
             lists = emptyList(),
             onFollowClick = { listDto ->
-                Toast.makeText(requireContext(), "Followed ${listDto.title}", Toast.LENGTH_SHORT).show()
+                val userId = listDto.owner.id
+                followViewModel.toggleFollow(userId, listDto.id)
+                Toast.makeText(requireContext(), "Follow toggled for ${listDto.title}", Toast.LENGTH_SHORT).show()
             },
             onBookClick = { book ->
                 val domainBook = Book(
@@ -86,6 +92,8 @@ class OtherListsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
             }
         }
+        val repo = ListFollowsRepository(RetrofitClient.listFollowsApiService(requireContext()))
+        followViewModel = ListFollowViewModel(repo)
     }
 
     private fun populateBookCards(lists: List<ListDto>) {
@@ -170,6 +178,7 @@ class OtherListsFragment : Fragment() {
 
         findNavController().navigate(action)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
