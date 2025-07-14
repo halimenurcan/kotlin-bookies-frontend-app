@@ -85,19 +85,28 @@ class OtherListsFragment : Fragment() {
     }
 
     private fun populateBooks(listDto: ListDto, container: LinearLayout) {
-        // Güvenli silme
         if (container.childCount > 2) {
             container.removeViews(1, container.childCount - 2)
         }
 
         val inflater = LayoutInflater.from(context)
+
         listDto.books.forEach { book ->
             val bookView = inflater.inflate(R.layout.item_book_grid, container, false)
-            // ... kitap görsellerini doldur
+
+            val bookImage = bookView.findViewById<ImageView>(R.id.bookImage)
+            val bookTitle = bookView.findViewById<TextView>(R.id.bookTitle)
+
+            bookTitle.text = book.title
+
+            Glide.with(this)
+                .load(book.coverImageUrl)
+                .placeholder(R.drawable.placeholder)
+                .into(bookImage)
+
             container.addView(bookView, container.childCount - 1)
         }
 
-        // SeeMoreCard tıklama
         val seeMoreCard = container.findViewById<View>(R.id.seeMoreCard)
         seeMoreCard?.setOnClickListener {
             val action = OtherListsFragmentDirections.actionOtherListsFragmentToThreeColumnFragment(
@@ -108,6 +117,7 @@ class OtherListsFragment : Fragment() {
             requireParentFragment().findNavController().navigate(action)
         }
     }
+
 
 
 
