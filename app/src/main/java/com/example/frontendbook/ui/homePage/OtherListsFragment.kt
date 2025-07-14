@@ -1,6 +1,7 @@
 package com.example.frontendbook.ui.homePage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ListDto
 import com.example.frontendbook.databinding.FragmentListsBinding
+import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.OtherListAdapter
 
 class OtherListsFragment : Fragment() {
@@ -32,24 +34,38 @@ class OtherListsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("onSeeMoreClicked", "Current fragment: OtherListsFragment")
+
         super.onViewCreated(view, savedInstanceState)
+        binding.btnAddList.visibility = View.GONE
 
-        binding.btnAddList.visibility = View.GONE // Diğer kullanıcıların listesi olduğu için gizli
-
-        // ViewModel
         viewModel = ViewModelProvider(
             this,
             ListsViewModelFactory(requireContext())
         )[ListsViewModel::class.java]
 
-        // Adapter
         otherListAdapter = OtherListAdapter(
             lists = emptyList(),
             onFollowClick = { listDto ->
                 Toast.makeText(requireContext(), "Followed ${listDto.title}", Toast.LENGTH_SHORT).show()
             },
-            onBookClick = { bookId ->
-                Toast.makeText(requireContext(), "Book $bookId clicked", Toast.LENGTH_SHORT).show()
+            onBookClick = { book ->
+                val domainBook = Book(
+                    id = book.id,
+                    title = book.title ?: "",
+                    isbn = book.isbn ?: "",
+                    coverImageUrl = book.coverImageUrl ?: "",
+                    author = book.author?.toString() ?: "",
+                    description = book.description ?: "",
+                    pageCount = book.pageCount ?: 0,
+                    publisher = book.publisher ?: "",
+                    publishedYear = book.publishedYear ?: 0,
+                    rating = book.rating ?: 0
+                )
+
+                val action = OtherListsFragmentDirections
+                    .actionOtherListsFragmentToBookDetailFragment(domainBook)
+                findNavController().navigate(action)
             }
         )
 
@@ -58,28 +74,34 @@ class OtherListsFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-        // ViewModel’den diğer kullanıcıların listelerini iste
         viewModel.loadOtherLists()
 
-        // Gözlemle
         viewModel.otherLists.observe(viewLifecycleOwner) { lists ->
             otherListAdapter.submitList(lists)
-
-            // Kitapları yatay listeye manuel ekle
-            binding.listsRecyclerView.post {
-                lists.forEachIndexed { index, listDto ->
-                    val recyclerItem = binding.listsRecyclerView.layoutManager?.findViewByPosition(index)
-                    recyclerItem?.let {
-                        val bookContainer = it.findViewById<LinearLayout>(R.id.bookContainer)
-                        populateBooks(listDto, bookContainer)
-                    }
-                }
-            }
+            populateBookCards(lists)
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun populateBookCards(lists: List<ListDto>) {
+        Log.d("NAVIGATION_DEBUG", "Trying to navigate from OtherListsFragment")
+
+        binding.listsRecyclerView.post {
+            lists.forEachIndexed { index, listDto ->
+                val itemView = binding.listsRecyclerView.layoutManager?.findViewByPosition(index)
+                itemView?.let {
+                    val bookContainer = it.findViewById<LinearLayout>(R.id.bookContainer)
+                    if (bookContainer != null) {
+                        populateBooks(listDto, bookContainer)
+                    } else {
+                        Log.e("OtherListsFragment", "bookContainer is null!")
+                    }
+                }
             }
         }
     }
@@ -104,24 +126,50 @@ class OtherListsFragment : Fragment() {
                 .placeholder(R.drawable.placeholder)
                 .into(bookImage)
 
+            bookView.setOnClickListener {
+                val domainBook = Book(
+                    id = book.id,
+                    title = book.title ?: "",
+                    isbn = book.isbn ?: "",
+                    coverImageUrl = book.coverImageUrl ?: "",
+                    author = book.author?.toString() ?: "",
+                    description = book.description ?: "",
+                    pageCount = book.pageCount ?: 0,
+                    publisher = book.publisher ?: "",
+                    publishedYear = book.publishedYear ?: 0,
+                    rating = book.rating ?: 0)
+
+                val action = OtherListsFragmentDirections
+                    .actionOtherListsFragmentToBookDetailFragment(domainBook)
+                findNavController().navigate(action)
+            }
+
             container.addView(bookView, container.childCount - 1)
         }
 
-        val seeMoreCard = container.findViewById<View>(R.id.seeMoreCard)
-        seeMoreCard?.setOnClickListener {
-            val action = OtherListsFragmentDirections.actionOtherListsFragmentToThreeColumnFragment(
-                title = listDto.title,
-                listId = listDto.id,
-                type = null
-            )
-            requireParentFragment().findNavController().navigate(action)
+        // SEE MORE CARD GÜVENLİ BİÇİMDE BULUNUYOR
+        val seeMoreCard = LayoutInflater.from(context).inflate(R.layout.see_more_card, container, false)
+        if (seeMoreCard != null) {
+            seeMoreCard.setOnClickListener {
+                Log.d("ListsFragment", "SeeMoreCard tıklandı, listDto id: ${listDto.id}")
+                onSeeMoreClicked(listDto)
+            }
+            container.addView(seeMoreCard)
+        } else {
+            Log.e("OtherListsFragment", "seeMoreCard is NULL! Container içinde yok!")
         }
     }
 
+    private val onSeeMoreClicked: (ListDto) -> Unit = { listDto ->
+        val action = HomePageFragmentDirections
+            .actionHomePageFragmentToThreeColumnFragment(
+                title = listDto.title ?: "List",
+                listId = listDto.id,
+                type = null
+            )
 
-
-
-
+        findNavController().navigate(action)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

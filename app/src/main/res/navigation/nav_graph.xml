@@ -13,7 +13,13 @@
         android:label="Home Page"
         tools:layout="@layout/fragment_home_page">
         <action
+            android:id="@+id/action_homePageFragment_to_threeColumnFragment"
+            app:destination="@id/threeColumnFragment" />
+        <action
             android:id="@+id/action_homePageFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
+        <action
+            android:id="@+id/action_otherListsFragment_to_bookDetailFragment"
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
@@ -117,10 +123,23 @@
         android:id="@+id/otherListsFragment"
         android:name="com.example.frontendbook.ui.homePage.OtherListsFragment"
         android:label="Other Lists">
-
+        <argument
+            android:name="book"
+            app:argType="com.example.frontendbook.domain.model.Book"
+            app:nullable="true" />
         <action
             android:id="@+id/actionOtherListsFragmentToThreeColumnFragment"
             app:destination="@id/threeColumnFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_otherListsFragment"
+            app:destination="@id/otherListsFragment" />
+        <action
+            android:id="@+id/action_otherListsFragment_to_bookDetailFragment"
+            app:destination="@id/bookInfoPageFragment" />
+        <action
+            android:id="@+id/actionListsFragmentToThreeColumnFragment"
+            app:destination="@id/threeColumnFragment"/>
+
     </fragment>
     <!-- Kullanıcı Listesi -->
     <fragment

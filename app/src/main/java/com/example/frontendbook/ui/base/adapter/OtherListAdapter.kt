@@ -7,13 +7,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
+import com.example.frontendbook.data.api.dto.BookDto
 import com.example.frontendbook.data.api.dto.ListDto
 import com.google.android.material.button.MaterialButton
 
 class OtherListAdapter(
     private var lists: List<ListDto>,
     private val onFollowClick: (ListDto) -> Unit,
-    private val onBookClick: (Long) -> Unit // listeye tıklanınca
+    private val onBookClick: (BookDto) -> Unit // listeye tıklanınca
 ) : RecyclerView.Adapter<OtherListAdapter.OtherListViewHolder>() {
 
     inner class OtherListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,7 +40,7 @@ class OtherListAdapter(
                 bookTitle.text = book.title
 
                 bookView.setOnClickListener {
-                    onBookClick(book.id)
+                    onBookClick(book)
                 }
 
                 bookContainer.addView(bookView)
