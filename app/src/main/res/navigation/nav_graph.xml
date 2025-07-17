@@ -97,21 +97,26 @@
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment"
         android:label="three_column_fragment">
-
-    <argument
-        android:name="title"
-        app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="listId"
-            app:argType="long" />
-    <argument
-        android:name="type"
-        app:argType="string"
-        app:nullable="true" />
+            app:argType="long"
+             />
+        <argument
+            android:name="userId"
+            app:argType="long"
+           />
         <action
             android:id="@+id/action_threeColumnFragment_to_bookInfoPageFragment"
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
+
 
     <!-- Kitap Ekle BottomSheet -->
     <dialog
@@ -149,7 +154,10 @@
         android:id="@+id/userListFragment"
         android:name="com.example.frontendbook.ui.base.inlinestyle.UserListFragment"
         android:label="UserListFragment"
-        tools:layout="@layout/fragment_user_list" />
+        tools:layout="@layout/fragment_user_list">
+        <argument android:name="userListType" app:argType="com.example.frontendbook.domain.model.UserListType" />
+        <argument android:name="profileUserId" app:argType="long" />
+    </fragment>
 
     <!-- Diğer Kullanıcı Profili -->
     <fragment

@@ -125,7 +125,9 @@ class SearchFragment : Fragment() {
             val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
                 title = "Most Popular",
                 type = "popular",
-                listId = 0
+                listId = 0,
+                userId = 0
+
             )
             findNavController().navigate(action)
         }
@@ -134,7 +136,8 @@ class SearchFragment : Fragment() {
             val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
                 title = "Highly Rated",
                 type = "rated",
-                listId = 0
+                listId = 0,
+                userId = 0,
             )
             findNavController().navigate(action)
         }

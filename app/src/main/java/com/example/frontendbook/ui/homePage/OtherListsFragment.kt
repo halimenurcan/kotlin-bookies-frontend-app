@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.homePage
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -49,12 +50,20 @@ class OtherListsFragment : Fragment() {
         )[ListsViewModel::class.java]
 
         otherListAdapter = OtherListAdapter(
+
             lists = emptyList(),
             onFollowClick = { listDto ->
-                val userId = listDto.owner.id
-                followViewModel.toggleFollow(userId, listDto.id)
-                Toast.makeText(requireContext(), "Follow toggled for ${listDto.title}", Toast.LENGTH_SHORT).show()
+                // Aktif kullanıcı id'sini çek
+                val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+                val currentUserId = prefs.getLong("user_id", -1L)
+                if (currentUserId != -1L) {
+                    followViewModel.toggleFollow(currentUserId, listDto.id)
+                    Toast.makeText(requireContext(), "Follow toggled for ${listDto.title}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Kullanıcı bulunamadı!", Toast.LENGTH_SHORT).show()
+                }
             },
+
             onBookClick = { book ->
                 val domainBook = Book(
                     id = book.id,
@@ -173,7 +182,8 @@ class OtherListsFragment : Fragment() {
             .actionHomePageFragmentToThreeColumnFragment(
                 title = listDto.title ?: "List",
                 listId = listDto.id,
-                type = null
+                type = null,
+                userId = 0
             )
 
         findNavController().navigate(action)
@@ -184,3 +194,5 @@ class OtherListsFragment : Fragment() {
         _binding = null
     }
 }
+
+

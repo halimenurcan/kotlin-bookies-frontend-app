@@ -36,7 +36,6 @@ class ListsFragment : Fragment() {
     private lateinit var listAdapter: ListAdapter
     private lateinit var otherListAdapter: OtherListAdapter
 
-
     private var showUserLists: Boolean = true
 
     override fun onCreateView(
@@ -56,28 +55,18 @@ class ListsFragment : Fragment() {
             this,
             ListsViewModelFactory(requireContext())
         )[ListsViewModel::class.java]
-        viewModel.otherLists.observe(viewLifecycleOwner) { otherLists ->
-            otherListAdapter.submitList(otherLists)
 
-            binding.otherListsRecyclerView.post {
-                otherLists.forEachIndexed { index, listDto ->
-                    val recyclerViewItem = binding.otherListsRecyclerView
-                        .layoutManager?.findViewByPosition(index)
-                    recyclerViewItem?.let {
-                        val bookContainer = it.findViewById<LinearLayout>(R.id.bookContainer)
-                        populateBooks(listDto, bookContainer)
-                    }
-                }
-            }
-        }
-        if (!showUserLists) {
-            viewModel.loadOtherLists()
-        }
-        // Adapterleri tanımla
+        // --- ADAPTER TANIMLARI ---
         listAdapter = ListAdapter(
             emptyList(),
             onClick = { list ->
-                val bundle = Bundle().apply { putLong("listId", list.id) }
+                // NAVIGATION ARGS DÜZGÜN GÖNDER!
+                val bundle = Bundle().apply {
+                    putString("title", list.title ?: "List")
+                    putLong("listId", list.id)
+                    putString("type", null) // veya başka bir tip göndereceksen burada belirt
+                    // İstersen userId da gönderebilirsin (örn. kendi listeleri ise)
+                }
                 findNavController().navigate(R.id.actionListsFragmentToThreeColumnFragment, bundle)
             },
             onDeleteClick = { listId ->
@@ -95,7 +84,7 @@ class ListsFragment : Fragment() {
             }
         )
 
-        // Doğru adapteri ata
+        // ADAPTER ve LAYOUT
         binding.listsRecyclerView.adapter = if (showUserLists) listAdapter else otherListAdapter
         binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -128,14 +117,12 @@ class ListsFragment : Fragment() {
         // Gözlemleme ve veri yükleme
         if (showUserLists && userId != -1L) {
             viewModel.loadUserLists(userId)
-
             viewModel.lists.observe(viewLifecycleOwner) { lists ->
                 listAdapter.submitList(lists)
                 populateBookCards(lists)
             }
         } else {
             viewModel.loadExploreLists()
-
             viewModel.lists.observe(viewLifecycleOwner) { lists ->
                 otherListAdapter.submitList(lists)
                 populateBookCards(lists)
@@ -148,6 +135,7 @@ class ListsFragment : Fragment() {
             }
         }
     }
+
     private fun populateBookCards(lists: List<ListDto>) {
         binding.listsRecyclerView.post {
             lists.forEachIndexed { index, listDto ->
@@ -160,51 +148,42 @@ class ListsFragment : Fragment() {
         }
     }
 
-
     private fun populateBooks(listDto: ListDto, container: LinearLayout) {
         container.removeViews(1, container.childCount - 2)
-
         val inflater = LayoutInflater.from(context)
 
         listDto.books.forEach { book ->
             val bookView = inflater.inflate(R.layout.item_book_grid, container, false)
-
             val bookImage = bookView.findViewById<ImageView>(R.id.bookImage)
             val bookTitle = bookView.findViewById<TextView>(R.id.bookTitle)
-
             bookTitle.text = book.title
-
             Glide.with(this)
                 .load(book.coverImageUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(bookImage)
-
             container.addView(bookView, container.childCount - 1)
         }
-
         val seeMoreCard = container.findViewById<View>(R.id.seeMoreCard)
         seeMoreCard.setOnClickListener {
             Log.d("ListsFragment", "SeeMoreCard tıklandı, listDto id: ${listDto.id}")
-            onSeeMoreClicked(listDto) // Burada listener tetikleniyor, fragment transaction buradan yapılacak.
+            onSeeMoreClicked(listDto)
         }
     }
+
+    // SafeArgs ile navigation yönlendirmesi (TAVSİYE EDİLEN YOL)
     private val onSeeMoreClicked: (ListDto) -> Unit = { listDto ->
         Log.d("ListsFragment", "onSeeMoreClicked BAŞLANGIÇ, id: ${listDto.id}")
 
+        // Eğer SafeArgs kullanıyorsan:
         val action = ListsFragmentDirections.actionListsFragmentToThreeColumnFragment(
             title = listDto.title ?: "List",
             listId = listDto.id,
             type = null,
-            // Eğer type yoksa null gönder, navigation arg tanımı nullable olmalı
+            userId = 0 // istersen kullanıcı id de gönderebilirsin (nav_graph.xml'de varsa)
         )
-
         findNavController().navigate(action)
-
         Log.d("ListsFragment", "onSeeMoreClicked BİTİŞ")
     }
-
-
-
 
     private fun showAddListDialog() {
         val context = requireContext()
@@ -214,7 +193,6 @@ class ListsFragment : Fragment() {
         inputLayout.hint = "List Name"
         inputLayout.setPadding(50, 0, 50, 0)
         editText.setSingleLine()
-
         inputLayout.addView(editText)
 
         val dialog = MaterialAlertDialogBuilder(context)
@@ -236,7 +214,6 @@ class ListsFragment : Fragment() {
             if (listName.isNotEmpty()) {
                 val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
                 val userId = prefs.getLong("user_id", -1L)
-
                 viewModel.createList(userId, listName) { success ->
                     if (success) {
                         Toast.makeText(context, "Liste oluşturuldu", Toast.LENGTH_SHORT).show()

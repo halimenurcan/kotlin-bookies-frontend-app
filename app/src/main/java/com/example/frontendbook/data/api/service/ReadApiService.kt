@@ -1,20 +1,38 @@
 package com.example.frontendbook.data.api.service
 
+import com.example.frontendbook.data.api.dto.SimpleReadRequest
 import com.example.frontendbook.data.model.ReadEntry
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.Response
+import retrofit2.http.*
 
 interface ReadApiService {
+    @GET("books-status/read-list/{userId}")
+    suspend fun getReadListByUserId(@Path("userId") userId: Long): List<SimpleReadRequest>
 
-    @GET("readlist/user/{userId}")
-    suspend fun getReadListByUserId(@Path("userId") userId: Long): List<ReadEntry>
+    @POST("books-status/read-list")
+    suspend fun addToReadList(@Body request: SimpleReadRequest): Response<Unit>
 
-    @POST("readlist")
-    suspend fun addToReadList(@Body readEntry: ReadEntry): ReadEntry
+    @DELETE("books-status/read-list/user/{userId}/book/{bookId}")
+    suspend fun deleteFromReadList(
+        @Path("userId") userId: Long,
+        @Path("bookId") bookId: Long
+    ): Response<Unit>
+    @GET("books-status/read/{userId}/book/{bookId}")
+    suspend fun isBookRead(@Path("userId") userId: Long, @Path("bookId") bookId: Long): Boolean
+    @GET("books-status/read-list/{userId}/book/{bookId}")
+    suspend fun isBookReadList(@Path("userId") userId: Long, @Path("bookId") bookId: Long): Boolean
 
-    @DELETE("readlist/{entryId}")
-    suspend fun deleteFromReadList(@Path("entryId") entryId: Long)
+
+    // Okunanlar (Read)
+    @GET("books-status/read/{userId}")
+    suspend fun getReadByUserId(@Path("userId") userId: Long): List<ReadEntry>
+
+    @POST("books-status/read")
+    suspend fun addToRead(@Body request: SimpleReadRequest): Response<Unit>
+
+    @DELETE("books-status/read/user/{userId}/book/{bookId}")
+    suspend fun deleteFromRead(
+        @Path("userId") userId: Long,
+        @Path("bookId") bookId: Long
+    ): Response<Unit>
 }

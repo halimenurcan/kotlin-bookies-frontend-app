@@ -88,6 +88,19 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 .into(binding.bookPreviewImage)
             binding.bookPreviewTitle.text = book.title
             binding.bookPreviewAuthor.text = book.author
+
+            // BEĞENİ DURUMUNU HER KİTAPTA KONTROL ET
+            val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val userId = prefs.getLong("user_id", -1L)
+            if (userId != -1L) {
+                lifecycleScope.launch {
+                    isLiked = likedRepo.isBookLiked(userId, book.id.toLong())
+                    updateLikeUi(isLiked)
+                }
+            } else {
+                isLiked = false
+                updateLikeUi(isLiked)
+            }
         }
 
         binding.recyclerView.apply {
@@ -130,6 +143,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                         binding.recyclerView.visibility = View.GONE
                         binding.bookPreviewArea.visibility = View.GONE
                         binding.selectedBookDetails.visibility = View.GONE
+                        selectedBook = null
+                        isLiked = false
+                        updateLikeUi(isLiked)
                         return@setOnTouchListener true
                     }
                 }
@@ -145,6 +161,9 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             binding.bookPreviewArea.visibility = View.GONE
             binding.selectedBookDetails.visibility = View.GONE
             binding.backButton.visibility = View.GONE
+            selectedBook = null
+            isLiked = false
+            updateLikeUi(isLiked)
         }
 
         searchViewModel.combinedResults.observe(viewLifecycleOwner) { results ->
@@ -189,7 +208,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                         Toast.makeText(requireContext(), "Review ekleme hatası: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
-                // Sadece beğeni
+                // Sadece beğeni/listeye ekle
                 if (listId != -1L) {
                     val ok = likedRepo.likeBook(listId, book.id.toLong())
                     if (ok) Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
@@ -230,6 +249,8 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             binding.addBookTitle.text = getString(R.string.add_book)
             binding.backButton.visibility = View.GONE
             selectedBook = null
+            isLiked = false
+            updateLikeUi(isLiked)
             hideKeyboard()
             dismiss()
         }

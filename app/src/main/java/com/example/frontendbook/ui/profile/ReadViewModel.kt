@@ -9,47 +9,87 @@ class ReadViewModel(
     private val repository: ReadRepository
 ) : ViewModel() {
 
-    private val _readList = MutableLiveData<List<ReadEntry>>()
-    val readList: LiveData<List<ReadEntry>> = _readList
+    private val _toReadList = MutableLiveData<List<ReadEntry>>()
+    val toReadList: LiveData<List<ReadEntry>> get() = _toReadList
+
+    private val _readBooks = MutableLiveData<List<ReadEntry>>()
+    val readBooks: LiveData<List<ReadEntry>> get() = _readBooks
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    /** Belirli bir kullanıcının read list'ini getirir */
-    fun loadReadList(userId: Long) {
+    // Okunacaklar listesini getir
+    fun loadToReadList(userId: Long) {
         viewModelScope.launch {
             try {
-                val list = repository.getReadList(userId)
-                _readList.value = list
+                _toReadList.value = repository.getToReadList(userId)
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = "Liste yüklenemedi: ${e.message}"
+                _error.value = "Okunacaklar yüklenemedi: ${e.message}"
             }
         }
     }
 
-    /** Yeni kitap ekle */
-    fun addReadEntry(entry: ReadEntry) {
+    // Okunmuş kitaplar listesini getir
+    fun loadReadBooks(userId: Long) {
         viewModelScope.launch {
             try {
-                repository.addToReadList(entry)
+                _readBooks.value = repository.getReadBooks(userId)
                 _error.value = null
-                loadReadList(entry.userId) // Listeyi güncelle
             } catch (e: Exception) {
-                _error.value = "Ekleme başarısız: ${e.message}"
+                _error.value = "Okunanlar yüklenemedi: ${e.message}"
             }
         }
     }
 
-    /** Kitabı listeden sil */
-    fun removeReadEntry(entryId: Long, userId: Long) {
+    // Okunacaklara ekle
+    fun addToReadList(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
-                repository.removeFromReadList(entryId)
+                repository.addToReadList(userId, bookId)
                 _error.value = null
-                loadReadList(userId) // Listeyi güncelle
+                loadToReadList(userId)
             } catch (e: Exception) {
-                _error.value = "Silme başarısız: ${e.message}"
+                _error.value = "Okunacaklara eklenemedi: ${e.message}"
+            }
+        }
+    }
+
+    // Okunmuşlara ekle
+    fun addToReadBooks(userId: Long, bookId: Long) {
+        viewModelScope.launch {
+            try {
+                repository.addToReadBooks(userId, bookId)
+                _error.value = null
+                loadReadBooks(userId)
+            } catch (e: Exception) {
+                _error.value = "Okunanlara eklenemedi: ${e.message}"
+            }
+        }
+    }
+
+    // Okunacaklardan sil
+    fun removeFromReadList(userId: Long, bookId: Long) {
+        viewModelScope.launch {
+            try {
+                repository.removeFromReadList(userId, bookId)
+                _error.value = null
+                loadToReadList(userId)
+            } catch (e: Exception) {
+                _error.value = "Okunacaklardan silinemedi: ${e.message}"
+            }
+        }
+    }
+
+    // Okunmuşlardan sil
+    fun removeFromReadBooks(userId: Long, bookId: Long) {
+        viewModelScope.launch {
+            try {
+                repository.removeFromReadBooks(userId, bookId)
+                _error.value = null
+                loadReadBooks(userId)
+            } catch (e: Exception) {
+                _error.value = "Okunanlardan silinemedi: ${e.message}"
             }
         }
     }

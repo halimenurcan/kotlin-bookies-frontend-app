@@ -12,5 +12,4 @@ data class ReadEntry(
     val bookPublishedYear: Int?,
     val bookCoverUrl: String,
     val userId: Long,
-    val rating : Int
 )
