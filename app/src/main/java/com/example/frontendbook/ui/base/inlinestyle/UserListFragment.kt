@@ -8,9 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.R
+import com.example.frontendbook.data.model.toSimple
 import com.example.frontendbook.databinding.FragmentUserListBinding
 import com.example.frontendbook.domain.model.UserListType
 import com.example.frontendbook.ui.base.adapter.UserListAdapter
+import com.example.frontendbook.ui.profile.FollowerViewModel
+import com.example.frontendbook.ui.profile.FollowerViewModelFactory
 
 class UserListFragment : Fragment() {
 
@@ -20,19 +23,14 @@ class UserListFragment : Fragment() {
     private lateinit var listType: UserListType
     private var profileUserId: Long = -1L
 
-    private lateinit var viewModel: UserListViewModel
+    private lateinit var viewModel: FollowerViewModel // FollowerViewModel kullanıyoruz
     private lateinit var adapter: UserListAdapter
-
-    companion object {
-        private const val ARG_TYPE = "arg_user_list_type"
-        private const val ARG_PROFILE_USER_ID = "arg_profile_user_id"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            listType = it.getSerializable(ARG_TYPE) as UserListType
-            profileUserId = it.getLong(ARG_PROFILE_USER_ID)
+            listType = it.getSerializable("userListType") as UserListType
+            profileUserId = it.getLong("profileUserId")
         }
     }
 
@@ -44,9 +42,8 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // 1) RecyclerView + Adapter
         adapter = UserListAdapter(emptyList()) { selectedUser ->
-            // Tıklanan kullanıcının profil sayfasına git
             val bundle = Bundle().apply {
-                putLong("user_id", selectedUser.userId.toLong())
+                putLong("userId", selectedUser.userId.toLong()) // UserResponse'da userId olmalı!
             }
             findNavController().navigate(R.id.otherUserProfileFragment, bundle)
         }
@@ -56,16 +53,26 @@ class UserListFragment : Fragment() {
         // 2) ViewModel
         viewModel = ViewModelProvider(
             this,
-            UserListViewModelFactory(requireContext())
-        ).get(UserListViewModel::class.java)
+            FollowerViewModelFactory(requireContext())
+        ).get(FollowerViewModel::class.java)
 
-        // 3) Veri yükle
-        viewModel.loadList(profileUserId, listType)
-
-        // 4) Gözle
-        viewModel.users.observe(viewLifecycleOwner) { users ->
-            adapter.submitList(users)
+        // 3) Veri yükle ve doğru LiveData'yı observe et
+        when (listType) {
+            UserListType.FOLLOWERS -> {
+                viewModel.loadFollowers(profileUserId)
+                viewModel.followers.observe(viewLifecycleOwner) { users ->
+                    adapter.submitList(users.map{it.toSimple()})
+                }
+            }
+            UserListType.FOLLOWING -> {
+                viewModel.loadFollowing(profileUserId)
+                viewModel.following.observe(viewLifecycleOwner) { users ->
+                    adapter.submitList(users.map{it.toSimple()})
+                }
+            }
         }
+
+        // 4) Hata gözle
         viewModel.error.observe(viewLifecycleOwner) { err ->
             err?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
@@ -81,6 +88,6 @@ class UserListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
-        }
+        _binding = null
+    }
 }

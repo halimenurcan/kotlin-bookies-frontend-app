@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.frontendbook.data.api.dto.UserResponse
 import com.example.frontendbook.data.repository.UserRepository
+import com.example.frontendbook.data.repository.FollowersRepository
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    private val followersRepository: FollowersRepository // <-- EKLENDİ
 ) : ViewModel() {
 
     private val TAG = "UserViewModel"
@@ -32,14 +34,9 @@ class UserViewModel(
                 Log.d(TAG, "loadUser() -> kullanıcı verisi: $fetched")
                 _user.value = fetched
 
-                val fCount = repository.getFollowersCount(userId)
-                Log.d(TAG, "loadUser() -> followersCount: $fCount")
-                _followersCount.value = fCount
-
-                val gCount = repository.getFollowingCount(userId)
-                Log.d(TAG, "loadUser() -> followingCount: $gCount")
-                _followingCount.value = gCount
-
+                // (İsteğe bağlı: burada sayıları da yükleyebilirsin)
+                loadFollowersCount(userId)
+                loadFollowingCount(userId)
             } catch (e: Exception) {
                 Log.e(TAG, "loadUser() -> hata", e)
                 _error.value = e.message ?: "Kullanıcı bilgisi alınırken hata oluştu"
@@ -47,20 +44,42 @@ class UserViewModel(
         }
     }
 
-    // 🔧 EKLENDİ
-    fun updateAvatar(userId: Int, avatarId: String) {
-        Log.d("UserViewModel", "updateAvatar() çağrıldı -> userId=$userId, avatarId=$avatarId")
+    fun loadFollowersCount(userId: Long) {
         viewModelScope.launch {
             try {
-                repository.updateAvatar(userId, avatarId)
-                loadUser(userId.toLong()) // güncel veriyi çek
+                val count = followersRepository.getFollowerCount(userId)
+                _followersCount.value = count
+                Log.d(TAG, "loadFollowersCount() -> $count")
             } catch (e: Exception) {
-                Log.e("UserViewModel", "updateAvatar() -> hata: ${e.message}", e)
-                _error.value = e.message ?: "Avatar güncellenirken hata oluştu"
+                Log.e(TAG, "loadFollowersCount() -> hata", e)
+                _error.value = e.message ?: "Takipçi sayısı alınamadı"
             }
         }
     }
 
+    fun loadFollowingCount(userId: Long) {
+        viewModelScope.launch {
+            try {
+                val count = followersRepository.getFollowingCount(userId)
+                _followingCount.value = count
+                Log.d(TAG, "loadFollowingCount() -> $count")
+            } catch (e: Exception) {
+                Log.e(TAG, "loadFollowingCount() -> hata", e)
+                _error.value = e.message ?: "Takip edilen sayısı alınamadı"
+            }
+        }
+    }
+
+    fun updateAvatar(userId: Int, avatarId: String) {
+        Log.d(TAG, "updateAvatar() çağrıldı -> userId=$userId, avatarId=$avatarId")
+        viewModelScope.launch {
+            try {
+                repository.updateAvatar(userId, avatarId)
+                loadUser(userId.toLong()) // Güncel veriyi çek
+            } catch (e: Exception) {
+                Log.e(TAG, "updateAvatar() -> hata: ${e.message}", e)
+                _error.value = e.message ?: "Avatar güncellenirken hata oluştu"
+            }
+        }
+    }
 }
-
-

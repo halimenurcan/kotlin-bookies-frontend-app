@@ -15,15 +15,13 @@ import com.example.frontendbook.data.repository.BookRepository
 import com.example.frontendbook.data.repository.LikedReviewsRepository
 import com.example.frontendbook.databinding.ItemReviewBinding
 import com.example.frontendbook.domain.model.Book
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class ReviewsAdapter(
     private val likedRepo: LikedReviewsRepository,
     private val userId: Long,
-    private val onClick: ((Book) -> Unit)? = null
+    private val onClick: ((Book) -> Unit)? = null,
+    private val onLikedChanged: (() -> Unit)? = null
 ) : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
 
     private val expandedItems = mutableSetOf<Long>()
@@ -39,8 +37,13 @@ class ReviewsAdapter(
 
     inner class ViewHolder(private val b: ItemReviewBinding) : RecyclerView.ViewHolder(b.root) {
 
+        private var lastReviewId: Long? = null
+        private var checkLikeJob: Job? = null
+
         @SuppressLint("SetTextI18n")
         fun bind(r: ReviewDto) {
+            lastReviewId = r.id
+
             // Kitap kapağı
             Glide.with(b.reviewBookCover.context)
                 .load(r.bookCoverUrl)
@@ -63,13 +66,9 @@ class ReviewsAdapter(
                 }
             }
 
-            // Yıldızlar
             b.reviewRatingBar.rating = r.score?.toFloat() ?: 0f
-
-            // Yorum içeriği
             b.reviewContent.text = r.comment
 
-            // Açılma durumu
             if (expandedItems.contains(r.id)) {
                 b.reviewContent.maxLines = Int.MAX_VALUE
                 b.reviewContent.ellipsize = null
@@ -77,8 +76,6 @@ class ReviewsAdapter(
                 b.reviewContent.maxLines = 2
                 b.reviewContent.ellipsize = android.text.TextUtils.TruncateAt.END
             }
-
-            // Yorum genişletme/küçültme
             b.reviewContent.setOnClickListener {
                 if (expandedItems.contains(r.id))
                     expandedItems.remove(r.id)
@@ -86,9 +83,8 @@ class ReviewsAdapter(
                     expandedItems.add(r.id)
                 notifyItemChanged(absoluteAdapterPosition)
             }
-            b.reviewBookTitle.text = "Yükleniyor..."
 
-            // Kitap başlığı getir (opsiyonel)
+            b.reviewBookTitle.text = "Yükleniyor..."
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val repo = BookRepository(b.root.context)
@@ -102,40 +98,54 @@ class ReviewsAdapter(
                     }
                 }
             }
-
-            // Yorum yazarı
             b.reviewAuthor.text = "– ${r.userName}"
-
-            // Zaman etiketi
             b.reviewTimestamp.text = r.createdAt
 
-            // Like durumu ikon ayarlama
-            b.likeButton.setImageResource(
-                if (r.isLiked) R.drawable.like_filled else R.drawable.like
-            )
+            // --- BEĞENİ DURUMUNU GERÇEK ZAMANLI KONTROL ET ---
+            checkLikeJob?.cancel()
+            b.likeButton.setImageResource(R.drawable.like) // defaultta boş
 
-            // Like butonu tıklama işlemi
+            // Like durumunu API'dan çek!
+            checkLikeJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val isLikedApi = likedRepo.isLiked(userId, r.id)
+                    withContext(Dispatchers.Main) {
+                        // Hala aynı review gösteriliyorsa setle
+                        if (lastReviewId == r.id) {
+                            r.isLiked = isLikedApi
+                            b.likeButton.setImageResource(
+                                if (isLikedApi) R.drawable.like_filled else R.drawable.like
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("REVIEWS_ADAPTER", "Beğeni durumu kontrolü hatası: ${e.message}")
+                }
+            }
+
             b.likeButton.setOnClickListener {
                 val isNowLiked = !r.isLiked
                 r.isLiked = isNowLiked
-                notifyItemChanged(absoluteAdapterPosition)
+                b.likeButton.setImageResource(
+                    if (isNowLiked) R.drawable.like_filled else R.drawable.like
+                )
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    val result = if (isNowLiked) {
-                        likedRepo.like(userId, r.id)
-                    } else {
-                        likedRepo.unlike(userId, r.id)
-                    }
+                    val result = if (isNowLiked) likedRepo.like(userId, r.id)
+                    else likedRepo.unlike(userId, r.id)
                     withContext(Dispatchers.Main) {
                         if (!result) {
-                            // Hata olduysa geri al
                             r.isLiked = !isNowLiked
-                            notifyItemChanged(absoluteAdapterPosition)
+                            b.likeButton.setImageResource(
+                                if (r.isLiked) R.drawable.like_filled else R.drawable.like
+                            )
                             Toast.makeText(
                                 b.root.context,
                                 "İşlem başarısız oldu!",
                                 Toast.LENGTH_SHORT
                             ).show()
+                        } else {
+                            onLikedChanged?.invoke()
                         }
                     }
                 }

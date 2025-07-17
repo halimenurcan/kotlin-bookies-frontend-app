@@ -58,12 +58,12 @@ class AllReviewsFragment : Fragment() {
 
         // Like işlemleri için repo ve userId
         val likedRepo = LikedReviewsRepository(RetrofitClient.likedReviewsApiService(requireContext()))
-        val CURRENT_USER_ID = 123L // Gerçek ID'ni buraya yaz, login ile alıyorsan oradan çek
-
+        val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val userId = prefs.getLong("user_id", -1L)
         // GÜNCEL: Adapter'a tüm parametreleri ver!
         reviewsAdapter = ReviewsAdapter(
             likedRepo = likedRepo,
-            userId = CURRENT_USER_ID,
+            userId = userId,
             onClick = { book ->
                 listener?.onBookClicked(book)
             }

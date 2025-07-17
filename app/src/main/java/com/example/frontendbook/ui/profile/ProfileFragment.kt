@@ -82,11 +82,11 @@ class ProfileFragment : Fragment() {
                 binding.profileImage.setImageResource(R.drawable.avatar)
             }
         }
-        viewModel.followersCount.observe(viewLifecycleOwner) { count ->
+        viewModel.followingCount.observe(viewLifecycleOwner) { count ->
             Log.d(TAG, "Followers count: $count")
             binding.btnFollowers.text = getString(R.string.followers_count, count)
         }
-        viewModel.followingCount.observe(viewLifecycleOwner) { count ->
+        viewModel.followersCount.observe(viewLifecycleOwner) { count ->
             Log.d(TAG, "Following count: $count")
             binding.btnFollowing.text = getString(R.string.following_count, count)
         }
@@ -96,6 +96,8 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
+        viewModel.loadFollowersCount(userId)
+        viewModel.loadFollowingCount(userId)
 
         // ReadViewModel LiveData gözlemleri (Opsiyonel, istersen UI'da listele)
         readViewModel.toReadList.observe(viewLifecycleOwner) { list ->

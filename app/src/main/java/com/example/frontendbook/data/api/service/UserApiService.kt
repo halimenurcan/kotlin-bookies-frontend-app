@@ -46,13 +46,13 @@ interface UserApiService {
 
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: Long)
-    @GET("users/{userId}/followers")
+    @GET("followers/{userId}")
     suspend fun getFollowers(
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
     /** Takip ettiklerim listesi */
-    @GET("users/{userId}/following")
+    @GET("followers/following/{userId}")
     suspend fun getFollowing(
         @Path("userId") userId: Long
     ): Response<List<UserDto>>

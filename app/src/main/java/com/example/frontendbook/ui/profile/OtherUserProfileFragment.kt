@@ -24,6 +24,7 @@ class OtherUserProfileFragment : Fragment() {
     private val args: OtherUserProfileFragmentArgs by navArgs()
     private val targetUserId: Long get() = args.userId
 
+    // Şu anki kullanıcıyı çekiyoruz (giriş yapan kullanıcı)
     private val currentUserId: Long by lazy {
         requireContext()
             .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
@@ -46,6 +47,7 @@ class OtherUserProfileFragment : Fragment() {
             return
         }
 
+        // User bilgi gözlemleri
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             binding.otherUsernameText.text = user.username
             if (!user.profileImageUrl.isNullOrBlank()) {
@@ -59,70 +61,93 @@ class OtherUserProfileFragment : Fragment() {
             }
         }
         userViewModel.error.observe(viewLifecycleOwner) { it?.let { m -> Toast.makeText(requireContext(), m, Toast.LENGTH_LONG).show() } }
+        userViewModel.followersCount.observe(viewLifecycleOwner) { count ->
+            binding.btnOtherFollowers.text = getString(R.string.followers_count, count)
+        }
+        userViewModel.followingCount.observe(viewLifecycleOwner) { count ->
+            binding.btnOtherFollowing.text = getString(R.string.following_count, count)
+        }
 
+        // Takip durumu gözlemi
         followerViewModel.isFollowing.observe(viewLifecycleOwner) { following ->
             binding.btnFollowAction.text = if (following) getString(R.string.unfollow) else getString(R.string.follow)
         }
         followerViewModel.error.observe(viewLifecycleOwner) { it?.let { m -> Toast.makeText(requireContext(), m, Toast.LENGTH_LONG).show() } }
+        followerViewModel.loadIsFollowing(targetUserId, currentUserId)
 
+        // Kullanıcı ve takip durumunu yükle
         userViewModel.loadUser(targetUserId)
-        // *DİKKAT: Doğru ID SIRASI*
-        followerViewModel.loadFollowStatus(targetUserId, currentUserId)
+        followerViewModel.loadFollowStatus(currentUserId, targetUserId)
 
+        // Takip/Çık takip butonu
         binding.btnFollowAction.setOnClickListener {
-            followerViewModel.toggleFollow(targetUserId, currentUserId)
+            followerViewModel.toggleFollow(currentUserId, targetUserId)
         }
 
-        // Manuel bundle + navigate:
+        // Takipçi listesi
         binding.btnOtherFollowers.setOnClickListener {
             findNavController().navigate(
                 R.id.userListFragment,
                 Bundle().apply {
-                    putSerializable("arg_user_list_type", UserListType.FOLLOWERS)
-                    putLong("arg_profile_user_id", targetUserId)
+                    putSerializable("userListType", UserListType.FOLLOWERS)
+                    putLong("profileUserId", targetUserId)
                 }
             )
         }
+
+        // Takip edilenler listesi
         binding.btnOtherFollowing.setOnClickListener {
             findNavController().navigate(
                 R.id.userListFragment,
                 Bundle().apply {
-                    putSerializable("arg_user_list_type", UserListType.FOLLOWING)
-                    putLong("arg_profile_user_id", targetUserId)
+                    putSerializable("userListType", UserListType.FOLLOWING)
+                    putLong("profileUserId", targetUserId)
+
                 }
             )
         }
+
+        // Okunan kitaplar
         binding.btnOtherRead.setOnClickListener {
             val bundle = Bundle().apply {
                 putString(ThreeColumnFragment.ARG_TITLE, "Read")
                 putString(ThreeColumnFragment.ARG_TYPE, "read")
                 putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
+                putLong("listId", 0L)
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
+        // Okunacak kitaplar
         binding.btnOtherReadlist.setOnClickListener {
             val bundle = Bundle().apply {
                 putString(ThreeColumnFragment.ARG_TITLE, "Readlist")
                 putString(ThreeColumnFragment.ARG_TYPE, "readlist")
                 putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
+                putLong("listId", 0L)
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
+        // Diğer kullanıcının listeleri (örnek, arg_title kullanıyorsan navigation'da kontrol et)
         binding.btnOtherLists.setOnClickListener {
             findNavController().navigate(
-                R.id.threeColumnFragment,
+                R.id.listsFragment,
                 Bundle().apply {
-                    putString("arg_title", "List")
-                    putString("arg_type", "List")
-                    putLong(ThreeColumnFragment.ARG_LIST_ID, targetUserId)
+                    putString("arg_title", "List")             // <-- string
+                    putString("arg_type", "list")              // <-- string
+                    putLong("arg_list_id", 0L)                 // <-- long
+                    putLong("arg_user_id", targetUserId)       // <-- long (diğer user'ın id'si)
+                    putLong("profileUserId", targetUserId)     // <-- long
                 }
             )
         }
+
+        // Diğer kullanıcının beğendiği kitaplar
         binding.btnOtherLikes.setOnClickListener {
             val bundle = Bundle().apply {
                 putString(ThreeColumnFragment.ARG_TITLE, "Likes")
                 putString(ThreeColumnFragment.ARG_TYPE, "likes")
                 putLong(ThreeColumnFragment.ARG_USER_ID, targetUserId)
+                putLong("listId", 0L)
             }
             findNavController().navigate(R.id.threeColumnFragment, bundle)
         }
@@ -130,6 +155,6 @@ class OtherUserProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
-        }
+        _binding = null
+    }
 }

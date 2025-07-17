@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
-import com.example.frontendbook.domain.model.UserSimple
+import com.example.frontendbook.data.model.UserSimple
 
 class UserListAdapter(
     private var users: List<UserSimple> = emptyList(),

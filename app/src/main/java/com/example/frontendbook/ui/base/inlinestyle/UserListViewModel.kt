@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.example.frontendbook.data.remote.dto.UserDto
 import com.example.frontendbook.data.repository.UserFollowRepository
 import com.example.frontendbook.domain.model.UserListType
-import com.example.frontendbook.domain.model.UserSimple
+import com.example.frontendbook.data.model.UserSimple
 import kotlinx.coroutines.launch
 
 class UserListViewModel(

@@ -1,8 +1,8 @@
 package com.example.frontendbook.data.repository
 
 import FollowersApiService
+import com.example.frontendbook.data.api.dto.UserResponse
 import com.example.frontendbook.data.model.FollowerRequest
-import com.example.frontendbook.data.model.FollowerResponse
 
 class FollowersRepository(
     private val api: FollowersApiService
@@ -20,15 +20,24 @@ class FollowersRepository(
         return api.deleteFollower(userId, followerId).isSuccessful
     }
 
-    suspend fun getFollowersOfUser(userId: Long): List<FollowerResponse> {
+    suspend fun getFollowersOfUser(userId: Long): List<UserResponse> {
         val resp = api.getFollowersOfUser(userId)
         if (!resp.isSuccessful) throw Exception("Takipçiler alınamadı: ${resp.code()}")
-        return resp.body() ?: emptyList()
+        return resp.body()?._embedded?.userResponseDTOList ?: emptyList()
     }
-
-    suspend fun getFollowingOfUser(userId: Long): List<FollowerResponse> {
+    suspend fun getFollowingOfUser(userId: Long): List<UserResponse> {
         val resp = api.getFollowingOfUser(userId)
         if (!resp.isSuccessful) throw Exception("Takip edilenler alınamadı: ${resp.code()}")
-        return resp.body() ?: emptyList()
-        }
+        return resp.body()?._embedded?.userResponseDTOList ?: emptyList()
+    }
+
+    // ---- EKLEDİKLERİN: ----
+    suspend fun getFollowerCount(userId: Long): Int {
+         return api.getFollowerCount(userId)
+
+    }
+
+    suspend fun getFollowingCount(userId: Long): Int {
+        return api.getFollowingCount(userId)
+    }
 }
