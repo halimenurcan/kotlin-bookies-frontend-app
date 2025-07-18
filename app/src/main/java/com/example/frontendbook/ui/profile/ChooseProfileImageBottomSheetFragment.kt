@@ -1,6 +1,7 @@
 package com.example.frontendbook.ui.profile
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -8,15 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.frontendbook.R
 
 class ChooseProfileImageBottomSheetFragment(
     private val onImageSelected: (Int) -> Unit
 ) : BottomSheetDialogFragment() {
 
-    private lateinit var sharedPrefs: android.content.SharedPreferences
-    private val viewModel: UserViewModel by activityViewModels()
+    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var viewModel: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +29,15 @@ class ChooseProfileImageBottomSheetFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // ViewModel'i factory ile oluştur
+        val factory = UserViewModelFactory(requireContext())
+        viewModel = ViewModelProvider(requireActivity(), factory)[UserViewModel::class.java]
+
+        // SharedPreferences başlat
         sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val savedAvatarId = sharedPrefs.getInt("user_avatar", R.drawable.avatar)
 
+        // Avatar eşlemeleri
         val avatarMap = mapOf(
             R.id.imgAvatar1 to Pair(R.drawable.bookworms, R.id.imgCheck1),
             R.id.imgAvatar2 to Pair(R.drawable.bookfriends, R.id.imgCheck2),
@@ -38,13 +45,13 @@ class ChooseProfileImageBottomSheetFragment(
             R.id.imgAvatar4 to Pair(R.drawable.bookcat, R.id.imgCheck4)
         )
 
-        // --- Başlangıçta kaydedilmiş tik'i göster ---
-        for ((avatarViewId, pair) in avatarMap) {
+        // Başlangıçta tik işaretini göster
+        for ((_, pair) in avatarMap) {
             val checkImageView = view.findViewById<ImageView>(pair.second)
             checkImageView.visibility = if (pair.first == savedAvatarId) View.VISIBLE else View.GONE
         }
 
-        // --- Avatar seçildiğinde ---
+        // Avatar tıklama işlemleri
         for ((avatarViewId, pair) in avatarMap) {
             val avatarImageView = view.findViewById<ImageView>(avatarViewId)
             val checkImageView = view.findViewById<ImageView>(pair.second)
@@ -55,26 +62,32 @@ class ChooseProfileImageBottomSheetFragment(
                     view.findViewById<ImageView>(checkId).visibility = View.GONE
                 }
 
-                // Seçilenin tik'ini göster
+                // Seçilen tik'i göster
                 checkImageView.visibility = View.VISIBLE
 
                 // Seçimi kaydet
                 sharedPrefs.edit().putInt("user_avatar", pair.first).apply()
 
-                val avatarId = when (pair.first) {
-                    R.drawable.bookworms -> "avatar_1"
-                    R.drawable.bookfriends -> "avatar_2"
-                    R.drawable.bookbibliofil -> "avatar_3"
-                    R.drawable.bookcat -> "avatar_4"
-                    else -> "avatar_default"
-                }
-                val userId = sharedPrefs.getLong("user_id", -1L).toInt()
-                Log.d("ChooseProfile", "Avatar seçildi → userId=$userId, avatarId=$avatarId")
-                if (userId != -1) {
-                    viewModel.updateAvatar(userId, avatarId)
+                // Seçilen avatar'ın backend id'sini belirle (Long)
+                val avatar: Long = when (pair.first) {
+                    R.drawable.bookworms -> 1L
+                    R.drawable.bookfriends -> 2L
+                    R.drawable.bookbibliofil -> 3L
+                    R.drawable.bookcat -> 4L
+                    else -> 0L
                 }
 
-                // 300ms sonra geri bildir
+                // Kullanıcı ID'sini al
+                val userId: Long = sharedPrefs.getLong("user_id", -1L)
+                Log.d("ChooseProfile", "Avatar seçildi → userId=$userId, avatarId=$avatar")
+
+                // Geçerliyse API'ye gönder
+                if (userId != -1L && avatar != 0L) {
+                    viewModel.updateAvatar(userId, avatar)
+
+                }
+
+                // 300ms sonra callback ve kapatma
                 view.postDelayed({
                     onImageSelected(pair.first)
                     dismiss()

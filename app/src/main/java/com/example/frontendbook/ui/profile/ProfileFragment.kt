@@ -12,14 +12,17 @@ import android.view.animation.ScaleAnimation
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.LikedBooksRepository
+import com.example.frontendbook.data.repository.UserRepository
 import com.example.frontendbook.databinding.FragmentProfileBinding
 import com.example.frontendbook.domain.model.UserListType
 import com.example.frontendbook.ui.likedbooks.LikedBooksViewModel
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -27,7 +30,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: UserViewModel
     private lateinit var readViewModel: ReadViewModel
-    private lateinit var likedBooksViewModel : LikedBooksViewModel
+    private lateinit var likedBooksViewModel: LikedBooksViewModel
+    private lateinit var userRepository: UserRepository
     private val TAG = "ProfileFragment"
 
     override fun onCreateView(
@@ -40,6 +44,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val likedRepo = LikedBooksRepository(RetrofitClient.likedBooksApiService(requireContext()))
         likedBooksViewModel = ViewModelProvider(
             this,
@@ -53,12 +58,13 @@ class ProfileFragment : Fragment() {
         // UserViewModel
         viewModel = ViewModelProvider(this, UserViewModelFactory(requireContext()))
             .get(UserViewModel::class.java)
-
         // ReadViewModel (okunan/okunacak kitaplar)
         readViewModel = ViewModelProvider(
             this,
             ReadViewModelFactory(requireContext())
         )[ReadViewModel::class.java]
+        // UserRepository
+        userRepository = UserRepository(RetrofitClient.userApiService(requireContext()))
 
         // SharedPrefs'ten userId al
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
@@ -69,37 +75,54 @@ class ProfileFragment : Fragment() {
             return
         }
 
+        // --- AVATAR GÜNCELLEME (Backend'den ÇEKMEK) ---
+        // Her profil açılışında avatar'ı çek
+        lifecycleScope.launch {
+            val avatarResponse = userRepository.fetchAvatar(userId)
+
+            val avatarId = avatarResponse?.avatar ?: 0L // Null ise default avatar
+            Log.d(TAG, "Profil avatar backend id: $avatarId")
+            // Backend'den dönen avatar id'sini drawable ile eşleştir
+            val avatarDrawable = when (avatarId.toInt()) {
+                1 -> R.drawable.bookworms
+                2 -> R.drawable.bookfriends
+                3 -> R.drawable.bookbibliofil
+                4 -> R.drawable.bookcat
+                else -> R.drawable.avatar // default
+            }
+
+            binding.profileImage.setImageResource(avatarDrawable)
+            loadAvatar(userId)
+
+        }
+
         // LiveData gözlemleri (User)
         viewModel.user.observe(viewLifecycleOwner) { user ->
             Log.d(TAG, "observe(user) -> $user")
             binding.usernameText.text = user.username
+            // Profil fotoğrafı için Glide (isteğe bağlı)
             if (!user.profileImageUrl.isNullOrBlank()) {
                 Glide.with(this)
                     .load(user.profileImageUrl)
                     .placeholder(R.drawable.avatar)
                     .into(binding.profileImage)
-            } else {
-                binding.profileImage.setImageResource(R.drawable.avatar)
             }
         }
         viewModel.followingCount.observe(viewLifecycleOwner) { count ->
-            Log.d(TAG, "Followers count: $count")
             binding.btnFollowers.text = getString(R.string.followers_count, count)
         }
         viewModel.followersCount.observe(viewLifecycleOwner) { count ->
-            Log.d(TAG, "Following count: $count")
             binding.btnFollowing.text = getString(R.string.following_count, count)
         }
         viewModel.error.observe(viewLifecycleOwner) { msg ->
             msg?.let {
-                Log.e(TAG, "ViewModel error: $it")
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
         viewModel.loadFollowersCount(userId)
         viewModel.loadFollowingCount(userId)
 
-        // ReadViewModel LiveData gözlemleri (Opsiyonel, istersen UI'da listele)
+        // ReadViewModel LiveData gözlemleri
         readViewModel.toReadList.observe(viewLifecycleOwner) { list ->
             Log.d(TAG, "Okunacak kitaplar: ${list.size}")
         }
@@ -140,9 +163,7 @@ class ProfileFragment : Fragment() {
 
         // --- OKUNMUŞ KİTAPLAR (btnRead) ---
         binding.btnRead.setOnClickListener {
-            Log.d(TAG, "btnRead clicked - userId = $userId")
             readViewModel.loadReadBooks(userId)
-            // Navigation'ı da aynı anda yapabilirsin:
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
@@ -155,7 +176,6 @@ class ProfileFragment : Fragment() {
         }
         // --- OKUNACAK KİTAPLAR (btnReadlist) ---
         binding.btnReadlist.setOnClickListener {
-            Log.d(TAG, "btnReadlist clicked - userId = $userId")
             readViewModel.loadToReadList(userId)
             findNavController().navigate(
                 R.id.threeColumnFragment,
@@ -169,7 +189,6 @@ class ProfileFragment : Fragment() {
         }
         // --- BEĞENİLER (btnLikes) ---
         binding.btnLikes.setOnClickListener {
-            Log.d(TAG, "btnLikes clicked - userId = $userId")
             likedBooksViewModel.loadLikedBooks(userId)
             findNavController().navigate(
                 R.id.threeColumnFragment,
@@ -183,7 +202,6 @@ class ProfileFragment : Fragment() {
         }
         // Takipçi ve Takip edilenler
         binding.btnFollowers.setOnClickListener {
-            Log.d(TAG, "btnFollowers clicked - userId = $userId")
             findNavController().navigate(
                 R.id.userListFragment,
                 Bundle().apply {
@@ -193,7 +211,6 @@ class ProfileFragment : Fragment() {
             )
         }
         binding.btnFollowing.setOnClickListener {
-            Log.d(TAG, "btnFollowing clicked - userId = $userId")
             findNavController().navigate(
                 R.id.userListFragment,
                 Bundle().apply {
@@ -204,10 +221,24 @@ class ProfileFragment : Fragment() {
         }
         // Listeler
         binding.btnLists.setOnClickListener {
-            Log.d(TAG, "btnLists clicked - userId = $userId")
             findNavController().navigate(R.id.listsFragment)
         }
     }
+    private fun loadAvatar(userId: Long) {
+        lifecycleScope.launch {
+            val avatarResponse = userRepository.fetchAvatar(userId)
+            val avatarId = avatarResponse?.avatar ?: 0L
+            val avatarDrawable = when (avatarId.toInt()) {
+                1 -> R.drawable.bookworms
+                2 -> R.drawable.bookfriends
+                3 -> R.drawable.bookbibliofil
+                4 -> R.drawable.bookcat
+                else -> R.drawable.avatar
+            }
+            binding.profileImage.setImageResource(avatarDrawable)
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
