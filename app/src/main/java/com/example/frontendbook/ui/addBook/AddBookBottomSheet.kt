@@ -30,13 +30,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import android.view.KeyEvent
 import android.view.MotionEvent
+import com.example.frontendbook.data.repository.ReadRepository
+import com.example.frontendbook.ui.profile.ReadViewModel
+import com.example.frontendbook.ui.profile.ReadViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class AddBookBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetAddBookBinding? = null
     private val binding get() = _binding!!
-
+    private val readViewModel: ReadViewModel by activityViewModels {
+        ReadViewModelFactory(requireContext())
+    }
     private val searchViewModel: SearchViewModel by activityViewModels {
         SearchViewModelFactory(RetrofitClient.searchApiService(requireContext()))
     }
@@ -176,7 +181,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // 3) Save button: Add to list &/or Create review
         binding.saveBookButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
             val comment = binding.commentInput.text.toString().trim()
@@ -190,25 +194,31 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             }
 
             lifecycleScope.launch {
-                // Sadece review
-                if (comment.isNotEmpty() || rating > 0) {
+                // Yorum da YOK, rating de YOK ise: SADECE Okudum listesine ekle
+                if (comment.isEmpty() && rating == 0) {
+                    // ViewModel ile readBooks'a ekle
+                    readViewModel.addToReadBooks(userId, book.id.toLong())
+                    Toast.makeText(requireContext(), "Kitap okuduklarına eklendi", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Review işlemleri (eskisi gibi)
                     try {
                         val req = ReviewCreateRequest(
                             userId = userId,
                             bookId = book.id.toLong(),
                             score = rating,
                             comment = comment,
-                            read = false, // true donucek done tusuna basinca okundu listesine gidicegi zaman
+                            read = true,   // Burada true olacak, çünkü Done'a basınca okudum'a gidecek
                             toRead = false,
                             liked = isLiked
                         )
                         val created = reviewsRepo.createComment(req)
+                        readViewModel.addToReadBooks(userId, book.id.toLong())
                         Toast.makeText(requireContext(), "Review eklendi (ID=${created.id})", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         Toast.makeText(requireContext(), "Review ekleme hatası: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
-                // Sadece beğeni/listeye ekle
+
                 if (listId != -1L) {
                     val ok = likedRepo.likeBook(listId, book.id.toLong())
                     if (ok) Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
@@ -217,6 +227,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 dismiss()
             }
         }
+
 
         // 4) Like/unlike
         binding.likeButton.setOnClickListener {

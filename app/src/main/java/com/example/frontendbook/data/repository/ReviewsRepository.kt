@@ -11,7 +11,6 @@ class ReviewsRepository(
     private val api: ReviewsApiService
 ) {
 
-    /** Bir kitaba ait yorumları getirir */
     suspend fun fetchReviewsForBook(bookId: Long): List<ReviewDto> {
         Log.d("ReviewsRepo", "→ fetchReviewsForBook(bookId=$bookId) called")
         val resp = api.getReviewsForBook(bookId)
