@@ -1,9 +1,9 @@
 package com.example.frontendbook.ui.notifications
 
 import androidx.lifecycle.*
+import com.example.frontendbook.data.api.dto.NotificationDto
 import com.example.frontendbook.data.model.Notification
 import com.example.frontendbook.data.model.NotificationType
-import com.example.frontendbook.data.remote.dto.NotificationDto
 import com.example.frontendbook.data.repository.NotificationsRepository
 import kotlinx.coroutines.launch
 
@@ -53,15 +53,25 @@ class NotificationsViewModel(
     /** DTO'dan UI modeli olan Notification nesnesine dönüşüm */
     private fun NotificationDto.toNotification(): Notification {
         return Notification(
-            iconResId = 0, // Adapter içinde type'a göre atanacak
-            message = this.message,
-            time = formatTime(this.timestamp),
-            type = determineNotificationType(this.message),
-            relatedId = extractRelatedId(this.message),
-            id = this.id,  // Notification modeline id eklenmiş olmalı
-            read = this.read
+            iconResId = 0, // type'a göre NotificationAdapter içinde atanacak
+            message = generateMessage(type), // artık content değil
+            time = formatTime(createdAt),    // artık timestamp değil
+            type = determineNotificationType(type),
+            relatedId = targetId,
+            id = id,
+            read = read
         )
     }
+
+    private fun generateMessage(type: String): String {
+        return when (type) {
+            "FOLLOW_USER" -> "Seni takip etti"
+            "FOLLOW_LIST" -> "Listeni takip etti"
+            "LIKE_COMMENT" -> "Yorumunu beğendi"
+            else -> "Bildirim"
+        }
+    }
+
 
     /** Mesaja göre NotificationType belirlenir */
     private fun determineNotificationType(message: String): NotificationType {

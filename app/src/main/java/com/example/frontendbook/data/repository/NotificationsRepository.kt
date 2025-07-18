@@ -1,7 +1,7 @@
 package com.example.frontendbook.data.repository
 
 import com.example.frontendbook.data.api.service.NotificationApiService
-import com.example.frontendbook.data.remote.dto.NotificationDto
+import com.example.frontendbook.data.api.dto.NotificationDto
 
 class NotificationsRepository(
     private val api: NotificationApiService
