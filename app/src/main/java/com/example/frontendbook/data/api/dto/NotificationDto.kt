@@ -1,10 +1,12 @@
-package com.example.frontendbook.data.remote.dto
-
-import com.google.gson.annotations.SerializedName
+package com.example.frontendbook.data.api.dto
 
 data class NotificationDto(
     val id: Long,
-    @SerializedName("content") val message: String,
-    @SerializedName("isRead") val read: Boolean,
-    @SerializedName("timestamp") val timestamp: String
+    val senderId: Long,
+    val receiverId: Long,
+    val type: String,
+    val targetId: String,
+    val read: Boolean,
+    val createdAt: String,
+    val updatedAt: String
 )
