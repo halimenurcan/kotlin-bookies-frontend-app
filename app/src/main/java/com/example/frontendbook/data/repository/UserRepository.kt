@@ -1,6 +1,7 @@
 package com.example.frontendbook.data.repository
 
 import android.util.Log
+import com.example.frontendbook.data.api.dto.AvatarResponse
 import com.example.frontendbook.data.api.service.UserApiService
 import com.example.frontendbook.data.api.dto.UserResponse
 import com.example.frontendbook.data.model.AvatarRequest
@@ -9,20 +10,44 @@ import com.example.frontendbook.data.model.BookInteractionRequest
 class UserRepository(private val api: UserApiService) {
     private val TAG = "UserRepository"
 
-    suspend fun updateAvatar(userId: Int, avatarId: String) {
-        val request = AvatarRequest(avatarId)
-        try {
-            Log.d("UserRepository", "updateAvatar() -> gönderiliyor: userId=$userId, avatarId=$avatarId")
-            val response = api.updateAvatar(userId, request)
-            if (response.isSuccessful) {
-                Log.d("UserRepository", "updateAvatar() -> başarıyla güncellendi. HTTP ${response.code()}")
-            } else {
+    suspend fun updateAvatar(userId: Long, avatar: Long): Boolean {
+        return try {
+            val response = api.updateAvatar(
+                userId,
+                AvatarRequest(userId,avatar)
+            )
+            if (!response.isSuccessful) {
                 Log.e("UserRepository", "updateAvatar() -> başarısız! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
             }
+            response.isSuccessful
         } catch (e: Exception) {
-            Log.e("UserRepository", "updateAvatar() -> hata oluştu: ${e.message}", e)
+            Log.e("UserRepository", "updateAvatar() -> hata: ${e.message}", e)
+            false
         }
     }
+
+    suspend fun getAvatarByUserId(userId: Long): AvatarResponse? {
+        return try {
+            val response = api.getAvatarByUserId(userId)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e(TAG, "getAvatarByUserId() -> başarısız! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getAvatarByUserId() -> hata: ${e.message}", e)
+            null
+        }
+    }
+
+    // UserRepository.kt
+    suspend fun fetchAvatar(userId: Long): AvatarResponse? {
+        val response = api.getAvatarByUserId(userId)
+        return if (response.isSuccessful) response.body() else null
+    }
+
+
 
 
     suspend fun fetchUser(userId: Long): UserResponse {
