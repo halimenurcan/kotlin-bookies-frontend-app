@@ -54,6 +54,7 @@ class OtherListsFragment : Fragment() {
         // Aktif kullanıcıyı bul
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val currentUserId = prefs.getLong("user_id", -1L)
+        val targetUserId = arguments?.getLong("arg_user_id", -1L) ?: -1L
 
         // ADAPTER
         otherListAdapter = OtherListAdapter(
@@ -91,7 +92,15 @@ class OtherListsFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-        viewModel.loadOtherLists()
+        // --- SADECE BURASI ---
+        if (targetUserId != -1L) {
+            // Sadece hedef kullanıcının listeleri
+            viewModel.loadOtherListsForUser(targetUserId)
+        } else {
+            // Diğer kullanıcıların listeleri (kendin hariç)
+            viewModel.loadOtherLists()
+        }
+        // --- BURADA 2. KEZ ÇAĞIRMA! ---
 
         if (currentUserId != -1L) {
             followViewModel.loadFollowedListIds(currentUserId)
@@ -99,7 +108,6 @@ class OtherListsFragment : Fragment() {
 
         followViewModel.followedListIds.observe(viewLifecycleOwner) { followedIds ->
             Log.d("OtherListsFragment", "followedListIds updated: $followedIds")
-
             otherListAdapter.setFollowedListIds(followedIds)
             otherListAdapter.notifyDataSetChanged()
         }
@@ -116,6 +124,7 @@ class OtherListsFragment : Fragment() {
             error?.let { Toast.makeText(requireContext(), "Takip hatası: $it", Toast.LENGTH_SHORT).show() }
         }
     }
+
 
     private fun populateBookCards(lists: List<ListDto>) {
         binding.listsRecyclerView.post {

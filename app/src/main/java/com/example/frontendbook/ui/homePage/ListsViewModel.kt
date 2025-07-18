@@ -1,13 +1,17 @@
 package com.example.frontendbook.ui.homePage
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.frontendbook.data.api.dto.ListDto
 import com.example.frontendbook.data.repository.ListsRepository
 import kotlinx.coroutines.launch
 
-class ListsViewModel(private val context: Context,private val repo: ListsRepository) : ViewModel()
-{
+class ListsViewModel(
+    private val context: Context,
+    private val repo: ListsRepository
+) : ViewModel() {
+
     val deleteResult = MutableLiveData<Boolean>()
     private val _lists = MutableLiveData<List<ListDto>>()
     val lists: LiveData<List<ListDto>> = _lists
@@ -23,13 +27,26 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
             try {
                 val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
                 val currentUserId = prefs.getLong("user_id", -1L)
-
                 val allLists = repo.getAllLists()
+                Log.d("LISTS_VM", "Repo'dan gelen tüm listeler: $allLists")
 
-                // 👇 owner.id'yi doğrudan kullan
                 val filtered = allLists.filter { it.owner.id != currentUserId }
+                Log.d("LISTS_VM", "Filtrelenmiş diğer listeler: $filtered")
 
                 _otherLists.value = filtered
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+                Log.e("LISTS_VM", "Hata: ${e.message}")
+            }
+        }
+    }
+
+    // Belirli bir kullanıcının tüm listelerini getir
+    fun loadOtherListsForUser(userId: Long) {
+        viewModelScope.launch {
+            try {
+                _otherLists.value = repo.getUserLists(userId)
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
@@ -37,7 +54,7 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
         }
     }
 
-
+    // Kendi listelerini getir
     fun loadUserLists(userId: Long) {
         viewModelScope.launch {
             try {
@@ -48,6 +65,8 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
             }
         }
     }
+
+    // Kullanıcı değişirse ya da yeni liste eklenirse yenile
     fun refreshLists() {
         viewModelScope.launch {
             val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
@@ -57,23 +76,25 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
             }
         }
     }
+
+    // Liste silme işlemi
     fun deleteList(listId: Long) {
         viewModelScope.launch {
             val success = repo.deleteListById(listId)
             deleteResult.postValue(success)
-
             if (success) {
-                refreshLists() // ✅ Başarılıysa listeyi güncelle
+                refreshLists()
             }
         }
     }
+
+    // Yeni liste oluşturma
     fun createList(userId: Long, title: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
                 val success = repo.createList(userId, title)
-
                 if (success) {
-                    loadUserLists(userId) // Listeyi güncelle
+                    loadUserLists(userId)
                 }
                 onResult(success)
             } catch (e: Exception) {
@@ -83,6 +104,7 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
         }
     }
 
+    // Kitap ekleme işlemi
     fun addBookToList(listId: Long, bookId: Long, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
@@ -94,6 +116,8 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
             }
         }
     }
+
+    // Belirli bir liste ve kitaplarını getir
     private val _listWithBooks = MutableLiveData<ListDto>()
     val listWithBooks: LiveData<ListDto> = _listWithBooks
 
@@ -109,6 +133,7 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
         }
     }
 
+    // Keşfet ekranı için tüm listeleri getir (filter yok!)
     fun loadExploreLists() {
         viewModelScope.launch {
             try {
@@ -119,6 +144,4 @@ class ListsViewModel(private val context: Context,private val repo: ListsReposit
             }
         }
     }
-
-
 }

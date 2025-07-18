@@ -1,5 +1,6 @@
 package com.example.frontendbook.data.repository
 
+import android.util.Log
 import com.example.frontendbook.data.api.service.ListsApiService
 import com.example.frontendbook.data.model.AddBookToListRequest
 import com.example.frontendbook.data.model.CreateListRequest
@@ -49,6 +50,7 @@ class ListsRepository(
 
 
     suspend fun getAllLists(): List<ListDto> {
+        Log.d("LISTS_REPO", "API'den dönen: ${api.getAllLists()}")
 
         return api.getAllLists()
     }

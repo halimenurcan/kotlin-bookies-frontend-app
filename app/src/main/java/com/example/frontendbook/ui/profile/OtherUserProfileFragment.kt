@@ -130,13 +130,9 @@ class OtherUserProfileFragment : Fragment() {
         // Diğer kullanıcının listeleri (örnek, arg_title kullanıyorsan navigation'da kontrol et)
         binding.btnOtherLists.setOnClickListener {
             findNavController().navigate(
-                R.id.listsFragment,
+                R.id.otherListsFragment, // <-- Buraya dikkat!
                 Bundle().apply {
-                    putString("arg_title", "List")             // <-- string
-                    putString("arg_type", "list")              // <-- string
-                    putLong("arg_list_id", 0L)                 // <-- long
-                    putLong("arg_user_id", targetUserId)       // <-- long (diğer user'ın id'si)
-                    putLong("profileUserId", targetUserId)     // <-- long
+                    putLong("arg_user_id", targetUserId) // Diğer kullanıcının ID'si
                 }
             )
         }
