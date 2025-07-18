@@ -238,12 +238,12 @@ class BookInfoMoreDialog : DialogFragment() {
     private suspend fun checkIfBookIsRead(userId: Long, bookId: Long?): Boolean {
         if (userId == -1L || bookId == null) return false
         val readList = readRepository.getReadBooks(userId)
-        return readList.any { it.bookId.toString() == bookId.toString() }
+        return readList.any { it.bookId != null && it.bookId.toString() == bookId.toString() }
     }
 
     private suspend fun checkIfBookIsInToReadList(userId: Long, bookId: Long?): Boolean {
         if (userId == -1L || bookId == null) return false
         val toReadList = readRepository.getToReadList(userId)
-        return toReadList.any { it.bookId.toString() == bookId.toString() }
+        return toReadList.any { it.bookId != null && it.bookId.toString() == bookId.toString() }
     }
 }
