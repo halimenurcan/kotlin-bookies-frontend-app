@@ -20,11 +20,18 @@ import kotlinx.coroutines.*
 class ReviewsAdapter(
     private val likedRepo: LikedReviewsRepository,
     private val userId: Long,
+    private var likedReviewIds: List<Long> = emptyList(),
     private val onClick: ((Book) -> Unit)? = null,
     private val onLikedChanged: (() -> Unit)? = null
 ) : ListAdapter<ReviewDto, ReviewsAdapter.ViewHolder>(DIFF) {
 
     private val expandedItems = mutableSetOf<Long>()
+
+    // Liked ID listesi fragment tarafından güncellenince:
+    fun updateLikedReviewIds(newIds: List<Long>) {
+        likedReviewIds = newIds
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -32,19 +39,21 @@ class ReviewsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val review = getItem(position)
+        // KENDİ LOCAL beğeni listesine göre görseli anında güncelle
+        val isLiked = likedReviewIds.contains(review.id)
+        holder.bind(review, isLiked)
     }
 
     inner class ViewHolder(private val b: ItemReviewBinding) : RecyclerView.ViewHolder(b.root) {
-
         private var lastReviewId: Long? = null
         private var checkLikeJob: Job? = null
 
         @SuppressLint("SetTextI18n")
-        fun bind(r: ReviewDto) {
+        fun bind(r: ReviewDto, isLiked: Boolean) {
             lastReviewId = r.id
 
-            // Kitap kapağı
+            // --- Kitap kapağı ---
             Glide.with(b.reviewBookCover.context)
                 .load(r.bookCoverUrl)
                 .placeholder(R.drawable.placeholder)
@@ -56,9 +65,7 @@ class ReviewsAdapter(
                         try {
                             val repo = BookRepository(b.root.context)
                             val book = repo.fetchBookById(id)
-                            withContext(Dispatchers.Main) {
-                                onClick?.invoke(book)
-                            }
+                            withContext(Dispatchers.Main) { onClick?.invoke(book) }
                         } catch (e: Exception) {
                             Log.e("ImageClick", "Book fetch failed: ${e.message}")
                         }
@@ -66,9 +73,8 @@ class ReviewsAdapter(
                 }
             }
 
-            b.reviewRatingBar.rating = r.score?.toFloat() ?: 0f
+            // --- Review içeriği & Expand/Kısalt ---
             b.reviewContent.text = r.comment
-
             if (expandedItems.contains(r.id)) {
                 b.reviewContent.maxLines = Int.MAX_VALUE
                 b.reviewContent.ellipsize = null
@@ -84,6 +90,7 @@ class ReviewsAdapter(
                 notifyItemChanged(absoluteAdapterPosition)
             }
 
+            // --- Kitap adı async çekiliyor ---
             b.reviewBookTitle.text = "Yükleniyor..."
             CoroutineScope(Dispatchers.IO).launch {
                 try {
@@ -98,43 +105,35 @@ class ReviewsAdapter(
                     }
                 }
             }
+
             b.reviewAuthor.text = "– ${r.userName}"
             b.reviewTimestamp.text = r.createdAt
+            b.reviewRatingBar.rating = r.score?.toFloat() ?: 0f
 
-            // --- BEĞENİ DURUMUNU GERÇEK ZAMANLI KONTROL ET ---
-            checkLikeJob?.cancel()
-            b.likeButton.setImageResource(R.drawable.like) // defaultta boş
+            // --- BEĞENİ BUTONU STATE'i fragment'tan gelen veriye göre belirle ---
+            b.likeButton.setImageResource(if (isLiked) R.drawable.like_filled else R.drawable.like)
+            r.isLiked = isLiked // local UI state için
 
-            // Like durumunu API'dan çek!
-            checkLikeJob = CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val isLikedApi = likedRepo.isLiked(userId, r.id)
-                    withContext(Dispatchers.Main) {
-                        // Hala aynı review gösteriliyorsa setle
-                        if (lastReviewId == r.id) {
-                            r.isLiked = isLikedApi
-                            b.likeButton.setImageResource(
-                                if (isLikedApi) R.drawable.like_filled else R.drawable.like
-                            )
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("REVIEWS_ADAPTER", "Beğeni durumu kontrolü hatası: ${e.message}")
-                }
-            }
-
+            // --- Like İşlemi ---
             b.likeButton.setOnClickListener {
                 val isNowLiked = !r.isLiked
                 r.isLiked = isNowLiked
+
+                // UI anında güncellenir!
                 b.likeButton.setImageResource(
                     if (isNowLiked) R.drawable.like_filled else R.drawable.like
                 )
 
+                // API çağrısı yapılır (asenkron)
                 CoroutineScope(Dispatchers.IO).launch {
-                    val result = if (isNowLiked) likedRepo.like(userId, r.id)
-                    else likedRepo.unlike(userId, r.id)
+                    val result = if (isNowLiked)
+                        likedRepo.like(userId, r.id)
+                    else
+                        likedRepo.unlike(userId, r.id)
+
                     withContext(Dispatchers.Main) {
                         if (!result) {
+                            // Hata olursa eski haline döndür
                             r.isLiked = !isNowLiked
                             b.likeButton.setImageResource(
                                 if (r.isLiked) R.drawable.like_filled else R.drawable.like
@@ -145,6 +144,7 @@ class ReviewsAdapter(
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
+                            // Başarılıysa yukarıya haber ver, oradan fragment likedReviewIds'i tekrar güncelleyebilir!
                             onLikedChanged?.invoke()
                         }
                     }
