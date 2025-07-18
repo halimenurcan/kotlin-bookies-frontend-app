@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.base.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,15 @@ class OtherListAdapter(
     private val onBookClick: (BookDto) -> Unit
 ) : RecyclerView.Adapter<OtherListAdapter.OtherListViewHolder>() {
 
+    private var followedListIds: Set<Long> = emptySet()
+
+    fun setFollowedListIds(ids: List<Long>) {
+        Log.d("OtherListAdapter", "setFollowedListIds: $followedListIds")
+
+        this.followedListIds = ids.toSet()
+        notifyDataSetChanged()
+    }
+
     inner class OtherListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.listTitle)
         private val followButton: MaterialButton = itemView.findViewById(R.id.followButton)
@@ -26,13 +36,22 @@ class OtherListAdapter(
         fun bind(listItem: ListDto) {
             titleView.text = listItem.title
 
+            // Takip durumu kontrolü
+            val isFollowed = followedListIds.contains(listItem.id)
+            Log.d("OtherListAdapter", "List ${listItem.title}, id=${listItem.id}, isFollowed=$isFollowed")
+
+            followButton.text = if (isFollowed) "Unfollow" else "Follow"
+            followButton.setBackgroundColor(
+                itemView.context.getColor(
+                    if (isFollowed) R.color.buttonSecondary else R.color.stars_rated
+                )
+            )
+
             followButton.setOnClickListener {
                 onFollowClick(listItem)
-                Toast.makeText(itemView.context, "Follow toggled for ${listItem.title}", Toast.LENGTH_SHORT).show()
             }
 
             bookContainer.removeAllViews()
-
             listItem.books.forEach { book ->
                 val bookView = LayoutInflater.from(itemView.context)
                     .inflate(R.layout.item_book_grid, bookContainer, false)
@@ -66,3 +85,4 @@ class OtherListAdapter(
         notifyDataSetChanged()
     }
 }
+

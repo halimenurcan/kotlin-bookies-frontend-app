@@ -21,4 +21,11 @@ class ListFollowsRepository(
         val resp = api.getFollowerCount(listId)
         return if (resp.isSuccessful) resp.body() ?: 0 else 0
     }
+    suspend fun getFollowedListIdsByUser(userId: Long): List<Long> {
+        val resp = api.getFollowedLists(userId)
+        return if (resp.isSuccessful) {
+            resp.body()?.map { it.id } ?: emptyList()
+        } else emptyList()
+    }
+
 }

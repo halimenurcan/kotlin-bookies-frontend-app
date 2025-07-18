@@ -22,6 +22,11 @@ interface ListFollowsApiService {
         @Path("userId") userId: Long,
         @Path("listId") listId: Long
     ): Response<ListFollowResponse>
+    @GET("list-follows/user/{userId}")
+    suspend fun getFollowedLists(
+        @Path("userId") userId: Long
+    ): Response<List<ListFollowResponse>>
+
 
     @GET("list-follows/user/{userId}/list/{listId}/is-following")
     suspend fun isFollowing(
