@@ -1,8 +1,7 @@
 package com.example.frontendbook.data.model
 
 data class ReadEntry(
-    val id: Long,
-    val bookId: String,
+    val bookId: Long,
     val bookTitle: String,
     val bookAuthor: String?,
     val bookIsbn: String?,
