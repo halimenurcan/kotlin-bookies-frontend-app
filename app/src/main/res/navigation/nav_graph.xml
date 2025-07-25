@@ -6,7 +6,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homePageFragment">
 
-    <!-- Ana Sayfa -->
+    <!-- HomePage -->
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.frontendbook.ui.homePage.HomePageFragment"
@@ -26,7 +26,7 @@
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-    <!-- Arama -->
+    <!-- Search -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.frontendbook.ui.search.SearchFragment"
@@ -47,7 +47,7 @@
 
     </fragment>
 
-    <!-- Kitap Detay Sayfası -->
+    <!-- BookInfoPage -->
     <fragment
         android:id="@+id/bookInfoPageFragment"
         android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
@@ -60,7 +60,7 @@
             app:destination="@id/reviewsFragment" />
     </fragment>
 
-    <!-- Yorumlar Listesi -->
+    <!-- List that contains Reviews -->
     <fragment
         android:id="@+id/reviewsFragment"
         android:name="com.example.frontendbook.ui.homePage.ReviewsFragment"
@@ -74,7 +74,7 @@
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-    <!-- Kendi Profil -->
+    <!-- Own Profile -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.frontendbook.ui.profile.ProfileFragment"
@@ -85,14 +85,14 @@
             app:destination="@id/listsFragment" />
     </fragment>
 
-    <!-- Bildirimler -->
+    <!-- Notifications -->
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
 
-    <!-- Üç Kolon Düzeni -->
+    <!-- Three Column Fragment -->
     <fragment
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment"
@@ -118,7 +118,7 @@
     </fragment>
 
 
-    <!-- Kitap Ekle BottomSheet -->
+    <!--AddBookBottomSheet -->
     <dialog
         android:id="@+id/addBookBottomSheet"
         android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
@@ -149,7 +149,8 @@
             app:destination="@id/threeColumnFragment"/>
 
     </fragment>
-    <!-- Kullanıcı Listesi -->
+
+    <!-- List that contains Users -->
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.example.frontendbook.ui.base.inlinestyle.UserListFragment"
@@ -159,7 +160,7 @@
         <argument android:name="profileUserId" app:argType="long" />
     </fragment>
 
-    <!-- Diğer Kullanıcı Profili -->
+    <!-- Others Profiles -->
     <fragment
         android:id="@+id/otherUserProfileFragment"
         android:name="com.example.frontendbook.ui.profile.OtherUserProfileFragment"
@@ -173,7 +174,7 @@
             app:destination="@id/listsFragment" />
     </fragment>
 
-    <!-- Listeler -->
+    <!-- Lists -->
     <fragment
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
@@ -210,6 +211,10 @@
                 app:argType="string"
                 app:nullable="true" />
         </action>
+        <action
+            android:id="@+id/action_listsFragment_to_bookInfoPageFragment"
+            app:destination="@id/bookInfoPageFragment" />
+
     </fragment>
 
     <!-- Liste Detayı -->

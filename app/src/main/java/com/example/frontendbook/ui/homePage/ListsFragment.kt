@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ListDto
+import com.example.frontendbook.data.api.dto.toDomain
 import com.example.frontendbook.databinding.FragmentListsBinding
+import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.base.adapter.ListAdapter
 import com.example.frontendbook.ui.base.adapter.OtherListAdapter
 import com.google.android.material.textfield.TextInputEditText
@@ -161,6 +163,10 @@ class ListsFragment : Fragment() {
                 .load(book.coverImageUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(bookImage)
+            bookView.setOnClickListener {
+                val action = ListsFragmentDirections.actionListsFragmentToBookInfoPageFragment(book.toDomain())
+                findNavController().navigate(action)
+            }
             container.addView(bookView, container.childCount - 1)
         }
         val seeMoreCard = container.findViewById<View>(R.id.seeMoreCard)
