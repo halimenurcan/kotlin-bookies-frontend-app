@@ -5,20 +5,25 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.SimpleReadRequest
+import com.example.frontendbook.data.model.ReviewCreateRequest
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.ReadRepository
 import com.example.frontendbook.data.repository.LikedBooksRepository
 import com.example.frontendbook.domain.model.Book
+import com.example.frontendbook.ui.homePage.ReviewsViewModel
+import com.example.frontendbook.ui.homePage.ReviewsViewModelFactory   // ← factory import!
 import com.example.frontendbook.ui.likedbooks.LikedBooksViewModel
 import kotlinx.coroutines.launch
 
 class BookInfoMoreDialog : DialogFragment() {
     private lateinit var likedBooksViewModel: LikedBooksViewModel
     private lateinit var readRepository: ReadRepository
+    private lateinit var reviewsViewModel: ReviewsViewModel
 
     companion object {
         private const val PREFS_NAME = "auth_prefs"
@@ -47,6 +52,12 @@ class BookInfoMoreDialog : DialogFragment() {
         val prefs   = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val userId  = prefs.getLong(KEY_USER_ID, -1L)
 
+        // DÜZELTME: ViewModel'i Factory ile oluştur!
+        reviewsViewModel = ViewModelProvider(
+            requireActivity(),
+            ReviewsViewModelFactory(requireContext())
+        )[ReviewsViewModel::class.java]
+
         readRepository = ReadRepository(RetrofitClient.readApiService(requireContext()))
 
         // LikedBooks için ViewModel ve repo:
@@ -54,7 +65,7 @@ class BookInfoMoreDialog : DialogFragment() {
         likedBooksViewModel = ViewModelProvider(
             this,
             object : ViewModelProvider.Factory {
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     @Suppress("UNCHECKED_CAST")
                     return LikedBooksViewModel(likedRepo) as T
                 }
@@ -72,15 +83,11 @@ class BookInfoMoreDialog : DialogFragment() {
         updateReadIcon(readBtn)
         updateReadlistIcon(readlistBtn)
         lifecycleScope.launch {
-            // READ (Okundu) durumu kontrol
             isRead = checkIfBookIsRead(userId, book?.id)
             updateReadIcon(readBtn)
-
-            // TO READ (Okunacak) durumu kontrol
             isToRead = checkIfBookIsInToReadList(userId, book?.id)
             updateReadlistIcon(readlistBtn)
         }
-        // --- Like durumu kontrolü ---
         if (userId != -1L && book != null) {
             likedBooksViewModel.checkLiked(userId, book.id)
         }
@@ -92,15 +99,12 @@ class BookInfoMoreDialog : DialogFragment() {
             error?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() }
         }
 
-        // --- OKUNDU TIKLAMA ---
         readBtn.setOnClickListener {
             isRead = !isRead
             if (isRead) {
                 if (isToRead) {
-                    // Okunacak'tan çıkar, Okundu'ya ekle
                     isToRead = false
                     lifecycleScope.launch {
-
                         removeFromToRead(book, userId)
                         addToRead(book, userId)
                     }
@@ -109,9 +113,7 @@ class BookInfoMoreDialog : DialogFragment() {
                     lifecycleScope.launch { addToRead(book, userId) }
                 }
             } else {
-                // Okundu'dan çıkar
                 lifecycleScope.launch { removeFromRead(book, userId) }
-                // Beğeni de pasif olmalı
                 if (isLiked && userId != -1L && book != null) {
                     likedBooksViewModel.toggleLike(userId, book.id)
                     isLiked = false
@@ -121,7 +123,6 @@ class BookInfoMoreDialog : DialogFragment() {
             updateReadIcon(readBtn)
         }
 
-        // --- OKUNACAKLAR TIKLAMA ---
         readlistBtn.setOnClickListener {
             isToRead = !isToRead
             if (isToRead) {
@@ -148,12 +149,10 @@ class BookInfoMoreDialog : DialogFragment() {
 
         likeBtn.setOnClickListener {
             if (isLiked) {
-                // Beğeniyi kaldırmak için Okundu kontrolüne gerek yok!
                 if (userId != -1L && book != null) {
                     likedBooksViewModel.toggleLike(userId, book.id)
                 }
             } else {
-                // Yeni beğeni ekleyeceksek, Okundu olmalı!
                 if (!isRead) {
                     Toast.makeText(context, "Önce ‘Okundu’ işaretleyin.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
@@ -164,7 +163,6 @@ class BookInfoMoreDialog : DialogFragment() {
             }
         }
 
-        // --- KAYDET BUTONU ---
         saveBtn.setOnClickListener {
             if (book == null) {
                 Toast.makeText(requireContext(), "Kitap bilgisi bulunamadı", Toast.LENGTH_SHORT).show()
@@ -175,16 +173,22 @@ class BookInfoMoreDialog : DialogFragment() {
                 dismiss()
                 return@setOnClickListener
             }
-
             val comment = commentInput.text.toString().trim()
             val rating  = ratingBar.rating.toInt()
 
             lifecycleScope.launch {
-
-
                 try {
                     if ((comment.isNotEmpty() || rating > 0 || isLiked) && isRead) {
-                        // Burada backend’e review kaydedebilirsin.
+                        val request = ReviewCreateRequest(
+                            userId = userId,
+                            bookId = book.id,
+                            comment = comment,
+                            score = rating,
+                            read = isRead,
+                            toRead = isRead,
+                            liked = isLiked
+                        )
+                        reviewsViewModel.createComment(request)
                         Toast.makeText(requireContext(), "Yorum kaydedildi!", Toast.LENGTH_SHORT).show()
                         dismiss()
                         return@launch
@@ -196,11 +200,9 @@ class BookInfoMoreDialog : DialogFragment() {
                 }
             }
         }
-
         cancelBtn.setOnClickListener { dismiss() }
     }
 
-    // --- REPOSITORY YARDIMCI METOTLARI ---
     private suspend fun addToRead(book: Book?, userId: Long) {
         if (book == null) return
         readRepository.addToReadBooks(userId, book.id)
@@ -225,7 +227,6 @@ class BookInfoMoreDialog : DialogFragment() {
         Toast.makeText(requireContext(), "Okuyacaklardan çıkarıldı!", Toast.LENGTH_SHORT).show()
     }
 
-    // --- İKON GÜNCELLEMELERİ ---
     private fun updateReadIcon(btn: ImageView) {
         btn.setImageResource(if (isRead) R.drawable.read_filled else R.drawable.read_empty)
     }
@@ -240,7 +241,6 @@ class BookInfoMoreDialog : DialogFragment() {
         val readList = readRepository.getReadBooks(userId)
         return readList.any { it.bookId != null && it.bookId.toString() == bookId.toString() }
     }
-
     private suspend fun checkIfBookIsInToReadList(userId: Long, bookId: Long?): Boolean {
         if (userId == -1L || bookId == null) return false
         val toReadList = readRepository.getToReadList(userId)
