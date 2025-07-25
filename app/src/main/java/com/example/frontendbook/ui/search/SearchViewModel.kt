@@ -24,12 +24,16 @@ class SearchViewModel(
 
 
     val searchStarted: LiveData<Boolean> = _searchStarted
-    fun searchBooksAndUsers(query: String) {
+    fun searchBooksAndUsers(
+        query: String,
+        genres: List<String>? = null,
+        languages: List<String>? = null
+    ) {
         _searchStarted.value = true
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                _combinedResults.value = repo.searchAll(query)
+                _combinedResults.value = repo.searchAll(query, genres, languages)
                 _error.value = null
             } catch (e: Exception) {
                 _combinedResults.value = emptyList()
@@ -40,7 +44,6 @@ class SearchViewModel(
         }
     }
 
-    // SearchViewModel.kt içine ekle
     fun clearResults() {
         _combinedResults.value = emptyList()
         _searchStarted.value = false

@@ -10,17 +10,22 @@ import kotlinx.coroutines.coroutineScope
 class SearchRepository(
     private val api: SearchApiService
 ) {
-    suspend fun searchAll(keyword: String): List<CombinedSearchResult> = coroutineScope {
+    suspend fun searchAll(
+        keyword: String,
+        genres: List<String>? = null,
+        languages: List<String>? = null
+    ): List<CombinedSearchResult> = coroutineScope {
         val usersDeferred = async {
             api.searchUsers(keyword)
                 .body()?.embedded?.users.orEmpty()
                 .map { CombinedSearchResult.UserResult(it.toDomain()) }
         }
         val booksDeferred = async {
-            api.searchBooks(keyword)
+            api.searchBooks(keyword, genres, languages)
                 .body()?.embedded?.books.orEmpty()
                 .map { CombinedSearchResult.BookResult(it.toDomain()) }
         }
         usersDeferred.await() + booksDeferred.await()
     }
+
 }
