@@ -173,33 +173,34 @@ class BookInfoMoreDialog : DialogFragment() {
                 dismiss()
                 return@setOnClickListener
             }
+
             val comment = commentInput.text.toString().trim()
             val rating  = ratingBar.rating.toInt()
 
             lifecycleScope.launch {
                 try {
-                    if ((comment.isNotEmpty() || rating > 0 || isLiked) && isRead) {
+                    if ((comment.isNotBlank() || rating > 0)) {
                         val request = ReviewCreateRequest(
                             userId = userId,
                             bookId = book.id,
                             comment = comment,
                             score = rating,
                             read = isRead,
-                            toRead = isRead,
+                            toRead = isToRead,
                             liked = isLiked
                         )
                         reviewsViewModel.createComment(request)
                         Toast.makeText(requireContext(), "Yorum kaydedildi!", Toast.LENGTH_SHORT).show()
-                        dismiss()
-                        return@launch
+                    } else {
+                        Toast.makeText(requireContext(), "Kaydedildi!", Toast.LENGTH_SHORT).show()
                     }
-                    Toast.makeText(requireContext(), "Kaydedildi!", Toast.LENGTH_SHORT).show()
                     dismiss()
                 } catch (e: Exception) {
                     Toast.makeText(requireContext(), "Kaydedilemedi: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
+
         cancelBtn.setOnClickListener { dismiss() }
     }
 
