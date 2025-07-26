@@ -1,5 +1,4 @@
 package com.example.frontendbook.data.api.dto
-
 data class AvatarResponse(
     val id: Long,
     val createdAt: String,
