@@ -10,7 +10,7 @@ interface ReadApiService {
     @GET("books/{id}")
     suspend fun getBookById(@Path("id") bookId: Long): BookDto
     @GET("books-status/read-list/{userId}")
-    suspend fun getReadListByUserId(@Path("userId") userId: Long): List<SimpleReadRequest>
+    suspend fun getReadListByUserId(@Path("userId") userId: Long): List<BookDto>
 
     @POST("books-status/read-list")
     suspend fun addToReadList(@Body request: SimpleReadRequest): Response<Unit>
@@ -26,9 +26,8 @@ interface ReadApiService {
     suspend fun isBookReadList(@Path("userId") userId: Long, @Path("bookId") bookId: Long): Boolean
 
 
-    // Okunanlar (Read)
     @GET("books-status/read/{userId}")
-    suspend fun getReadByUserId(@Path("userId") userId: Long): List<ReadEntry>
+    suspend fun getReadByUserId(@Path("userId") userId: Long): List<BookDto>
 
     @POST("books-status/read")
     suspend fun addToRead(@Body request: SimpleReadRequest): Response<Unit>
