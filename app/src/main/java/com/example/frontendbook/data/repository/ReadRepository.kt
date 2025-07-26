@@ -1,5 +1,6 @@
 package com.example.frontendbook.data.repository
 
+import android.util.Log
 import com.example.frontendbook.data.api.dto.SimpleReadRequest
 import com.example.frontendbook.data.api.service.ReadApiService
 import com.example.frontendbook.data.model.ReadEntry
@@ -16,25 +17,31 @@ class ReadRepository(private val api: ReadApiService) {
         val readBooks = getToReadList(userId)
         return readBooks.any { it.bookId.toString() == bookId.toString() }
     }
-    // --- Okunacak kitaplar (to-read list) için ---
     suspend fun getToReadList(userId: Long): List<ReadEntry> = withContext(Dispatchers.IO) {
-        api.getReadListByUserId(userId).map {
-            ReadEntry(
-                id = 0L,
-                userId = it.userId,
-                bookId = it.bookId.toString(),
-                bookTitle = "",
-                bookAuthor = "",
-                bookIsbn = "",
-                bookDescription = "",
-                bookPageCount = null,
-                bookPublisher = "",
-                bookPublishedYear = null,
-                bookCoverUrl = "",
+        val entries = api.getReadListByUserId(userId)
 
-            )
+        entries.mapNotNull { entry ->
+            try {
+                val book = api.getBookById(entry.bookId)  // ✅ Artık çalışır
+
+                ReadEntry(
+                    userId = entry.userId,
+                    bookId = book.id,
+                    bookTitle = book.title,
+                    bookAuthor = book.author.name,
+                    bookIsbn = book.isbn,
+                    bookDescription = book.description,
+                    bookPageCount = book.pageCount,
+                    bookPublisher = book.publisher,
+                    bookPublishedYear = book.publishedYear,
+                    bookCoverUrl = book.coverImageUrl.toString()
+                )
+            } catch (e: Exception) {
+                null
+            }
         }
     }
+
 
     suspend fun addToReadList(userId: Long, bookId: Long): Boolean = withContext(Dispatchers.IO) {
         val req = SimpleReadRequest(userId, bookId)
@@ -47,8 +54,43 @@ class ReadRepository(private val api: ReadApiService) {
 
     // --- Okunmuş kitaplar (read) için ---
     suspend fun getReadBooks(userId: Long): List<ReadEntry> = withContext(Dispatchers.IO) {
-        api.getReadByUserId(userId)
+        val entries = api.getReadByUserId(userId)
+
+        Log.d("READ_DEBUG", "📥 getReadByUserId response (${entries.size} adet):")
+        entries.forEachIndexed { index, entry ->
+            Log.d("READ_DEBUG", "🔹 [$index] Entry: userId=${entry.userId}, bookId=${entry.bookId}")
+        }
+
+        entries.mapNotNull { entry ->
+            val bookId = entry.bookId
+            if (bookId == null) {
+                Log.e("READ_DEBUG", "❌ Hatalı entry, bookId null veya geçersiz: $entry")
+                return@mapNotNull null
+            }
+
+            try {
+                val book = api.getBookById(bookId)
+                Log.d("READ_DEBUG", "✅ Kitap çekildi: ${book.title} (${book.id})")
+
+                ReadEntry(
+                    userId = entry.userId,
+                    bookId = book.id,
+                    bookTitle = book.title,
+                    bookAuthor = book.author.name,
+                    bookIsbn = book.isbn,
+                    bookDescription = book.description,
+                    bookPageCount = book.pageCount,
+                    bookPublisher = book.publisher,
+                    bookPublishedYear = book.publishedYear,
+                    bookCoverUrl = book.coverImageUrl.toString()
+                )
+            } catch (e: Exception) {
+                Log.e("READ_DEBUG", "❌ Kitap API hatası: ${e.message} (bookId=$bookId)")
+                null
+            }
+        }
     }
+
 
     suspend fun addToReadBooks(userId: Long, bookId: Long): Boolean = withContext(Dispatchers.IO) {
         val req = SimpleReadRequest(userId, bookId)

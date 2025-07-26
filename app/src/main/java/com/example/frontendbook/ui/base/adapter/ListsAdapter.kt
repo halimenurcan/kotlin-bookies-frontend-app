@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.base.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,8 @@ class ListAdapter(
 
         fun bind(listItem: ListDto) {
             titleView.text = listItem.title
-            itemView.setOnClickListener { onClick(listItem) }
+
+            itemView.setOnClickListener(null)
             addCardView.setOnClickListener {
                 AddBookToListBottomSheet.newInstance(listItem.id)
                     .show((itemView.context as FragmentActivity).supportFragmentManager, "AddBookToList")

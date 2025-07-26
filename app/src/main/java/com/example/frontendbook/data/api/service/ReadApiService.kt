@@ -1,11 +1,14 @@
 package com.example.frontendbook.data.api.service
 
+import com.example.frontendbook.data.api.dto.BookDto
 import com.example.frontendbook.data.api.dto.SimpleReadRequest
 import com.example.frontendbook.data.model.ReadEntry
 import retrofit2.Response
 import retrofit2.http.*
 
 interface ReadApiService {
+    @GET("books/{id}")
+    suspend fun getBookById(@Path("id") bookId: Long): BookDto
     @GET("books-status/read-list/{userId}")
     suspend fun getReadListByUserId(@Path("userId") userId: Long): List<SimpleReadRequest>
 

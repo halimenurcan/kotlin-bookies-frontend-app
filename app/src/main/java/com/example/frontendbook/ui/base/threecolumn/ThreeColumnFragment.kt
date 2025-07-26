@@ -126,8 +126,9 @@ class ThreeColumnFragment : Fragment() {
                     readViewModel = ViewModelProvider(this, readFactory)[ReadViewModel::class.java]
                     readViewModel.readBooks.observe(viewLifecycleOwner) { entries ->
                         val books = entries.map { entry ->
+                            Log.d("THREE_COLUMN", "⛳ Entry: $entry")
                             Book(
-                                id = entry.id,
+                                id = entry.bookId.toLong(),
                                 author = entry.bookAuthor ?: "Unknown",
                                 title = entry.bookTitle ?: "Untitled",
                                 isbn = entry.bookIsbn ?: "",
@@ -152,7 +153,7 @@ class ThreeColumnFragment : Fragment() {
                     readViewModel.toReadList.observe(viewLifecycleOwner) { entries ->
                         val books = entries.map { entry ->
                             Book(
-                                id = entry.id,
+                                id = entry.bookId.toLong(),
                                 author = entry.bookAuthor ?: "Unknown",
                                 title = entry.bookTitle ?: "Untitled",
                                 isbn = entry.bookIsbn ?: "",

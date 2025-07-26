@@ -30,17 +30,17 @@ class ReadViewModel(
         }
     }
 
-    // Okunmuş kitaplar listesini getir
     fun loadReadBooks(userId: Long) {
         viewModelScope.launch {
             try {
-                _readBooks.value = repository.getReadBooks(userId)
-                _error.value = null
+                val result = repository.getReadBooks(userId)
+                _readBooks.value = result
             } catch (e: Exception) {
-                _error.value = "Okunanlar yüklenemedi: ${e.message}"
+                _error.value = e.message
             }
         }
     }
+
 
     // Okunacaklara ekle
     fun addToReadList(userId: Long, bookId: Long) {

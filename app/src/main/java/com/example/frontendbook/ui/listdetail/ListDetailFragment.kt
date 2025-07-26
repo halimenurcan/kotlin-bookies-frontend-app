@@ -30,7 +30,7 @@ class ListDetailFragment : Fragment() {
     private lateinit var adapter: BookAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_list_detail, container, false)
+        return inflater.inflate(R.layout.fragment_lists, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
