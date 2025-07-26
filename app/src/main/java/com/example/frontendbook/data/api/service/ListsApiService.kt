@@ -12,7 +12,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ListsApiService {
-    /** Kullanıcının oluşturduğu tüm listeleri getirir */
+
     @GET("lists/user/{userId}")
     suspend fun getUserLists(
         @Path("userId") userId: Long

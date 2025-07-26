@@ -20,7 +20,7 @@ interface UserApiService {
     suspend fun getAvatarByUserId(
         @Path("userId") userId: Long
     ): Response<AvatarResponse>
-    // Dönüş tipi backend’e göre değişebilir, örnek için AvatarResponse kullandım.
+
 
     @PUT("avatar/{userId}")
     suspend fun updateAvatar(
@@ -59,25 +59,25 @@ interface UserApiService {
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
-    /** Takip ettiklerim listesi */
+
     @GET("followers/following/{userId}")
     suspend fun getFollowing(
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
-    /** Bir kullanıcıyı takip et */
+
     @POST("users/{targetId}/follow")
     suspend fun followUser(
         @Path("targetId") targetUserId: Long
     ): Response<Unit>
 
-    /** Bir kullanıcıyı takipten bırak */
+
     @DELETE("users/{targetId}/follow")
     suspend fun unfollowUser(
         @Path("targetId") targetUserId: Long
     ): Response<Unit>
 
-    /** İki kullanıcı arasındaki takip durumunu kontrol et */
+
     @GET("users/{currentId}/following/{targetId}")
     suspend fun isFollowing(
         @Path("currentId") currentUserId: Long,

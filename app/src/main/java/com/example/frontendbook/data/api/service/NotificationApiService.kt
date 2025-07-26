@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 interface NotificationApiService {
 
-    /** Tüm bildirimleri al */
+
     @GET("notifications")
     suspend fun getNotifications(): Response<NotificationResponse>
 

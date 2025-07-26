@@ -25,7 +25,6 @@ interface FollowersApiService {
     @GET("followers/followed/{userId}")
     suspend fun getFollowingOfUser(@Path("userId") userId: Long): Response<FollowersResponse>
 
-    // --- Bunları ekle ---
     @GET("followers/{userId}/count")
     suspend fun getFollowerCount(@Path("userId") userId: Long): Int
 
