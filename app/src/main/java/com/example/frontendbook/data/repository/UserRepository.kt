@@ -86,10 +86,15 @@ class UserRepository(private val api: UserApiService) {
         return count
     }
 
-    suspend fun sendBookInteraction(userId: Long, request1: Long, request: BookInteractionRequest): Boolean {
-        Log.d(TAG, "sendBookInteraction() -> ${request}")
-        val success = api.sendBookInteraction(request.userId, request).isSuccessful
-        Log.d(TAG, "sendBookInteraction() -> success=$success")
-        return success
+    suspend fun sendBookInteraction(userId: Long, request: BookInteractionRequest): Boolean {
+        return try {
+            val response = api.sendBookInteraction(userId, request)
+            Log.d(TAG, "sendBookInteraction() -> HTTP ${response.code()}")
+            response.isSuccessful
+        } catch (e: Exception) {
+            Log.e(TAG, "sendBookInteraction() -> hata: ${e.message}", e)
+            false
+        }
     }
+
 }

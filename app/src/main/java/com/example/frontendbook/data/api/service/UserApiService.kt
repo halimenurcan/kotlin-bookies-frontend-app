@@ -16,23 +16,27 @@ import retrofit2.http.Query
 
 interface UserApiService {
 
-    @GET("avatar/{userId}")
+    @GET("user-avatars/{userId}")
     suspend fun getAvatarByUserId(
         @Path("userId") userId: Long
     ): Response<AvatarResponse>
-    // Dönüş tipi backend’e göre değişebilir, örnek için AvatarResponse kullandım.
 
-    @PUT("avatar/{userId}")
+    @PUT("user-avatars/{userId}")
     suspend fun updateAvatar(
         @Path("userId") userId: Long,
         @Body avatarRequest: AvatarRequest
     ): Response<Unit>
 
-
     @POST("users/{userId}/books/interact")
     suspend fun sendBookInteraction(
         @Path("userId") userId: Long,
         @Body interaction: BookInteractionRequest
+    ): Response<Unit>
+
+
+    @POST("user-avatars")
+    suspend fun createUserAvatar(
+        @Body avatarRequest: AvatarRequest
     ): Response<Unit>
 
     @GET("users/search")
