@@ -11,9 +11,10 @@ class LikedReviewsRepository(
         return resp.isSuccessful && resp.body() == true
     }
     suspend fun getLikedReviewIds(userId: Long): List<Long> {
-        // API çağrısı ile kullanıcının beğendiği review ID'leri alınır
-        return api.getLikedReviews(userId).map { it.id }
-    }    suspend fun getLikeCount(reviewId: Long): Int {
+        val response = api.getLikedReviews(userId)
+        return response.embedded.comments.map { it.id }
+
+    }  suspend fun getLikeCount(reviewId: Long): Int {
         val resp = api.getReviewLikeCount(reviewId)
         return if (resp.isSuccessful) resp.body() ?: 0 else 0
     }

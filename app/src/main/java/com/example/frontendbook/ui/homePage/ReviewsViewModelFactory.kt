@@ -17,7 +17,7 @@ class ReviewsViewModelFactory(
         if (modelClass.isAssignableFrom(ReviewsViewModel::class.java)) {
             val apiService = RetrofitClient.reviewsApiService(context)
             val repository = ReviewsRepository(apiService)
-            return ReviewsViewModel(repository) as T
+            return ReviewsViewModel(repository, context) as T  // ❗ context parametresi eklendi
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
