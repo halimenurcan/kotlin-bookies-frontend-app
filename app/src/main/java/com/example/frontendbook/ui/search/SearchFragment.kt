@@ -1,14 +1,10 @@
 package com.example.frontendbook.ui.search
+
 import android.app.AlertDialog
-import com.example.frontendbook.ui.search.SearchViewModel
 import android.content.Context
-import android.os.Bundle
-import android.util.Log
 import android.content.res.ColorStateList
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Bundle
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.CheckedTextView
@@ -18,48 +14,39 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frontendbook.R
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.databinding.FragmentSearchBinding
 import com.example.frontendbook.ui.base.adapter.CombinedSearchAdapter
-
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.example.frontendbook.R
-
-
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    // artık direkt Long, default -1L
     private val currentUserId: Long by lazy {
-        requireContext()
-            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             .getLong("user_id", -1L)
     }
 
     private val factory by lazy {
-        SearchViewModelFactory(
-            RetrofitClient.searchApiService(requireContext())
-        )
+        SearchViewModelFactory(RetrofitClient.searchApiService(requireContext()))
     }
+
     private val viewModel: SearchViewModel by viewModels { factory }
     private lateinit var adapter: CombinedSearchAdapter
 
-    private val genreOptions = listOf("Fantasy", "Mystery", "Science Fiction")
-    private val languageOptions = listOf("English", "Turkish", "German")
+    private val genreOptions = mutableListOf<String>()
+    private val languageOptions = mutableListOf<String>()
     private val selectedGenres = mutableSetOf<String>()
     private val selectedLanguages = mutableSetOf<String>()
 
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
@@ -69,10 +56,10 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
         observeViewModel()
+        viewModel.loadFilterOptions()
     }
 
     private fun setupViews() {
-
         adapter = CombinedSearchAdapter(
             onBookClick = { book ->
                 val action = SearchFragmentDirections
@@ -80,18 +67,13 @@ class SearchFragment : Fragment() {
                 findNavController().navigate(action)
             },
             onUserClick = { user ->
-                val clickedUserId = user.id ?: -1L
-
-                if (clickedUserId == currentUserId) {
-                    val action = SearchFragmentDirections
-                        .actionSearchFragmentToProfileFragment()
-                    findNavController().navigate(action)
-                } else {
-                    val action = SearchFragmentDirections
-                        .actionSearchFragmentToOtherUserProfileFragment(clickedUserId)
-                    findNavController().navigate(action)
-                }
-            })
+                val action = if ((user.id ?: -1L) == currentUserId)
+                    SearchFragmentDirections.actionSearchFragmentToProfileFragment()
+                else
+                    SearchFragmentDirections.actionSearchFragmentToOtherUserProfileFragment(user.id ?: -1L)
+                findNavController().navigate(action)
+            }
+        )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
@@ -103,12 +85,15 @@ class SearchFragment : Fragment() {
             if (isSearch) {
                 val query = binding.searchInput.text.toString().trim()
                 if (query.isNotEmpty()) {
-                    viewModel.searchBooksAndUsers(query)
+                    viewModel.searchBooksAndUsers(
+                        query,
+                        genres = selectedGenres.toList(),
+                        languages = selectedLanguages.toList()
+                    )
                     binding.browseContainer.visibility = View.GONE
                     binding.backButton.visibility = View.VISIBLE
                     binding.recyclerView.visibility = View.VISIBLE
-                    (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE)
-                            as InputMethodManager)
+                    (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                         .hideSoftInputFromWindow(binding.searchInput.windowToken, 0)
                 }
                 true
@@ -121,51 +106,35 @@ class SearchFragment : Fragment() {
             binding.backButton.visibility = View.GONE
             binding.searchInput.text.clear()
         }
+
         binding.mostPopularButton.setOnClickListener {
             val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
-                title = "Most Popular",
-                type = "popular",
-                listId = 0,
-                userId = 0
-
+                title = "Most Popular", type = "popular", listId = 0, userId = 0
             )
             findNavController().navigate(action)
         }
 
         binding.highlyRatedButton.setOnClickListener {
             val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
-                title = "Highly Rated",
-                type = "rated",
-                listId = 0,
-                userId = 0,
+                title = "Highly Rated", type = "rated", listId = 0, userId = 0
             )
             findNavController().navigate(action)
         }
 
         binding.genreButton.setOnClickListener {
-            showMultiSelectDialog(
-                title = "Select Genres",
-                options = genreOptions,
-                selectedSet = selectedGenres
-            )
+            showMultiSelectDialog("Select Genres", genreOptions, selectedGenres)
         }
 
         binding.languageButton.setOnClickListener {
-            showMultiSelectDialog(
-                title = "Select Languages",
-                options = languageOptions,
-                selectedSet = selectedLanguages
-            )
+            showMultiSelectDialog("Select Languages", languageOptions, selectedLanguages)
         }
 
         binding.applyFiltersButton.setOnClickListener {
             Toast.makeText(requireContext(), "Filtreler uygulandı", Toast.LENGTH_SHORT).show()
-            // Örnek: viewModel.filterBooks(selectedGenres, selectedLanguages)
         }
 
-
         val chipStyleBackground = MaterialShapeDrawable(
-            ShapeAppearanceModel().withCornerSize(16f) // yuvarlak köşe
+            ShapeAppearanceModel().withCornerSize(16f)
         ).apply {
             fillColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
             strokeColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.textSecondary))
@@ -180,7 +149,6 @@ class SearchFragment : Fragment() {
             minimumHeight = 0
             setPadding(32, 16, 32, 16)
         }
-
     }
 
     private fun showMultiSelectDialog(
@@ -188,6 +156,11 @@ class SearchFragment : Fragment() {
         options: List<String>,
         selectedSet: MutableSet<String>
     ) {
+        if (options.isEmpty() || options.any { it.isBlank() }) {
+            Toast.makeText(requireContext(), "$title verileri yüklenemedi", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val checkedItems = options.map { it in selectedSet }.toBooleanArray()
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
@@ -208,7 +181,6 @@ class SearchFragment : Fragment() {
                     dialog.dismiss()
                 }
             }
-
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                 ?.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
 
@@ -225,14 +197,13 @@ class SearchFragment : Fragment() {
             val backgroundColor = ContextCompat.getColor(requireContext(), R.color.backgroundPrimary)
             val shape = MaterialShapeDrawable().apply {
                 fillColor = ColorStateList.valueOf(backgroundColor)
-                shapeAppearanceModel = ShapeAppearanceModel().withCornerSize(8f) // 8dp
+                shapeAppearanceModel = ShapeAppearanceModel().withCornerSize(8f)
             }
             dialog.window?.setBackgroundDrawable(shape)
         }
 
         dialog.show()
     }
-
 
     private fun updateFilterChips() {
         binding.chipGroupFilters.removeAllViews()
@@ -252,43 +223,27 @@ class SearchFragment : Fragment() {
             val chip = Chip(requireContext()).apply {
                 text = label
                 isCloseIconVisible = true
-
                 chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.white)
-
                 chipStrokeColor = ContextCompat.getColorStateList(context, R.color.textSecondary)
                 chipStrokeWidth = 1f
-
                 setTextColor(ContextCompat.getColor(context, R.color.black))
-
                 closeIconTint = ContextCompat.getColorStateList(context, R.color.textSecondary)
-
                 setOnCloseIconClickListener { removeFilter(label) }
             }
-
             binding.chipGroupFilters.addView(chip)
         }
     }
 
     private fun removeFilter(label: String) {
         when {
-            label.startsWith("Genre: ") -> {
-                val value = label.removePrefix("Genre: ")
-                selectedGenres.remove(value)
-            }
-            label.startsWith("Language: ") -> {
-                val value = label.removePrefix("Language: ")
-                selectedLanguages.remove(value)
-            }
+            label.startsWith("Genre: ") -> selectedGenres.remove(label.removePrefix("Genre: "))
+            label.startsWith("Language: ") -> selectedLanguages.remove(label.removePrefix("Language: "))
         }
         updateFilterChips()
     }
 
-
-
     private fun observeViewModel() {
         viewModel.combinedResults.observe(viewLifecycleOwner) { results ->
-
-
             if (results.isNotEmpty()) {
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.backButton.visibility = View.VISIBLE
@@ -308,8 +263,17 @@ class SearchFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
-    }
 
+        viewModel.genres.observe(viewLifecycleOwner) { genres ->
+            genreOptions.clear()
+            genreOptions.addAll(genres.filterNotNull())
+        }
+
+        viewModel.languages.observe(viewLifecycleOwner) { langs ->
+            languageOptions.clear()
+            languageOptions.addAll(langs.filterNotNull())
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

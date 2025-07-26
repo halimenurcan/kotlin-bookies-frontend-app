@@ -16,4 +16,9 @@ interface SearchApiService {
 
     @GET("users/search/{keyword}")
     suspend fun searchUsers(@Path("keyword") keyword: String): Response<EmbeddedUsersResponse>
+    @GET("books/genres")
+    suspend fun getAllGenres(): Response<List<String>>
+
+    @GET("books/languages")
+    suspend fun getAllLanguages(): Response<List<String>>
 }

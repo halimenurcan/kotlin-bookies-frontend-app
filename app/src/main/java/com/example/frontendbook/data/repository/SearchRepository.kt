@@ -27,5 +27,11 @@ class SearchRepository(
         }
         usersDeferred.await() + booksDeferred.await()
     }
+    suspend fun getGenres(): List<String> {
+        return api.getAllGenres().body().orEmpty()
+    }
 
+    suspend fun getLanguages(): List<String> {
+        return api.getAllLanguages().body().orEmpty()
+    }
 }

@@ -12,6 +12,12 @@ class SearchViewModel(
     private val repo: SearchRepository
 ) : ViewModel() {
 
+    private val _genres = MutableLiveData<List<String>>()
+    val genres: LiveData<List<String>> = _genres
+
+    private val _languages = MutableLiveData<List<String>>()
+    val languages: LiveData<List<String>> = _languages
+
     private val _combinedResults = MutableLiveData<List<CombinedSearchResult>>()
     val combinedResults: LiveData<List<CombinedSearchResult>> = _combinedResults
 
@@ -20,34 +26,46 @@ class SearchViewModel(
 
     private val _error = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _error
+
     private val _searchStarted = MutableLiveData(false)
-
-
     val searchStarted: LiveData<Boolean> = _searchStarted
+
     fun searchBooksAndUsers(
         query: String,
         genres: List<String>? = null,
         languages: List<String>? = null
     ) {
-        _searchStarted.value = true
+        _searchStarted.postValue(true)
         viewModelScope.launch {
-            _isLoading.value = true
+            _isLoading.postValue(true)
             try {
-                _combinedResults.value = repo.searchAll(query, genres, languages)
-                _error.value = null
+                val results = repo.searchAll(query, genres, languages)
+                _combinedResults.postValue(results)
+                _error.postValue(null)
             } catch (e: Exception) {
-                _combinedResults.value = emptyList()
-                _error.value = e.message
+                _combinedResults.postValue(emptyList())
+                _error.postValue(e.message ?: "Bir hata oluştu")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }
 
     fun clearResults() {
-        _combinedResults.value = emptyList()
-        _searchStarted.value = false
+        _combinedResults.postValue(emptyList())
+        _searchStarted.postValue(false)
     }
 
-
+    fun loadFilterOptions() {
+        viewModelScope.launch {
+            try {
+                val genreList = repo.getGenres()
+                val languageList = repo.getLanguages()
+                _genres.postValue(genreList)
+                _languages.postValue(languageList)
+            } catch (e: Exception) {
+                _error.postValue("Filtreler yüklenemedi: ${e.message}")
+            }
+        }
+    }
 }
