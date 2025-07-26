@@ -16,15 +16,16 @@
         android:gravity="center_vertical"
         android:padding="12dp">
 
+        <!-- Sol: İkon -->
         <ImageView
             android:id="@+id/notificationIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/notifications_new"
             android:contentDescription="Notification Icon"
-            android:layout_marginEnd="12dp"
-             />
+            android:layout_marginEnd="12dp" />
 
+        <!-- Orta: Mesaj alanı -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -43,6 +44,15 @@
                 android:ellipsize="end" />
 
             <TextView
+                android:id="@+id/notificationSenderUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="from @username"
+                android:textColor="@color/textBookInfo"
+                android:textSize="13sp" />
+
+            <TextView
                 android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,5 +61,16 @@
                 android:textColor="@color/textBookInfo"
                 android:textSize="13sp" />
         </LinearLayout>
+
+        <!-- Sağ: Delete butonu -->
+        <ImageButton
+            android:id="@+id/notDeleteButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/notdelete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Sil"
+            android:layout_marginStart="8dp"
+            app:tint="@color/textBookInfo"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

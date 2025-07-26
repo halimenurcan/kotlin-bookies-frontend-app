@@ -5,10 +5,11 @@ import com.google.gson.annotations.SerializedName
 
 data class NotificationResponse(
     @SerializedName("_embedded")
-    val embedded: NotificationEmbedded
+    val embedded: NotificationEmbedded?
 )
 
 data class NotificationEmbedded(
     @SerializedName("notificationResponseDTOList")
     val notifications: List<NotificationDto>
 )
+
