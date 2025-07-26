@@ -1,14 +1,17 @@
 package com.example.frontendbook.ui.notifications
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.frontendbook.data.api.dto.NotificationDto
 import com.example.frontendbook.data.model.Notification
 import com.example.frontendbook.data.model.NotificationType
 import com.example.frontendbook.data.repository.NotificationsRepository
+import com.example.frontendbook.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class NotificationsViewModel(
-    private val repo: NotificationsRepository
+    private val repo: NotificationsRepository,
+    private val userRepo: UserRepository
 ) : ViewModel() {
 
     // Arka uçtan gelen ham bildirim listesi (DTO formatında)
@@ -23,7 +26,11 @@ class NotificationsViewModel(
         viewModelScope.launch {
             try {
                 val dtoList = repo.fetchAll()
-                val notificationList = dtoList.map { it.toNotification() }
+                val notificationList = dtoList.map { dto ->
+                    val senderUsername = userRepo.getUsernameById(dto.senderId)
+                    Log.d("USERNAME_DEBUG", "senderId=${dto.senderId} → username=$senderUsername")  // <--- burası
+                    dto.toNotification(senderUsername)
+                }
                 _notifications.value = notificationList
                 _error.value = null
             } catch (e: Exception) {
@@ -31,6 +38,7 @@ class NotificationsViewModel(
             }
         }
     }
+
 
     /** Belirli bildirimi okundu olarak işaretler ve listeyi günceller */
     fun markAsRead(notification: Notification) {
@@ -50,18 +58,38 @@ class NotificationsViewModel(
         }
     }
 
+    fun deleteNotification(notification: Notification) {
+        viewModelScope.launch {
+            try {
+                Log.d("DELETE_NOTIFICATION", "Siliniyor: id=${notification.id}")
+                val response = repo.deleteNotification(notification.id)
+                if (response.isSuccessful) {
+                    _notifications.value = _notifications.value?.filterNot { it.id == notification.id }
+                } else {
+                    // Gerekirse logla ama kullanıcıya göstermeyelim
+                    Log.e("DELETE_NOTIFICATION", "Response code: ${response.code()}")
+                }
+
+            } catch (e: Exception) {
+                _error.value = "Hata: ${e.message}"
+            }
+        }
+    }
+
+
     /** DTO'dan UI modeli olan Notification nesnesine dönüşüm */
-    private fun NotificationDto.toNotification(): Notification {
+    private fun NotificationDto.toNotification(senderUsername: String): Notification {
         return Notification(
-            iconResId = 0, // type'a göre NotificationAdapter içinde atanacak
-            message = generateMessage(type), // artık content değil
-            time = formatTime(createdAt),    // artık timestamp değil
+            message = generateMessage(type),
+            time = formatTime(createdAt),
             type = determineNotificationType(type),
             relatedId = targetId,
+            senderUsername = senderUsername,
             id = id,
             read = read
         )
     }
+
 
     private fun generateMessage(type: String): String {
         return when (type) {
@@ -74,14 +102,15 @@ class NotificationsViewModel(
 
 
     /** Mesaja göre NotificationType belirlenir */
-    private fun determineNotificationType(message: String): NotificationType {
-        return when {
-            "takip etti" in message -> NotificationType.FOLLOW
-            "yorumunu beğendi" in message -> NotificationType.LIKE_COMMENT
-            "listeni beğendi" in message -> NotificationType.FOLLOW_LIST
-            else -> NotificationType.FOLLOW
+    private fun determineNotificationType(rawType: String): NotificationType {
+        return when (rawType.uppercase()) {
+            "FOLLOW_USER"  -> NotificationType.FOLLOW
+            "LIKE_COMMENT" -> NotificationType.LIKE_COMMENT
+            "FOLLOW_LIST"  -> NotificationType.FOLLOW_LIST
+            else           -> NotificationType.FOLLOW
         }
     }
+
 
     /** ISO 8601 timestamp'i sadeleştir (örn: 2025-07-04T10:45:00Z → 10:45) */
     private fun formatTime(timestamp: String): String {

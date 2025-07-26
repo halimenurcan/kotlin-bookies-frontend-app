@@ -10,6 +10,18 @@ import com.example.frontendbook.data.model.BookInteractionRequest
 class UserRepository(private val api: UserApiService) {
     private val TAG = "UserRepository"
 
+    suspend fun getUsernameById(userId: Long): String {
+        return try {
+            api.getUserById(userId).username
+        } catch (e: Exception) {
+            Log.e("UserRepo", "Username fetch error", e)
+            "unknown"
+        }
+    }
+
+
+
+
     suspend fun updateAvatar(userId: Long, avatar: Long): Boolean {
         return try {
             val response = api.updateAvatar(
@@ -46,6 +58,7 @@ class UserRepository(private val api: UserApiService) {
         val response = api.getAvatarByUserId(userId)
         return if (response.isSuccessful) response.body() else null
     }
+
 
 
 

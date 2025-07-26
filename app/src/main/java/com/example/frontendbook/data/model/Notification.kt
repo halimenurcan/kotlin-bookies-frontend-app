@@ -4,11 +4,11 @@ import com.example.frontendbook.R
 
 data class Notification(
     val id: Long,
-    val iconResId: Int,
     val message: String,
     val time: String,
     val type: NotificationType,
     val relatedId: String,
+    val senderUsername: String,
     val read: Boolean
 )
 

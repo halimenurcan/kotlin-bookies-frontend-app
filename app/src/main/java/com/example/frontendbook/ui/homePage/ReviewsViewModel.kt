@@ -1,31 +1,29 @@
 package com.example.frontendbook.ui.homePage
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.frontendbook.data.model.ReviewCreateRequest
 import com.example.frontendbook.data.api.dto.ReviewDto
+import com.example.frontendbook.data.remote.RetrofitClient
+import com.example.frontendbook.data.repository.LikedReviewsRepository
 import com.example.frontendbook.data.repository.ReviewsRepository
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for handling review-related UI state and operations.
- */
 class ReviewsViewModel(
-    private val repo: ReviewsRepository
+    private val repo: ReviewsRepository,
+    private val context: Context // → context eklendi!
 ) : ViewModel() {
 
-    // — LIST of comments/reviews —
     private val _comments = MutableLiveData<List<ReviewDto>>(emptyList())
     val comments: LiveData<List<ReviewDto>> = _comments
 
-    // — SINGLE comment/review —
     private val _selectedReview = MutableLiveData<ReviewDto?>()
     val selectedReview: LiveData<ReviewDto?> = _selectedReview
 
-    // — ERROR messages —
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
-    /** Yorum listesini (tüm yorumlar) yükler */
     fun loadAllComments() {
         viewModelScope.launch {
             try {
@@ -36,8 +34,31 @@ class ReviewsViewModel(
             }
         }
     }
+    fun loadAllCommentsWithLikes(userId: Long) {
+        viewModelScope.launch {
+            try {
+                val rawList = repo.fetchAllComments()
 
-    /** Bir kitaba ait yorumları yükler */
+                val likedRepo = LikedReviewsRepository(RetrofitClient.likedReviewsApiService(context))
+                val likedIds = likedRepo.getLikedReviewIds(userId)
+
+                val enriched = rawList.map { review ->
+                    review.copy(isLiked = likedIds.contains(review.id))
+                }
+
+                Log.d("VIEWMODEL", "Liked Ids: $likedIds")
+                Log.d("VIEWMODEL", "Enriched: ${enriched.map { it.id to it.isLiked }}")
+
+                _comments.value = enriched
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+                Log.e("VIEWMODEL", "Error loading comments with likes: ${e.message}")
+            }
+        }
+    }
+
+
     fun loadCommentsForBook(bookId: Long) {
         viewModelScope.launch {
             try {
@@ -49,7 +70,6 @@ class ReviewsViewModel(
         }
     }
 
-    /** Tek bir yorumu yükler ve [selectedReview]’e yayınlar */
     fun loadCommentById(id: Long) {
         viewModelScope.launch {
             try {
@@ -61,7 +81,6 @@ class ReviewsViewModel(
         }
     }
 
-    /** Yeni yorum oluşturur ve liste başına ekler */
     fun createComment(request: ReviewCreateRequest) {
         viewModelScope.launch {
             try {
@@ -74,7 +93,6 @@ class ReviewsViewModel(
         }
     }
 
-    /** Yorum silme işlemi */
     fun deleteComment(id: Long) {
         viewModelScope.launch {
             try {

@@ -1,7 +1,5 @@
 package com.example.frontendbook.ui.notifications
 
-import com.example.frontendbook.R
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.frontendbook.R
+import com.example.frontendbook.data.model.Notification
+import com.example.frontendbook.data.model.NotificationType
 import com.example.frontendbook.databinding.FragmentNotificationsBinding
 import com.example.frontendbook.ui.base.adapter.NotificationAdapter
 import com.example.frontendbook.ui.homePage.ReviewsFragment
@@ -35,36 +36,41 @@ class NotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ViewModel’i Factory üzerinden al
         viewModel = ViewModelProvider(this, NotificationsViewModelFactory(requireContext()))
             .get(NotificationsViewModel::class.java)
 
-        // RecyclerView ayarları
         binding.notificationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Bildirimler LiveData olarak gözlemleniyor
-        viewModel.notifications.observe(viewLifecycleOwner) { notifications ->
-            adapter = NotificationAdapter(notifications) { clickedNotification ->
-                viewModel.markAsRead(clickedNotification) // Bildirimi okundu olarak işaretle
-                handleNotificationClick(clickedNotification) // Türüne göre yönlendir
+        adapter = NotificationAdapter(
+            items = mutableListOf(),
+
+            onClick = { clickedNotification ->
+                viewModel.markAsRead(clickedNotification)
+                handleNotificationClick(clickedNotification)
+            },
+            onDeleteClick = { notification ->
+                viewModel.deleteNotification(notification)
             }
-            binding.notificationsRecyclerView.adapter = adapter
+        )
+
+        binding.notificationsRecyclerView.adapter = adapter
+
+        viewModel.notifications.observe(viewLifecycleOwner) { notifications ->
+            adapter.updateItems(notifications)
         }
 
-        // Hata durumunu gözlemle
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Veriyi yükle
         viewModel.loadNotifications()
     }
 
-    private fun handleNotificationClick(notification: com.example.frontendbook.data.model.Notification) {
+    private fun handleNotificationClick(notification: Notification) {
         when (notification.type) {
-            com.example.frontendbook.data.model.NotificationType.FOLLOW -> {
+            NotificationType.FOLLOW -> {
                 val userId = notification.relatedId
                 val fragment = OtherUserProfileFragment().apply {
                     arguments = Bundle().apply {
@@ -72,11 +78,12 @@ class NotificationsFragment : Fragment() {
                     }
                 }
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.notificationsRecyclerView, fragment)
+                    .replace(R.id.nav_host_fragment, fragment)
                     .addToBackStack(null)
                     .commit()
             }
-            com.example.frontendbook.data.model.NotificationType.LIKE_COMMENT -> {
+
+            NotificationType.LIKE_COMMENT -> {
                 val commentId = notification.relatedId.toLongOrNull() ?: return
                 val fragment = ReviewsFragment().apply {
                     arguments = Bundle().apply {
@@ -84,11 +91,12 @@ class NotificationsFragment : Fragment() {
                     }
                 }
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment) // container ID'yi doğru gir
+                    .replace(R.id.nav_host_fragment, fragment)
                     .addToBackStack(null)
                     .commit()
             }
-            com.example.frontendbook.data.model.NotificationType.FOLLOW_LIST -> {
+
+            NotificationType.FOLLOW_LIST -> {
                 val listId = notification.relatedId
                 val fragment = ListDetailFragment().apply {
                     arguments = Bundle().apply {
@@ -96,7 +104,7 @@ class NotificationsFragment : Fragment() {
                     }
                 }
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.notificationsRecyclerView, fragment)
+                    .replace(R.id.nav_host_fragment, fragment)
                     .addToBackStack(null)
                     .commit()
             }

@@ -1,6 +1,8 @@
 package com.example.frontendbook.data.api.service
 
 import com.example.frontendbook.data.api.dto.LikedReviewDto
+import com.example.frontendbook.data.api.dto.LikedReviewResponseWrapper
+import com.example.frontendbook.data.api.dto.LikedReviewsResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -22,13 +24,13 @@ interface LikedReviewsApiService {
         @Body req: com.example.frontendbook.data.model.LikedReviewRequest
     ): Response<Unit>
 
-    @DELETE("liked-comments/user/{userId}/comment/{reviewId}")
+    @DELETE("liked-comments/user/{userId}/comment/{commentId}")
     suspend fun unlikeReview(
         @Path("userId") userId: Long,
-        @Path("commentId") reviewId: Long
+        @Path("commentId") commentId: Long
     ): Response<Unit>
 
-    @GET("api/liked-reviews/user/{userId}")
-    suspend fun getLikedReviews(@Path("userId") userId: Long): List<LikedReviewDto>
+    @GET("liked-comments/{userId}")
+    suspend fun getLikedReviews(@Path("userId") userId: Long): LikedReviewsResponse
 }
 

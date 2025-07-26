@@ -1,5 +1,3 @@
-// ui/homePage/AllReviewsFragment.kt
-
 package com.example.frontendbook.ui.homePage
 
 import android.content.Context
@@ -12,22 +10,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.databinding.FragmentReviewsBinding
-import androidx.navigation.fragment.findNavController
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.LikedReviewsRepository
 import com.example.frontendbook.domain.model.Book
 
-
 class AllReviewsFragment : Fragment() {
+
     interface BookClickListener {
         fun onBookClicked(book: Book)
     }
+
     private var _binding: FragmentReviewsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ReviewsViewModel by viewModels {
         ReviewsViewModelFactory(requireContext())
     }
+
     private lateinit var reviewsAdapter: ReviewsAdapter
     private var listener: BookClickListener? = null
 
@@ -40,8 +39,11 @@ class AllReviewsFragment : Fragment() {
         }
     }
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentReviewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,18 +51,19 @@ class AllReviewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // SystemBars padding (opsiyonel)
+        // SystemBars padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
             insets
         }
 
-        // Like işlemleri için repo ve userId
+        // Beğeni işlemleri için repo ve userId
         val likedRepo = LikedReviewsRepository(RetrofitClient.likedReviewsApiService(requireContext()))
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
-        // GÜNCEL: Adapter'a tüm parametreleri ver!
+
+        // Adapter
         reviewsAdapter = ReviewsAdapter(
             likedRepo = likedRepo,
             userId = userId,
@@ -74,16 +77,19 @@ class AllReviewsFragment : Fragment() {
             adapter = reviewsAdapter
         }
 
-        // LiveData gözlemleri
+        // LiveData observers
         viewModel.comments.observe(viewLifecycleOwner) { list ->
             reviewsAdapter.submitList(list)
         }
+
         viewModel.error.observe(viewLifecycleOwner) { msg ->
-            msg?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+            msg?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
         }
 
-        // Tüm yorumları yükle
-        viewModel.loadAllComments()
+        // 🔥 Güncel yorumları ve beğeni durumlarını yükle
+        viewModel.loadAllCommentsWithLikes(userId)
     }
 
     override fun onDestroyView() {
