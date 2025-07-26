@@ -9,7 +9,7 @@ data class UserDto(
 )
 
 fun UserDto.toDomain() = User(
-    id = (this.id ?: -1),                // null gelirse boş string
+    id = (this.id ?: -1),
     username = this.username ?: "",
     fullName = this.fullName ?: "",
     profileImageUrl = this.profileImageUrl

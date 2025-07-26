@@ -15,13 +15,13 @@ class AuthRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : AuthRepository {
     override suspend fun signIn(request: SignInRequest): Response<SignInResponse> {
-        // İstek atılmadan önce
+
         Log.d("AuthRepo", "→ signIn() called with request: $request")
         val response = apiService.signIn(request)
-        // İstekten hemen sonra
+
         Log.d("AuthRepo", "← signIn() response: code=${response.code()}, message=${response.message()}, url=${response.raw().request.url}")
         if (!response.isSuccessful) {
-            // Hata gövdesini okuyup logla (dikkat: errorBody()?.string() tek sefer okur)
+
             val errBody = response.errorBody()?.string()
             Log.e("AuthRepo", "!! signIn failed: errorBody=$errBody")
         } else {

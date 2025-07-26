@@ -44,7 +44,7 @@ class UserRepository(private val api: UserApiService) {
             if (response.isSuccessful) {
                 response.body()
             } else {
-                Log.e(TAG, "getAvatarByUserId() -> başarısız! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
+                Log.e(TAG, "getAvatarByUserId() -> Fail! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
                 null
             }
         } catch (e: Exception) {
@@ -53,25 +53,22 @@ class UserRepository(private val api: UserApiService) {
         }
     }
 
-    // UserRepository.kt
+
     suspend fun fetchAvatar(userId: Long): AvatarResponse? {
         val response = api.getAvatarByUserId(userId)
         return if (response.isSuccessful) response.body() else null
     }
 
 
-
-
-
     suspend fun fetchUser(userId: Long): UserResponse {
-        Log.d(TAG, "fetchUser() -> çağrıldı, userId=$userId")
+        Log.d(TAG, "fetchUser() -> fetch, userId=$userId")
         val resp = api.getUserById(userId)
-        Log.d(TAG, "fetchUser() -> kullanıcı alındı: $resp")
+        Log.d(TAG, "fetchUser() -> user fetch: $resp")
         return resp
     }
 
     suspend fun getFollowersCount(userId: Long): Int {
-        Log.d(TAG, "getFollowersCount() -> çağrıldı")
+        Log.d(TAG, "getFollowersCount() -> fetch")
         val resp = api.getFollowers(userId)
         val count = if (resp.isSuccessful) resp.body()?.size ?: 0 else 0
         Log.d(TAG, "getFollowersCount() -> count=$count (HTTP ${resp.code()})")
@@ -79,7 +76,7 @@ class UserRepository(private val api: UserApiService) {
     }
 
     suspend fun getFollowingCount(userId: Long): Int {
-        Log.d(TAG, "getFollowingCount() -> çağrıldı")
+        Log.d(TAG, "getFollowingCount() -> fetch")
         val resp = api.getFollowing(userId)
         val count = if (resp.isSuccessful) resp.body()?.size ?: 0 else 0
         Log.d(TAG, "getFollowingCount() -> count=$count (HTTP ${resp.code()})")

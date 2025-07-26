@@ -12,7 +12,6 @@ data class Notification(
     val read: Boolean
 )
 
-//bildirim türünü belirlemek için bildirim tipi enum class oluşturduk
 enum class NotificationType {
     FOLLOW,
     LIKE_COMMENT,

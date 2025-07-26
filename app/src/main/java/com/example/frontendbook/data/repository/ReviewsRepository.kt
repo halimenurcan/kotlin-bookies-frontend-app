@@ -51,7 +51,7 @@ class ReviewsRepository(
     suspend fun fetchAllComments(): List<ReviewDto> {
         val resp = api.getAllReviews()
         if (!resp.isSuccessful) {
-            throw Exception("Yüklenemedi: ${resp.code()}")
+            throw Exception("Could not be loaded: ${resp.code()}")
         }
 
         val wrapper = resp.body()!!
@@ -80,7 +80,7 @@ class ReviewsRepository(
         if (!resp.isSuccessful) {
             val err = resp.errorBody()?.string()
             Log.e("ReviewsRepo", "!! deleteReview failed: body=$err")
-            throw Exception("Yorum silme hatası: ${resp.code()}")
+            throw Exception("Comment deletion error: ${resp.code()}")
         }
     }
 
@@ -91,7 +91,7 @@ class ReviewsRepository(
         if (!resp.isSuccessful) {
             val err = resp.errorBody()?.string()
             Log.e("ReviewsRepo", "!! getCommentById failed: body=$err")
-            throw Exception("Yorum getirilemedi: ${resp.code()}")
+            throw Exception("No comments available: ${resp.code()}")
         }
 
         val dto = resp.body()!!
@@ -117,7 +117,7 @@ class ReviewsRepository(
         if (!resp.isSuccessful) {
             val err = resp.errorBody()?.string()
             Log.e("ReviewsRepo", "!! createComment failed: body=$err")
-            throw Exception("Yorum oluşturulamadı: ${resp.code()}")
+            throw Exception("Comment could not be created: ${resp.code()}")
         }
 
         val dto = resp.body()!!
