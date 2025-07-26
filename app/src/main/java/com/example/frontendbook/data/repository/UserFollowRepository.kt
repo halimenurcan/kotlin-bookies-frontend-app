@@ -7,16 +7,16 @@ class UserFollowRepository(
     private val api: UserApiService
 ) {
     suspend fun getFollowers(userId: Long): List<UserDto> {
-        // /api/users/{id}/followers
+
         val resp = api.getFollowers(userId)
-        if (!resp.isSuccessful) throw Exception("Takipçiler alınamadı: ${resp.code()}")
+        if (!resp.isSuccessful) throw Exception("Followers could not be retrieved.: ${resp.code()}")
         return resp.body() ?: emptyList()
     }
 
     suspend fun getFollowing(userId: Long): List<UserDto> {
-        // /api/users/{id}/following
+
         val resp = api.getFollowing(userId)
-        if (!resp.isSuccessful) throw Exception("Takip edilenler alınamadı: ${resp.code()}")
+        if (!resp.isSuccessful) throw Exception("Following could not be retrieved.: ${resp.code()}")
         return resp.body() ?: emptyList()
     }
 

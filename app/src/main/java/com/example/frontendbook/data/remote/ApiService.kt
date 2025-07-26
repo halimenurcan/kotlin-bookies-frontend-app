@@ -20,19 +20,19 @@ interface ApiService {
     @POST("/api/auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<RegisterResponse>
 
-    // 📚 BOOKS - Sıralama
+
     @GET("/books/sorted")
     suspend fun getSortedBooks(
         @Query("sort") sort: String // "most_popular", "highly_rated"
     ): Response<List<Book>>
 
-    // 📚 BOOKS - Arama
+
     @GET("/books/search")
     suspend fun searchBooks(
         @Query("query") query: String
     ): Response<List<Book>>
 
-    // 📚 BOOKS - Filtreleme
+
     @GET("/books/filter")
     suspend fun filterBooks(
         @Query("genre") genre: String? = null,

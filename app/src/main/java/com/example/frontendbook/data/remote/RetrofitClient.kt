@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private const val API_BASE_URL = "http://10.0.2.2:8080/api/"
 
-    // Logging interceptor for detailed request/response logs
+
     private fun getLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor { message ->
             Log.d("Network", message)
@@ -22,7 +22,7 @@ object RetrofitClient {
         }
     }
 
-    // Interceptor to add Authorization and Content-Type headers
+
     private fun getAuthInterceptor(context: Context): Interceptor = Interceptor { chain ->
         val prefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val token = prefs.getString("jwt_token", null)
@@ -39,7 +39,7 @@ object RetrofitClient {
         chain.proceed(request)
     }
 
-    // Single OkHttpClient used by all services
+
     private fun createOkHttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(getAuthInterceptor(context))
@@ -47,7 +47,7 @@ object RetrofitClient {
             .build()
     }
 
-    // Single Retrofit instance builder
+
     private fun getRetrofit(context: Context): Retrofit {
         return Retrofit.Builder()
             .baseUrl(API_BASE_URL)

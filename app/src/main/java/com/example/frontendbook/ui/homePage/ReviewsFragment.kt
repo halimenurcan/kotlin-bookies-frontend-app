@@ -63,7 +63,6 @@ class ReviewsFragment : Fragment() {
                     userId = userId,
                     likedReviewIds = likedReviewIds.toMutableList(),
                     onLikedChanged = {
-                        // Beğeni değiştiğinde güncel id listesini tekrar çek ve adapter'ı güncelle!
                         viewLifecycleOwner.lifecycleScope.launch {
                             val newLikedReviewIds = likedRepo.getLikedReviewIds(userId)
                             adapter.updateLikedReviewIds(newLikedReviewIds)

@@ -16,27 +16,23 @@ import retrofit2.http.Query
 
 interface UserApiService {
 
-    @GET("user-avatars/{userId}")
+    @GET("avatar/{userId}")
     suspend fun getAvatarByUserId(
         @Path("userId") userId: Long
     ): Response<AvatarResponse>
 
-    @PUT("user-avatars/{userId}")
+
+    @PUT("avatar/{userId}")
     suspend fun updateAvatar(
         @Path("userId") userId: Long,
         @Body avatarRequest: AvatarRequest
     ): Response<Unit>
 
+
     @POST("users/{userId}/books/interact")
     suspend fun sendBookInteraction(
         @Path("userId") userId: Long,
         @Body interaction: BookInteractionRequest
-    ): Response<Unit>
-
-
-    @POST("user-avatars")
-    suspend fun createUserAvatar(
-        @Body avatarRequest: AvatarRequest
     ): Response<Unit>
 
     @GET("users/search")
@@ -63,25 +59,25 @@ interface UserApiService {
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
-    /** Takip ettiklerim listesi */
+
     @GET("followers/following/{userId}")
     suspend fun getFollowing(
         @Path("userId") userId: Long
     ): Response<List<UserDto>>
 
-    /** Bir kullanıcıyı takip et */
+
     @POST("users/{targetId}/follow")
     suspend fun followUser(
         @Path("targetId") targetUserId: Long
     ): Response<Unit>
 
-    /** Bir kullanıcıyı takipten bırak */
+
     @DELETE("users/{targetId}/follow")
     suspend fun unfollowUser(
         @Path("targetId") targetUserId: Long
     ): Response<Unit>
 
-    /** İki kullanıcı arasındaki takip durumunu kontrol et */
+
     @GET("users/{currentId}/following/{targetId}")
     suspend fun isFollowing(
         @Path("currentId") currentUserId: Long,
