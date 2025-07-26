@@ -1,5 +1,7 @@
 package com.example.frontendbook.data.api.dto
 
+import com.example.frontendbook.data.remote.dto.UserDto
+
 data class ReviewDto(
     val id: Long,
     val userId: Long?,
@@ -11,7 +13,7 @@ data class ReviewDto(
     val createdAt: String,
     var isLiked: Boolean,
 
-    val book: BookDto? = null
-
+    val book: BookDto? = null,
+    val user:UserDto? =null
 
 )
