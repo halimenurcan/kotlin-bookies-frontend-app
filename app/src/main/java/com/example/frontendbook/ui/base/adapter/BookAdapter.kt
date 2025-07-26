@@ -28,7 +28,7 @@ class BookAdapter(
         Glide.with(holder.binding.root.context)
             .load(book.coverImageUrl)
             .placeholder(com.example.frontendbook.R.drawable.placeholder)
-            .error(com.example.frontendbook.R.drawable.bookk)             // hata durumunda
+            .error(com.example.frontendbook.R.drawable.bookk)
             .into(holder.binding.bookImage)
 
         holder.itemView.setOnClickListener {

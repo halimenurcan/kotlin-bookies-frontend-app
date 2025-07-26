@@ -93,7 +93,7 @@ class ThreeColumnFragment : Fragment() {
         val factory = ThreeColumnViewModelFactory(repository)
         threeColumnViewModel = ViewModelProvider(this, factory)[ThreeColumnViewModel::class.java]
 
-        // --- LISTEDEN YÜKLE ---
+
         if (listId != null && listId != 0L) {
             Log.d("THREE_COLUMN", "📘 Liste ID ile kitaplar yüklenecek: $listId")
             threeColumnViewModel.fetchListWithBooks(listId!!)
@@ -115,10 +115,10 @@ class ThreeColumnFragment : Fragment() {
                 adapter.submitList(books)
             }
             threeColumnViewModel.error.observe(viewLifecycleOwner) {
-                Log.e("THREE_COLUMN", "❌ Hata: $it")
+
             }
         }
-        // --- READ/READLIST/LIKES YÜKLE ---
+
         else if (type == "read" || type == "readlist" || type == "likes") {
             when (type) {
                 "read" -> {
@@ -126,7 +126,7 @@ class ThreeColumnFragment : Fragment() {
                     readViewModel = ViewModelProvider(this, readFactory)[ReadViewModel::class.java]
                     readViewModel.readBooks.observe(viewLifecycleOwner) { entries ->
                         val books = entries.map { entry ->
-                            Log.d("THREE_COLUMN", "⛳ Entry: $entry")
+                            Log.d("THREE_COLUMN", " Entry: $entry")
                             Book(
                                 id = entry.bookId.toLong(),
                                 author = entry.bookAuthor ?: "Unknown",
@@ -144,7 +144,7 @@ class ThreeColumnFragment : Fragment() {
                     }
                     if (userId != null && userId != -1L) readViewModel.loadReadBooks(userId!!)
                     readViewModel.error.observe(viewLifecycleOwner) {
-                        Log.e("THREE_COLUMN", "❌ Hata: $it")
+                        Log.e("THREE_COLUMN", " Error: $it")
                     }
                 }
                 "readlist" -> {
@@ -169,7 +169,7 @@ class ThreeColumnFragment : Fragment() {
                     }
                     if (userId != null && userId != -1L) readViewModel.loadToReadList(userId!!)
                     readViewModel.error.observe(viewLifecycleOwner) {
-                        Log.e("THREE_COLUMN", "❌ Hata: $it")
+                        Log.e("THREE_COLUMN", " Error: $it")
                     }
                 }
                 "likes" -> {
@@ -188,13 +188,13 @@ class ThreeColumnFragment : Fragment() {
                         adapter.submitList(books)
                     }
                     likedBooksViewModel.error.observe(viewLifecycleOwner) {
-                        Log.e("THREE_COLUMN", "❌ Hata: $it")
+                        Log.e("THREE_COLUMN", " Error: $it")
                     }
                     if (userId != null && userId != -1L) likedBooksViewModel.loadLikedBooks(userId!!)
                 }
             }
         }
-        // --- DEFAULT: KATEGORİ KİTAPLARI ---
+
         else {
             bookViewModel.books.observe(viewLifecycleOwner) { books ->
                 adapter.submitList(books)

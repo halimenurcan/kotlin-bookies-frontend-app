@@ -28,12 +28,10 @@ class BookSearchAdapter : ListAdapter<Book, BookSearchAdapter.BookViewHolder>(Bo
             binding.titleTextView.text = book.title
             binding.authorTextView.text = book.author
 
-
-            // Glide ile kapak resmini yükle
             Glide.with(binding.root.context)
                 .load(book.coverImageUrl)
-                .placeholder(R.drawable.placeholder) // drawable altına placeholder.png ekleyebilirsin
-                .error(R.drawable.search)       // ERROR SOLL SEIN
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.search)
                 .into(binding.bookCoverImage)
         }
     }

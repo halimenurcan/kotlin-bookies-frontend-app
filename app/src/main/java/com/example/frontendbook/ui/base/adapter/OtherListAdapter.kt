@@ -36,7 +36,6 @@ class OtherListAdapter(
         fun bind(listItem: ListDto) {
             titleView.text = listItem.title
 
-            // Takip durumu kontrolü
             val isFollowed = followedListIds.contains(listItem.id)
             Log.d("OtherListAdapter", "List ${listItem.title}, id=${listItem.id}, isFollowed=$isFollowed")
 

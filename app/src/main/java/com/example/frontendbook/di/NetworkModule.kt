@@ -27,7 +27,7 @@ object NetworkModule {
         return TokenInterceptor(context)
     }
 
-    // OkHttpClient'e TokenInterceptor ekle
+
     @Provides
     @Singleton
     fun provideOkHttpClient(tokenInterceptor: TokenInterceptor): OkHttpClient {
@@ -36,7 +36,7 @@ object NetworkModule {
             .build()
     }
 
-    // Retrofit'i OkHttpClient ile oluştur
+
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =

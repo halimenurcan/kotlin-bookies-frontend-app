@@ -171,7 +171,7 @@ class AddBookToListBottomSheet : BottomSheetDialogFragment() {
                                 Toast.makeText(requireContext(), "Failed to add to list", Toast.LENGTH_SHORT).show()
                             }
                         }
-                        if (isAdded) dismiss() // ⬅ dismiss burada, callback'in *içinde* ve `isAdded` kontrolü ile
+                        if (isAdded) dismiss()
                     }
                 }
             }

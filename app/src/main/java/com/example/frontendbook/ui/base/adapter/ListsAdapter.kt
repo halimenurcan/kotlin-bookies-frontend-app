@@ -50,7 +50,7 @@ class ListAdapter(
     override fun getItemCount(): Int = lists.size
 
     fun submitList(newLists: List<ListDto>) {
-        lists = newLists.toList() // Yeni referans kullan!
+        lists = newLists.toList()
         notifyDataSetChanged()
     }
 }

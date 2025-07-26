@@ -73,7 +73,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1) Book Search Adapter & RecyclerView
         adapter = AddBookSearchAdapter { book ->
             selectedBook = book
             binding.addBookTitle.text = book.title
@@ -83,7 +82,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             binding.selectedBookDetails.visibility = View.VISIBLE
             binding.backButton.visibility = View.VISIBLE
 
-            // reset review fields
             binding.commentInput.setText("")
             binding.ratingBar.rating = 0f
 
@@ -94,7 +92,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             binding.bookPreviewTitle.text = book.title
             binding.bookPreviewAuthor.text = book.author
 
-            // BEĞENİ DURUMUNU HER KİTAPTA KONTROL ET
             val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val userId = prefs.getLong("user_id", -1L)
             if (userId != -1L) {
@@ -114,7 +111,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             visibility = View.GONE
         }
 
-        // 2) Search flow
         binding.searchInput.setOnEditorActionListener { _, actionId, event ->
             val isSearch = actionId == EditorInfo.IME_ACTION_SEARCH
             val isEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
@@ -128,7 +124,6 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             } else false
         }
 
-        // clear-text “X” icon logic
         val closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.close)
         binding.searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -189,47 +184,47 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
             val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val userId = prefs.getLong("user_id", -1L)
             if (userId == -1L) {
-                Toast.makeText(requireContext(), "Oturum açılmamış", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Not logged in", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
-                // Yorum da YOK, rating de YOK ise: SADECE Okudum listesine ekle
+
                 if (comment.isEmpty() && rating == 0) {
-                    // ViewModel ile readBooks'a ekle
+
                     readViewModel.addToReadBooks(userId, book.id.toLong())
-                    Toast.makeText(requireContext(), "Kitap okuduklarına eklendi", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Added to ReadList", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Review işlemleri (eskisi gibi)
+
                     try {
                         val req = ReviewCreateRequest(
                             userId = userId,
                             bookId = book.id.toLong(),
                             score = rating,
                             comment = comment,
-                            read = true,   // Burada true olacak, çünkü Done'a basınca okudum'a gidecek
+                            read = true,
                             toRead = false,
                             liked = isLiked
                         )
                         val created = reviewsRepo.createComment(req)
                         readViewModel.addToReadBooks(userId, book.id.toLong())
-                        Toast.makeText(requireContext(), "Review eklendi (ID=${created.id})", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Review added (ID=${created.id})", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
-                        Toast.makeText(requireContext(), "Review ekleme hatası: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Review submission error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 if (listId != -1L) {
                     val ok = likedRepo.likeBook(listId, book.id.toLong())
-                    if (ok) Toast.makeText(requireContext(), "Kitap listeye eklendi", Toast.LENGTH_SHORT).show()
-                    else Toast.makeText(requireContext(), "Listeye ekleme başarısız", Toast.LENGTH_SHORT).show()
+                    if (ok) Toast.makeText(requireContext(), "Book added to list", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(requireContext(), "Failed to add book", Toast.LENGTH_SHORT).show()
                 }
                 dismiss()
             }
         }
 
 
-        // 4) Like/unlike
+
         binding.likeButton.setOnClickListener {
             val book = selectedBook ?: return@setOnClickListener
             isLiked = !isLiked
@@ -245,7 +240,7 @@ class AddBookBottomSheet : BottomSheetDialogFragment() {
                 if (!success) {
                     isLiked = !isLiked
                     updateLikeUi(isLiked)
-                    Toast.makeText(requireContext(), "İşlem başarısız", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Transaction failed", Toast.LENGTH_SHORT).show()
                 }
             }
         }

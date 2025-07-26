@@ -24,13 +24,13 @@ class SignInUseCase @Inject constructor(
                 if (!token.isNullOrEmpty() && userId != -1L) {
                     SignInState.Success(token, userId)
                 } else {
-                    SignInState.Error("Sunucudan geçerli token veya kullanıcı ID alınamadı.")
+                    SignInState.Error("Could not obtain a valid token or user ID from the server..")
                 }
             } else {
-                SignInState.Error("Hatalı giriş: ${response.code()}")
+                SignInState.Error("Invalid entry: ${response.code()}")
             }
         } catch (e: Exception) {
-            SignInState.Error("Hata: ${e.message}")
+            SignInState.Error("Error: ${e.message}")
         }
     }
 }

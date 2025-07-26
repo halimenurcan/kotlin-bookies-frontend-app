@@ -23,19 +23,19 @@ class ReviewsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: ReviewDto) {
-            // score → rating
+
             ratingBar.rating = item.score?.toFloat()!!
 
-            // yorum metni
+
             contentTv.text = item.comment
 
-            // yazarı göster (sadece ID varsa ID’yi, yoksa ismi)
+
             authorTv.text = "User ${item.userId}"
 
-            // zaman damgası
+
             timeTv.text = item.createdAt
 
-            // tıklamayı bildir
+
             itemView.setOnClickListener { onClick(item) }
         }
     }
@@ -52,7 +52,7 @@ class ReviewsAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    /** Yeni listeyi atar ve yeniler */
+
     fun submitList(newItems: List<ReviewDto>) {
         items = newItems
         notifyDataSetChanged()

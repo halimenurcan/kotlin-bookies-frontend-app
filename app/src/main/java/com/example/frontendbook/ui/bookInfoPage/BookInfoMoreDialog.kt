@@ -9,14 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.frontendbook.R
-import com.example.frontendbook.data.api.dto.SimpleReadRequest
 import com.example.frontendbook.data.model.ReviewCreateRequest
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.ReadRepository
 import com.example.frontendbook.data.repository.LikedBooksRepository
 import com.example.frontendbook.domain.model.Book
 import com.example.frontendbook.ui.homePage.ReviewsViewModel
-import com.example.frontendbook.ui.homePage.ReviewsViewModelFactory   // ← factory import!
+import com.example.frontendbook.ui.homePage.ReviewsViewModelFactory
 import com.example.frontendbook.ui.likedbooks.LikedBooksViewModel
 import kotlinx.coroutines.launch
 
@@ -52,7 +51,7 @@ class BookInfoMoreDialog : DialogFragment() {
         val prefs   = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val userId  = prefs.getLong(KEY_USER_ID, -1L)
 
-        // DÜZELTME: ViewModel'i Factory ile oluştur!
+
         reviewsViewModel = ViewModelProvider(
             requireActivity(),
             ReviewsViewModelFactory(requireContext())
@@ -60,7 +59,7 @@ class BookInfoMoreDialog : DialogFragment() {
 
         readRepository = ReadRepository(RetrofitClient.readApiService(requireContext()))
 
-        // LikedBooks için ViewModel ve repo:
+
         val likedRepo = LikedBooksRepository(RetrofitClient.likedBooksApiService(requireContext()))
         likedBooksViewModel = ViewModelProvider(
             this,
@@ -154,7 +153,7 @@ class BookInfoMoreDialog : DialogFragment() {
                 }
             } else {
                 if (!isRead) {
-                    Toast.makeText(context, "Önce ‘Okundu’ işaretleyin.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "First, check the “Read” box.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 if (userId != -1L && book != null) {
@@ -165,11 +164,11 @@ class BookInfoMoreDialog : DialogFragment() {
 
         saveBtn.setOnClickListener {
             if (book == null) {
-                Toast.makeText(requireContext(), "Kitap bilgisi bulunamadı", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No book information found", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (userId == -1L) {
-                Toast.makeText(requireContext(), "Kullanıcı bilgisi bulunamadı", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "User information not found", Toast.LENGTH_SHORT).show()
                 dismiss()
                 return@setOnClickListener
             }
@@ -190,13 +189,13 @@ class BookInfoMoreDialog : DialogFragment() {
                             liked = isLiked
                         )
                         reviewsViewModel.createComment(request)
-                        Toast.makeText(requireContext(), "Yorum kaydedildi!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Comment saved!", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(requireContext(), "Kaydedildi!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
                     }
                     dismiss()
                 } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Kaydedilemedi: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Could not be saved: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -23,7 +23,7 @@ class UserListFragment : Fragment() {
     private lateinit var listType: UserListType
     private var profileUserId: Long = -1L
 
-    private lateinit var viewModel: FollowerViewModel // FollowerViewModel kullanıyoruz
+    private lateinit var viewModel: FollowerViewModel
     private lateinit var adapter: UserListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,23 +40,23 @@ class UserListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // 1) RecyclerView + Adapter
+
         adapter = UserListAdapter(emptyList()) { selectedUser ->
             val bundle = Bundle().apply {
-                putLong("userId", selectedUser.userId.toLong()) // UserResponse'da userId olmalı!
+                putLong("userId", selectedUser.userId.toLong())
             }
             findNavController().navigate(R.id.otherUserProfileFragment, bundle)
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        // 2) ViewModel
+
         viewModel = ViewModelProvider(
             this,
             FollowerViewModelFactory(requireContext())
         ).get(FollowerViewModel::class.java)
 
-        // 3) Veri yükle ve doğru LiveData'yı observe et
+
         when (listType) {
             UserListType.FOLLOWERS -> {
                 viewModel.loadFollowers(profileUserId)
@@ -72,14 +72,14 @@ class UserListFragment : Fragment() {
             }
         }
 
-        // 4) Hata gözle
+
         viewModel.error.observe(viewLifecycleOwner) { err ->
             err?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
 
-        // 5) Başlık
+
         binding.headerTitle.text = when (listType) {
             UserListType.FOLLOWERS -> getString(R.string.title_followers)
             UserListType.FOLLOWING -> getString(R.string.title_following)

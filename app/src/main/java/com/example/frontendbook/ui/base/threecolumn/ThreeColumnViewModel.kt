@@ -22,7 +22,7 @@ class ThreeColumnViewModel(private val repository: ListsRepository) : ViewModel(
                 val result = repository.getListWithBooks(listId)
                 _listWithBooks.postValue(result)
             } catch (e: Exception) {
-                _error.postValue("❌ Hata: ${e.message}")
+                _error.postValue(" Error: ${e.message}")
             }
         }
     }

@@ -20,8 +20,6 @@ class UserListAdapter(
 
         fun bind(user: UserSimple) {
             username.text = user.username
-            // Glide ile avatarUrl yükleyebilirsin, yoksa placeholder:
-            // Glide.with(itemView).load(user.avatarUrl).into(avatar)
             avatar.setImageResource(R.drawable.avatar)
             itemView.setOnClickListener { onClick(user) }
         }
@@ -39,7 +37,6 @@ class UserListAdapter(
 
     override fun getItemCount(): Int = users.size
 
-    /** Dışarıdan yeni liste geldiğinde bunu çağır */
     fun submitList(newUsers: List<UserSimple>) {
         users = newUsers
         notifyDataSetChanged()

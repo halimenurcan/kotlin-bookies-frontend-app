@@ -26,7 +26,7 @@ class UserItemAdapter(private val items: List<UserItem>) :
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = items[position]
         holder.name.text = user.username
-        holder.image.setImageResource(R.drawable.avatar) // dummy image
+        holder.image.setImageResource(R.drawable.avatar)
     }
 
     override fun getItemCount() = items.size
