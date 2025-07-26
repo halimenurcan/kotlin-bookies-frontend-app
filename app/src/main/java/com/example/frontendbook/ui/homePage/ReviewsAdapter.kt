@@ -29,9 +29,16 @@ class ReviewsAdapter(
     private val expandedItems = mutableSetOf<Long>()
 
     fun updateLikedReviewIds(newLikedIds: List<Long>) {
+
         Log.d("ADAPTER_UPDATE", "updateLikedReviewIds called with: $newLikedIds")
-        likedReviewIds = newLikedIds.toMutableList()
-        submitList(currentList.toList()) // trigger rebinding
+        likedReviewIds.clear()
+        likedReviewIds.addAll(newLikedIds)
+
+        currentList.forEach { review ->
+            review.isLiked = likedReviewIds.contains(review.id)
+        }
+
+        submitList(currentList.toList()) // Yeni referansla tetikler
     }
 
     private fun isReviewLiked(reviewId: Long): Boolean {
@@ -105,29 +112,35 @@ class ReviewsAdapter(
             b.likeButton.setImageResource(if (isLiked) R.drawable.like_filled else R.drawable.like)
 
             b.likeButton.setOnClickListener {
-                val willLike = !isLiked
-                Log.d("LIKE_CLICK", "User clicked like on id=${r.id}, willLike=$willLike")
+                val isNowLiked = !r.isLiked
+                r.isLiked = isNowLiked // DTO'yu anında güncelle
 
-                // UI anında güncellenir
-                b.likeButton.setImageResource(if (willLike) R.drawable.like_filled else R.drawable.like)
+                // UI anında değişsin
+                b.likeButton.setImageResource(
+                    if (isNowLiked) R.drawable.like_filled else R.drawable.like
+                )
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    val success = if (willLike) likedRepo.like(userId, r.id)
-                    else likedRepo.unlike(userId, r.id)
+                    val success = if (isNowLiked)
+                        likedRepo.like(userId, r.id)
+                    else
+                        likedRepo.unlike(userId, r.id)
 
                     withContext(Dispatchers.Main) {
-                        if (success) {
-                            if (willLike) likedReviewIds.add(r.id)
-                            else likedReviewIds.remove(r.id)
-                            notifyItemChanged(bindingAdapterPosition)
-                            onLikedChanged?.invoke()
-                        } else {
+                        if (!success) {
+                            // Geri al
+                            r.isLiked = !isNowLiked
+                            b.likeButton.setImageResource(
+                                if (r.isLiked) R.drawable.like_filled else R.drawable.like
+                            )
                             Toast.makeText(b.root.context, "İşlem başarısız oldu!", Toast.LENGTH_SHORT).show()
-                            b.likeButton.setImageResource(if (!willLike) R.drawable.like_filled else R.drawable.like)
+                        } else {
+                            onLikedChanged?.invoke() // Dışarıya bildir
                         }
                     }
                 }
             }
+
         }
     }
 
