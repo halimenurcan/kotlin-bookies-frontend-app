@@ -1,5 +1,6 @@
 package com.example.frontendbook.ui.base.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,14 @@ class ListAdapter(
 ) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        private val titleView: TextView = itemView.findViewById(R.id.listTitle)
         private val addCardView: View = itemView.findViewById(R.id.addCardView)
         private val deleteButton: MaterialButton = itemView.findViewById(R.id.deleteButton)
 
         fun bind(listItem: ListDto) {
+            titleView.text = listItem.title
 
+            itemView.setOnClickListener(null)
             addCardView.setOnClickListener {
                 AddBookToListBottomSheet.newInstance(listItem.id)
                     .show((itemView.context as FragmentActivity).supportFragmentManager, "AddBookToList")

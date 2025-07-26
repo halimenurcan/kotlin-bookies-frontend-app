@@ -83,7 +83,6 @@
                 android:layout_marginVertical="8dp"
                 android:background="@color/line" />
 
-            <!-- Açıklama -->
             <TextView
                 android:id="@+id/bookDescription"
                 android:layout_width="match_parent"
@@ -92,7 +91,20 @@
                 android:textColor="@color/textBookInfo"
                 android:lineSpacingExtra="4dp"
                 android:textStyle="normal"
-                android:maxLines="100" />
+                android:maxLines="4"
+                android:ellipsize="end" />
+
+            <!-- Read More toggle -->
+            <TextView
+                android:id="@+id/readMoreToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read more"
+                android:textColor="@color/buttonSecondary"
+                android:textStyle="bold"
+                android:paddingTop="4dp"
+                android:clickable="true"
+                android:focusable="true" />
 
             <!-- Butonlar -->
             <LinearLayout
@@ -113,16 +125,6 @@
                     android:textColor="@android:color/white"
                     />
 
-                <Button
-                    android:id="@+id/bookInfolistsButton"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Lists"
-                    android:backgroundTint="@color/buttonSecondary"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
             <!-- Ratings -->

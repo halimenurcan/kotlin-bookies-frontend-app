@@ -1,10 +1,12 @@
 package com.example.frontendbook.ui.bookInfoPage
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -69,6 +71,24 @@ class BookInfoPageFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+        val bookDescription = view.findViewById<TextView>(R.id.bookDescription)
+        val readMoreToggle = view.findViewById<TextView>(R.id.readMoreToggle)
+
+        var isExpanded = false
+
+        readMoreToggle.setOnClickListener {
+            isExpanded = !isExpanded
+            if (isExpanded) {
+                bookDescription.maxLines = Integer.MAX_VALUE
+                bookDescription.ellipsize = null
+                readMoreToggle.text = "Read less"
+            } else {
+                bookDescription.maxLines = 4
+                bookDescription.ellipsize = TextUtils.TruncateAt.END
+                readMoreToggle.text = "Read more"
+            }
+        }
+
     }
 
     private fun renderRatingStars(rating: Int) {
