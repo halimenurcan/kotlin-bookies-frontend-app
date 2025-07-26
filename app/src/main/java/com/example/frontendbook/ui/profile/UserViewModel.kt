@@ -70,14 +70,18 @@ class UserViewModel(
         }
     }
 
-    fun updateAvatar(userId: Long, avatar: Long) {
+    fun updateAvatar(userId: Long, avatarId: Long) {
         viewModelScope.launch {
-            val success = repository.updateAvatar(userId, avatar)
-            if (!success) {
-                Log.e("UserViewModel", "updateAvatar() → başarısız!")
+            try {
+                val response = repository.updateAvatar(userId, avatarId)
+                Log.d("UserViewModel", "Avatar güncellendi: $response")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Avatar güncelleme hatası", e)
             }
         }
     }
+
+
 
 
 }

@@ -55,18 +55,17 @@ class ProfileFragment : Fragment() {
                 }
             }
         )[LikedBooksViewModel::class.java]
-        // UserViewModel
+
         viewModel = ViewModelProvider(this, UserViewModelFactory(requireContext()))
             .get(UserViewModel::class.java)
-        // ReadViewModel (okunan/okunacak kitaplar)
+
         readViewModel = ViewModelProvider(
             this,
             ReadViewModelFactory(requireContext())
         )[ReadViewModel::class.java]
-        // UserRepository
+
         userRepository = UserRepository(RetrofitClient.userApiService(requireContext()))
 
-        // SharedPrefs'ten userId al
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
         Log.d(TAG, "onViewCreated - userId from prefs = $userId")
@@ -75,26 +74,8 @@ class ProfileFragment : Fragment() {
             return
         }
 
-        // --- AVATAR GÜNCELLEME (Backend'den ÇEKMEK) ---
         // Her profil açılışında avatar'ı çek
-        lifecycleScope.launch {
-            val avatarResponse = userRepository.fetchAvatar(userId)
-
-            val avatarId = avatarResponse?.avatar ?: 0L // Null ise default avatar
-            Log.d(TAG, "Profil avatar backend id: $avatarId")
-            // Backend'den dönen avatar id'sini drawable ile eşleştir
-            val avatarDrawable = when (avatarId.toInt()) {
-                1 -> R.drawable.bookworms
-                2 -> R.drawable.bookfriends
-                3 -> R.drawable.bookbibliofil
-                4 -> R.drawable.bookcat
-                else -> R.drawable.avatar // default
-            }
-
-            binding.profileImage.setImageResource(avatarDrawable)
-            loadAvatar(userId)
-
-        }
+        loadAvatar(userId)
 
         // LiveData gözlemleri (User)
         viewModel.user.observe(viewLifecycleOwner) { user ->
@@ -154,49 +135,53 @@ class ProfileFragment : Fragment() {
         // Profil resmi ve ayarlar butonları
         binding.profileImage.setOnClickListener {
             ChooseProfileImageBottomSheetFragment { selectedResId ->
+                // Seçilen resmi anında göster
                 binding.profileImage.setImageResource(selectedResId)
+                // Avatarı backend'e kaydettikten sonra güncel halini çek (veya anında göster)
+                loadAvatar(userId)
             }.show(parentFragmentManager, "ChooseProfile")
         }
+
         binding.btnSettings.setOnClickListener {
             SettingsBottomSheetFragment().show(parentFragmentManager, "Settings")
         }
 
-        // --- OKUNMUŞ KİTAPLAR (btnRead) ---
+        // OKUNMUŞ KİTAPLAR (btnRead)
         binding.btnRead.setOnClickListener {
             readViewModel.loadReadBooks(userId)
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
                     putString("title", "Read")
-                    putString("type",  "read")
+                    putString("type", "read")
                     putLong("userId", userId)
-                    putLong("listId",0)
+                    putLong("listId", 0)
                 }
             )
         }
-        // --- OKUNACAK KİTAPLAR (btnReadlist) ---
+        // OKUNACAK KİTAPLAR (btnReadlist)
         binding.btnReadlist.setOnClickListener {
             readViewModel.loadToReadList(userId)
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
                     putString("title", "Readlist")
-                    putString("type",  "readlist")
+                    putString("type", "readlist")
                     putLong("userId", userId)
-                    putLong("listId",0)
+                    putLong("listId", 0)
                 }
             )
         }
-        // --- BEĞENİLER (btnLikes) ---
+        // BEĞENİLER (btnLikes)
         binding.btnLikes.setOnClickListener {
             likedBooksViewModel.loadLikedBooks(userId)
             findNavController().navigate(
                 R.id.threeColumnFragment,
                 Bundle().apply {
-                    putString("title","Likes")
-                    putString("type",  "likes")
+                    putString("title", "Likes")
+                    putString("type", "likes")
                     putLong("userId", userId)
-                    putLong("listId",0)
+                    putLong("listId", 0)
                 }
             )
         }
@@ -224,21 +209,21 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.listsFragment)
         }
     }
+
     private fun loadAvatar(userId: Long) {
         lifecycleScope.launch {
             val avatarResponse = userRepository.fetchAvatar(userId)
-            val avatarId = avatarResponse?.avatar ?: 0L
-            val avatarDrawable = when (avatarId.toInt()) {
-                1 -> R.drawable.bookworms
-                2 -> R.drawable.bookfriends
-                3 -> R.drawable.bookbibliofil
-                4 -> R.drawable.bookcat
-                else -> R.drawable.avatar
+            val avatarName = avatarResponse?.avatar ?: "avatar.png"
+            val avatarDrawable = when (avatarName) {
+                "bookworms.png"    -> R.drawable.bookworms
+                "bookfriends.png"  -> R.drawable.bookfriends
+                "bookbibliofil.png"-> R.drawable.bookbibliofil
+                "bookcat.png"      -> R.drawable.bookcat
+                else               -> R.drawable.avatar
             }
             binding.profileImage.setImageResource(avatarDrawable)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
