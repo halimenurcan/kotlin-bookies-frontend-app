@@ -12,8 +12,8 @@ class LikedReviewsRepository(
     }
     suspend fun getLikedReviewIds(userId: Long): List<Long> {
         val response = api.getLikedReviews(userId)
-        return response.embedded.comments.map { it.id }
-
+        val likedIds = response.embedded?.comments?.map { it.id } ?: emptyList()
+return likedIds
     }  suspend fun getLikeCount(reviewId: Long): Int {
         val resp = api.getReviewLikeCount(reviewId)
         return if (resp.isSuccessful) resp.body() ?: 0 else 0

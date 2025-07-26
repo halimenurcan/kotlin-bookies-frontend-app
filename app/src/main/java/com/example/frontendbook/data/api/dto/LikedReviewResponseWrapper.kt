@@ -13,10 +13,10 @@ data class Embedded(
 )
 data class LikedReviewsResponse(
     @SerializedName("_embedded")
-    val embedded: EmbeddedLikedReviews
+    val embedded: EmbeddedLikedReviews?
 )
 
 data class EmbeddedLikedReviews(
     @SerializedName("commentResponseDTOList")
-    val comments: List<LikedReviewDto>
+    val comments: List<LikedReviewDto> = emptyList() 
 )
