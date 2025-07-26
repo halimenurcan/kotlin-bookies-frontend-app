@@ -6,7 +6,7 @@ data class CommentsResponse(
     @SerializedName("_embedded")
     val embedded: EmbeddedComments
 )
-data class CommentListWrapper(
-    @SerializedName("commentResponseDTOList")
-    val comments: List<CommentResponseDTO>
+data class CommentResponseWrapper(
+    @SerializedName("_embedded")
+    val embedded: EmbeddedComments? = null
 )
