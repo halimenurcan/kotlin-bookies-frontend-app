@@ -79,11 +79,14 @@ class ListsFragment : Fragment() {
         otherListAdapter = OtherListAdapter(
             lists = emptyList(),
             onFollowClick = { listDto ->
-                Toast.makeText(requireContext(), "Followed ${listDto.title}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Followed ${listDto.title}", Toast.LENGTH_SHORT)
+                    .show()
             },
             onBookClick = { bookId ->
-                Toast.makeText(requireContext(), "Clicked bookId: $bookId", Toast.LENGTH_SHORT).show()
-            }
+                Toast.makeText(requireContext(), "Clicked bookId: $bookId", Toast.LENGTH_SHORT)
+                    .show()
+            },
+            onSeeMoreClick = onSeeMoreClicked
         )
 
         // ADAPTER ve LAYOUT

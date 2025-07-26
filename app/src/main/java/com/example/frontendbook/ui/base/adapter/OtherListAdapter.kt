@@ -4,10 +4,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.BookDto
 import com.example.frontendbook.data.api.dto.ListDto
@@ -16,14 +18,14 @@ import com.google.android.material.button.MaterialButton
 class OtherListAdapter(
     private var lists: List<ListDto>,
     private val onFollowClick: (ListDto) -> Unit,
-    private val onBookClick: (BookDto) -> Unit
+    private val onBookClick: (BookDto) -> Unit,
+    private val onSeeMoreClick: (ListDto) -> Unit  // ✅ Eklendi
 ) : RecyclerView.Adapter<OtherListAdapter.OtherListViewHolder>() {
 
     private var followedListIds: Set<Long> = emptySet()
 
     fun setFollowedListIds(ids: List<Long>) {
-        Log.d("OtherListAdapter", "setFollowedListIds: $followedListIds")
-
+        Log.d("OtherListAdapter", "setFollowedListIds: $ids")
         this.followedListIds = ids.toSet()
         notifyDataSetChanged()
     }
@@ -36,10 +38,7 @@ class OtherListAdapter(
         fun bind(listItem: ListDto) {
             titleView.text = listItem.title
 
-            // Takip durumu kontrolü
             val isFollowed = followedListIds.contains(listItem.id)
-            Log.d("OtherListAdapter", "List ${listItem.title}, id=${listItem.id}, isFollowed=$isFollowed")
-
             followButton.text = if (isFollowed) "Unfollow" else "Follow"
             followButton.setBackgroundColor(
                 itemView.context.getColor(
@@ -52,12 +51,19 @@ class OtherListAdapter(
             }
 
             bookContainer.removeAllViews()
-            listItem.books.forEach { book ->
-                val bookView = LayoutInflater.from(itemView.context)
-                    .inflate(R.layout.item_book_grid, bookContainer, false)
+            val inflater = LayoutInflater.from(itemView.context)
 
+            listItem.books.forEach { book ->
+                val bookView = inflater.inflate(R.layout.item_book_grid, bookContainer, false)
                 val bookTitle = bookView.findViewById<TextView>(R.id.bookTitle)
+                val bookImage = bookView.findViewById<ImageView>(R.id.bookImage)
+
                 bookTitle.text = book.title
+
+                Glide.with(itemView.context)
+                    .load(book.coverImageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .into(bookImage)
 
                 bookView.setOnClickListener {
                     onBookClick(book)
@@ -65,6 +71,15 @@ class OtherListAdapter(
 
                 bookContainer.addView(bookView)
             }
+
+            // ✅ See More Card
+            val seeMoreCard = inflater.inflate(R.layout.see_more_card, bookContainer, false)
+            seeMoreCard.setOnClickListener {
+                Log.d("OtherListAdapter", "See more clicked for listId=${listItem.id}")
+                onSeeMoreClick(listItem)
+            }
+
+            bookContainer.addView(seeMoreCard)
         }
     }
 
@@ -85,4 +100,3 @@ class OtherListAdapter(
         notifyDataSetChanged()
     }
 }
-
