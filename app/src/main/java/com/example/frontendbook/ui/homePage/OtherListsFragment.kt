@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,11 +56,9 @@ class OtherListsFragment : Fragment() {
             lists = emptyList(),
             onFollowClick = { listDto ->
                 if (currentUserId != -1L) {
-                    Log.d("OtherListsFragment", "Follow/unfollow: ${listDto.id}")
                     followViewModel.toggleFollow(currentUserId, listDto.id)
                 } else {
-                    Toast.makeText(requireContext(), "Kullanıcı bulunamadı!", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "Kullanıcı bulunamadı!", Toast.LENGTH_SHORT).show()
                 }
             },
             onBookClick = { book ->
@@ -81,13 +78,13 @@ class OtherListsFragment : Fragment() {
                     .actionOtherListsFragmentToBookDetailFragment(domainBook)
                 findNavController().navigate(action)
             },
-            onSeeMoreClick = { listDto -> // ✅ See More tıklanınca çalışacak navigation
-                val action = HomePageFragmentDirections
-                    .actionHomePageFragmentToThreeColumnFragment(
+            onSeeMoreClick = { listDto ->
+                val action = OtherListsFragmentDirections
+                    .actionListsFragmentToThreeColumnFragment(
                         title = listDto.title ?: "List",
                         listId = listDto.id,
-                        type = null,
-                        userId = 0
+                        type = "custom",
+                        userId = listDto.owner.id
                     )
                 findNavController().navigate(action)
             }
@@ -120,14 +117,12 @@ class OtherListsFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
-                Log.e("OtherListsFragment", "Hata: $it")
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
             }
         }
 
         followViewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
-                Log.e("OtherListsFragment", "Takip hatası: $it")
                 Toast.makeText(requireContext(), "Takip hatası: $it", Toast.LENGTH_SHORT).show()
             }
         }
@@ -141,8 +136,6 @@ class OtherListsFragment : Fragment() {
 
                 if (bookContainer != null) {
                     populateBooks(listDto, bookContainer)
-                } else {
-                    Log.w("OtherListsFragment", "bookContainer bulunamadı. Pozisyon: $index")
                 }
             }
         }
@@ -150,8 +143,8 @@ class OtherListsFragment : Fragment() {
 
     private fun populateBooks(listDto: ListDto, container: LinearLayout) {
         container.removeAllViews()
-
         val inflater = LayoutInflater.from(context)
+
         listDto.books.forEach { book ->
             val bookView = inflater.inflate(R.layout.item_book_grid, container, false)
             val bookImage = bookView.findViewById<ImageView>(R.id.bookImage)
@@ -159,15 +152,13 @@ class OtherListsFragment : Fragment() {
 
             bookTitle.text = book.title.orEmpty()
 
-            val imageUrl = book.coverImageUrl
-            if (!imageUrl.isNullOrBlank()) {
+            if (!book.coverImageUrl.isNullOrBlank()) {
                 Glide.with(requireContext())
-                    .load(imageUrl)
+                    .load(book.coverImageUrl)
                     .placeholder(R.drawable.placeholder)
                     .into(bookImage)
             } else {
                 bookImage.setImageResource(R.drawable.placeholder)
-                Log.w("OtherListsFragment", "Boş kapak görseli için placeholder gösterildi: ${book.title}")
             }
 
             bookView.setOnClickListener {
@@ -175,7 +166,7 @@ class OtherListsFragment : Fragment() {
                     id = book.id,
                     title = book.title.orEmpty(),
                     isbn = book.isbn.orEmpty(),
-                    coverImageUrl = imageUrl.orEmpty(),
+                    coverImageUrl = book.coverImageUrl.orEmpty(),
                     author = book.author?.toString().orEmpty(),
                     description = book.description.orEmpty(),
                     pageCount = book.pageCount ?: 0,
@@ -193,20 +184,16 @@ class OtherListsFragment : Fragment() {
 
         val seeMoreCard = inflater.inflate(R.layout.see_more_card, container, false)
         seeMoreCard.setOnClickListener {
-            onSeeMoreClicked(listDto)
+            val action = OtherListsFragmentDirections
+                .actionListsFragmentToThreeColumnFragment(
+                    title = listDto.title ?: "List",
+                    listId = listDto.id,
+                    type = "custom",
+                    userId = listDto.owner.id
+                )
+            findNavController().navigate(action)
         }
         container.addView(seeMoreCard)
-    }
-
-    private val onSeeMoreClicked: (ListDto) -> Unit = { listDto ->
-        val action = HomePageFragmentDirections
-            .actionHomePageFragmentToThreeColumnFragment(
-                title = listDto.title ?: "List",
-                listId = listDto.id,
-                type = null,
-                userId = 0
-            )
-        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

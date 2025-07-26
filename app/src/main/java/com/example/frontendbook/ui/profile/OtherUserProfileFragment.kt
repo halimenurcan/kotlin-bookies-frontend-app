@@ -50,22 +50,24 @@ class OtherUserProfileFragment : Fragment() {
         // User bilgi gözlemleri
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             binding.otherUsernameText.text = user.username
-            if (!user.profileImageUrl.isNullOrBlank()) {
-                Glide.with(this)
-                    .load(user.profileImageUrl)
-                    .placeholder(R.drawable.avatar)
-                    .circleCrop()
-                    .into(binding.otherProfileImage)
-            } else {
-                binding.otherProfileImage.setImageResource(R.drawable.avatar)
+
+            val avatarName = user.profileImageUrl ?: "avatar.png"
+            val avatarDrawable = when (avatarName) {
+                "bookworms.png"     -> R.drawable.bookworms
+                "bookfriends.png"   -> R.drawable.bookfriends
+                "bookbibliofil.png" -> R.drawable.bookbibliofil
+                "bookcat.png"       -> R.drawable.bookcat
+                else                -> R.drawable.avatar
             }
+
+            binding.otherProfileImage.setImageResource(avatarDrawable)
         }
         userViewModel.error.observe(viewLifecycleOwner) { it?.let { m -> Toast.makeText(requireContext(), m, Toast.LENGTH_LONG).show() } }
         userViewModel.followersCount.observe(viewLifecycleOwner) { count ->
-            binding.btnOtherFollowers.text = getString(R.string.followers_count, count)
+            binding.btnOtherFollowers.text = getString(R.string.following_count, count)
         }
         userViewModel.followingCount.observe(viewLifecycleOwner) { count ->
-            binding.btnOtherFollowing.text = getString(R.string.following_count, count)
+            binding.btnOtherFollowing.text = getString(R.string.followers_count, count)
         }
 
         // Takip durumu gözlemi
@@ -89,7 +91,7 @@ class OtherUserProfileFragment : Fragment() {
             findNavController().navigate(
                 R.id.userListFragment,
                 Bundle().apply {
-                    putSerializable("userListType", UserListType.FOLLOWERS)
+                    putSerializable("userListType", UserListType.FOLLOWING)
                     putLong("profileUserId", targetUserId)
                 }
             )
@@ -100,7 +102,7 @@ class OtherUserProfileFragment : Fragment() {
             findNavController().navigate(
                 R.id.userListFragment,
                 Bundle().apply {
-                    putSerializable("userListType", UserListType.FOLLOWING)
+                    putSerializable("userListType", UserListType.FOLLOWERS)
                     putLong("profileUserId", targetUserId)
 
                 }
