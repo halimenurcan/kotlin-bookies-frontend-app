@@ -9,7 +9,6 @@
     android:showDividers="middle"
     android:dividerPadding="8dp">
 
-    <!-- Avatar 1 -->
     <FrameLayout
         android:id="@+id/avatar1Container"
         android:layout_width="72dp"
@@ -37,7 +36,6 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <!-- Avatar 2 -->
     <FrameLayout
         android:id="@+id/avatar2Container"
         android:layout_width="72dp"
@@ -65,7 +63,6 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <!-- Avatar 3 -->
     <FrameLayout
         android:id="@+id/avatar3Container"
         android:layout_width="72dp"
@@ -93,7 +90,6 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <!-- Avatar 4 -->
     <FrameLayout
         android:id="@+id/avatar4Container"
         android:layout_width="72dp"

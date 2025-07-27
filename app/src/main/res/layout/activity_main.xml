@@ -6,7 +6,6 @@
     android:fitsSystemWindows="true"
     >
 
-    <!-- Toolbar en üstte -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolbar"
         android:layout_width="0dp"

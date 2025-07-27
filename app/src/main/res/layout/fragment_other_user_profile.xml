@@ -8,7 +8,6 @@
     tools:context=".ui.profile.OtherUserProfileFragment"
     android:background="@color/backgroundPrimary">
 
-    <!-- Profil Üst Alan -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/otherProfileHeader"
         android:layout_width="match_parent"
@@ -42,7 +41,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- ***** EKLENDİ: Takip Et / Bırak Butonu ***** -->
         <Button
             android:id="@+id/btnFollowAction"
             android:layout_width="wrap_content"
@@ -85,14 +83,12 @@
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Alt Menü: Read, Readlist, Lists, Likes -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/otherConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/headerColor">
 
-        <!-- Read -->
         <LinearLayout
             android:id="@+id/btnOtherRead"
             android:layout_width="0dp"
@@ -122,7 +118,6 @@
                 app:tint="@color/footer_icons" />
         </LinearLayout>
 
-        <!-- Readlist -->
         <LinearLayout
             android:id="@+id/btnOtherReadlist"
             android:layout_width="0dp"
@@ -151,7 +146,6 @@
                 app:tint="@color/footer_icons" />
         </LinearLayout>
 
-        <!-- Lists -->
         <LinearLayout
             android:id="@+id/btnOtherLists"
             android:layout_width="0dp"
@@ -180,7 +174,6 @@
                 app:tint="@color/footer_icons" />
         </LinearLayout>
 
-        <!-- Likes -->
         <LinearLayout
             android:id="@+id/btnOtherLikes"
             android:layout_width="0dp"

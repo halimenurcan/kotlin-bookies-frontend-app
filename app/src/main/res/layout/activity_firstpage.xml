@@ -8,7 +8,6 @@
     android:background="@color/backgroundPrimary"
     tools:context=".ui.entry.FirstPageActivity">
 
-    <!-- "BOOKIES" başlık -->
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
@@ -23,7 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Sign In Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signin"
         android:layout_width="0dp"
@@ -42,7 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Create Account Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/createaccount"
         android:layout_width="0dp"

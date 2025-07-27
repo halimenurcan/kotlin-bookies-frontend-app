@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <!-- Silinecek kod -->
     <TextView
         android:id="@+id/listDetailTitle"
         android:layout_width="wrap_content"
@@ -17,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Takip Et/Bırak Butonu -->
     <Button
         android:id="@+id/followListButton"
         android:layout_width="wrap_content"

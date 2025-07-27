@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="32dp">
 
-        <!-- Title -->
         <TextView
             android:id="@+id/signInTitle"
             android:layout_width="wrap_content"
@@ -29,7 +28,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Username Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameInputLayout"
             android:layout_width="0dp"
@@ -52,7 +50,6 @@
                 android:textColor="@color/textPrimary" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordInputLayout"
             android:layout_width="0dp"
@@ -75,7 +72,6 @@
                 android:textColor="@color/textPrimary" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Sign in Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/goMain"
             android:layout_width="0dp"
@@ -92,7 +88,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Join Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/gobacktoJoin"
             android:layout_width="0dp"
@@ -109,7 +104,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Reset Password Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/resetPass"
             android:layout_width="0dp"

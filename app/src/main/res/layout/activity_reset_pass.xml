@@ -9,7 +9,6 @@
     android:background="@color/backgroundPrimary"
     tools:context=".ui.signIn.SignInResetPassActivity">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/resetPas"
         android:layout_width="wrap_content"
@@ -23,7 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- E-mail input field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailInputLayout"
         style="@style/Widget.Bookies.TextInputLayout.OutlinedBox"
@@ -45,7 +43,6 @@
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Send Code Button  -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/goReset"
         android:layout_width="0dp"
@@ -62,7 +59,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Join Button  -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/gobacktoJoin"
         android:layout_width="0dp"
@@ -79,7 +75,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Sign in Button  -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/gobacktoSignin"
         android:layout_width="0dp"

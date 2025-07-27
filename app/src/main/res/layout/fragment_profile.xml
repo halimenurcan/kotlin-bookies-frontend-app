@@ -7,7 +7,6 @@
     tools:context=".ui.profile.ProfileFragment"
     android:background="@color/backgroundPrimary">
 
-    <!-- Profil Üst Alan -->
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:id="@+id/profileHeader"
@@ -18,7 +17,6 @@
         android:padding="16dp">
 
 
-        <!-- Ayarlar Butonu -->
 
 
         <ImageButton
@@ -34,7 +32,6 @@
             app:tint="@color/stars_rated" />
 
 
-        <!-- Profil Resmi -->
         <ImageView
             android:id="@+id/profileImage"
             android:layout_width="96dp"
@@ -53,7 +50,6 @@
             app:layout_constraintTop_toBottomOf="@id/btnSettings" />
 
 
-        <!-- Kullanıcı Adı -->
         <TextView
             android:id="@+id/usernameText"
             android:layout_width="wrap_content"
@@ -71,7 +67,6 @@
 
             />
 
-        <!-- Followers -->
         <Button
             android:id="@+id/btnFollowers"
             android:layout_width="wrap_content"
@@ -85,7 +80,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/usernameText" />
 
-        <!-- Following -->
         <Button
             android:id="@+id/btnFollowing"
             android:layout_width="wrap_content"
@@ -102,14 +96,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Alt Menü: Read, Readlist, Lists, Likes -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/headerColor">
 
-        <!-- Read -->
         <LinearLayout
             android:id="@+id/btnRead"
             android:layout_width="0dp"
@@ -124,7 +116,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5">
 
-            <!-- "Read" yazısı -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -133,9 +124,7 @@
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
 
-            <!-- Kitap ikonu (Book 2) -->
 
-            <!-- Ok işareti -->
             <ImageView
                 android:id="@+id/p_read"
                 android:layout_width="24dp"
@@ -153,7 +142,6 @@
         </LinearLayout>
 
 
-        <!-- Readlist -->
         <LinearLayout
             android:id="@+id/btnReadlist"
             android:layout_width="0dp"
@@ -189,7 +177,6 @@
                 app:tint="@color/footer_icons" />
         </LinearLayout>
 
-        <!-- Lists -->
         <LinearLayout
             android:id="@+id/btnLists"
             android:layout_width="0dp"
@@ -225,7 +212,6 @@
                 app:tint="@color/footer_icons" />
         </LinearLayout>
 
-        <!-- Likes -->
         <LinearLayout
             android:id="@+id/btnLikes"
             android:layout_width="0dp"

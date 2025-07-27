@@ -6,7 +6,6 @@
     android:background="@color/backgroundPrimary"
     android:padding="12dp">
 
-    <!-- Book Cover -->
     <ImageView
         android:id="@+id/reviewBookCover"
         android:layout_width="80dp"
@@ -19,7 +18,6 @@
         android:focusable="true"
         />
 
-    <!-- Like Button -->
     <ImageButton
         android:id="@+id/likeButton"
         android:layout_width="36dp"
@@ -30,7 +28,6 @@
         android:src="@drawable/like"
         android:contentDescription="Like" />
 
-    <!-- Rating Bar -->
     <RatingBar
         android:id="@+id/reviewRatingBar"
         style="?android:attr/ratingBarStyleSmall"
@@ -42,7 +39,6 @@
         android:stepSize="1"
         android:isIndicator="true" />
 
-    <!-- Vertical Content -->
     <LinearLayout
         android:id="@+id/reviewContentContainer"
         android:layout_width="match_parent"
@@ -53,7 +49,6 @@
         android:orientation="vertical"
         android:layout_marginTop="4dp">
 
-        <!-- Book Title -->
         <TextView
             android:id="@+id/reviewBookTitle"
             android:layout_width="match_parent"
@@ -64,7 +59,6 @@
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Review Content -->
         <TextView
             android:id="@+id/reviewContent"
             android:layout_width="match_parent"
@@ -75,7 +69,6 @@
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Author -->
         <TextView
             android:id="@+id/reviewAuthor"
             android:layout_width="match_parent"
@@ -84,7 +77,6 @@
             android:textSize="12sp"
             android:layout_marginBottom="2dp" />
 
-        <!-- Timestamp -->
         <TextView
             android:id="@+id/reviewTimestamp"
             android:layout_width="match_parent"

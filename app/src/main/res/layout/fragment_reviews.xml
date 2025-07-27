@@ -8,7 +8,6 @@
     android:background="@color/backgroundPrimary"
     tools:context=".ui.homePage.ReviewsFragment">
 
-    <!-- Sayfa başlığı -->
     <TextView
         android:id="@+id/reviewsTitle"
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reviewsRecyclerView"
         android:background="@color/boxes_background"

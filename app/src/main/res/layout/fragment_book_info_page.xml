@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundPrimary">
 
-    <!-- Üstte büyük görsel -->
     <FrameLayout
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"
@@ -17,13 +16,11 @@
             android:scaleType="centerCrop"
             android:src="@drawable/bookk" />
 
-        <!-- Gradient -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bottom_gradient" />
 
-        <!-- More button -->
         <ImageButton
             android:id="@+id/buttonMore"
             android:layout_width="48dp"
@@ -35,7 +32,6 @@
             android:contentDescription="@string/more_options" />
     </FrameLayout>
 
-    <!-- İçerik -->
     <ScrollView
         android:id="@+id/scrollContent"
         android:layout_below="@id/imageContainer"
@@ -49,7 +45,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Kitap bilgileri -->
             <TextView
                 android:id="@+id/bookTitle"
                 android:layout_width="wrap_content"
@@ -76,7 +71,6 @@
                 android:textStyle="italic"
                 android:textSize="14sp" />
 
-            <!-- Ayırıcı -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -94,7 +88,6 @@
                 android:maxLines="4"
                 android:ellipsize="end" />
 
-            <!-- Read More toggle -->
             <TextView
                 android:id="@+id/readMoreToggle"
                 android:layout_width="wrap_content"
@@ -106,7 +99,6 @@
                 android:clickable="true"
                 android:focusable="true" />
 
-            <!-- Butonlar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,7 +119,6 @@
 
             </LinearLayout>
 
-            <!-- Ratings -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

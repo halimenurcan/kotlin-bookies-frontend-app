@@ -30,7 +30,6 @@
             android:gravity="center"
             android:layout_marginTop="8dp" />
 
-        <!-- Ok ikonu -->
         <ImageView
             android:id="@+id/addPlus"
             android:layout_width="30dp"

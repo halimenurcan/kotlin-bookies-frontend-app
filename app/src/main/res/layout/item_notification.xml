@@ -16,7 +16,6 @@
         android:gravity="center_vertical"
         android:padding="12dp">
 
-        <!-- Sol: İkon -->
         <ImageView
             android:id="@+id/notificationIcon"
             android:layout_width="40dp"
@@ -25,7 +24,6 @@
             android:contentDescription="Notification Icon"
             android:layout_marginEnd="12dp" />
 
-        <!-- Orta: Mesaj alanı -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -62,7 +60,6 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <!-- Sağ: Delete butonu -->
         <ImageButton
             android:id="@+id/notDeleteButton"
             android:layout_width="40dp"

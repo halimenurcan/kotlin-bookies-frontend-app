@@ -9,7 +9,6 @@
     android:background="@color/backgroundPrimary"
     tools:context=".ui.search.SearchFragment">
 
-    <!-- Yükleniyor göstergesi -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
@@ -28,7 +27,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Header -->
             <LinearLayout
                 android:id="@+id/searchHeader"
                 android:layout_width="match_parent"
@@ -72,7 +70,6 @@
                     android:inputType="text" />
             </LinearLayout>
 
-            <!-- Filtre Alanı -->
             <LinearLayout
                 android:id="@+id/browseContainer"
                 android:layout_width="match_parent"
@@ -80,7 +77,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Seçilen Filtreler ChipGroup -->
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupFilters"
                     android:layout_width="match_parent"
@@ -90,7 +86,6 @@
                     app:chipSpacing="8dp"
                     android:layout_marginBottom="8dp" />
 
-                <!-- Genre Ana Butonu -->
                 <Button
                     android:id="@+id/genreButton"
                     android:layout_width="match_parent"
@@ -100,7 +95,6 @@
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
 
-                <!-- Language -->
                 <Button
                     android:id="@+id/languageButton"
                     android:layout_width="match_parent"
@@ -113,7 +107,6 @@
 
 
 
-                <!-- Most Popular & Highly Rated -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -143,7 +136,6 @@
                         app:cornerRadius="8dp" />
                 </LinearLayout>
 
-                <!-- AI Search -->
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/aiSearchButton"
                     android:layout_width="wrap_content"
@@ -156,7 +148,6 @@
                     app:tint="@color/white" />
             </LinearLayout>
 
-            <!-- Sonuçlar -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"

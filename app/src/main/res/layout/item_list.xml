@@ -7,7 +7,6 @@
     android:background="@color/boxes_background"
     android:minHeight="180dp">
 
-    <!-- Dinamik Başlık -->
     <TextView
         android:id="@+id/listTitle"
         android:layout_width="match_parent"
@@ -18,7 +17,6 @@
         android:textColor="@color/textPrimary"
         android:paddingBottom="8dp" />
 
-    <!-- Kitaplar + See More -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +28,6 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Kitap Kutuları -->
             <include layout="@layout/item_book_grid" />
             <include layout="@layout/item_book_grid" />
             <include layout="@layout/item_book_grid" />

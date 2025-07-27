@@ -6,7 +6,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homePageFragment">
 
-    <!-- HomePage -->
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.frontendbook.ui.homePage.HomePageFragment"
@@ -26,7 +25,6 @@
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-    <!-- Search -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.frontendbook.ui.search.SearchFragment"
@@ -46,7 +44,6 @@
             app:destination="@id/threeColumnFragment" />
     </fragment>
 
-    <!-- BookInfoPage -->
     <fragment
         android:id="@+id/bookInfoPageFragment"
         android:name="com.example.frontendbook.ui.bookInfoPage.BookInfoPageFragment"
@@ -59,7 +56,6 @@
             app:destination="@id/reviewsFragment" />
     </fragment>
 
-    <!-- List that contains Reviews -->
     <fragment
         android:id="@+id/reviewsFragment"
         android:name="com.example.frontendbook.ui.homePage.ReviewsFragment"
@@ -77,7 +73,6 @@
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-    <!-- Own Profile -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.frontendbook.ui.profile.ProfileFragment"
@@ -88,7 +83,6 @@
             app:destination="@id/listsFragment" />
     </fragment>
 
-    <!-- Notifications -->
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
@@ -105,7 +99,6 @@
             app:destination="@id/listsFragment" />
     </fragment>
 
-    <!-- Three Column Fragment -->
     <fragment
         android:id="@+id/threeColumnFragment"
         android:name="com.example.frontendbook.ui.base.threecolumn.ThreeColumnFragment"
@@ -128,7 +121,6 @@
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-    <!-- AddBookBottomSheet -->
     <dialog
         android:id="@+id/addBookBottomSheet"
         android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
@@ -160,7 +152,6 @@
             app:destination="@id/threeColumnFragment"/>
     </fragment>
 
-    <!-- List that contains Users -->
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.example.frontendbook.ui.base.inlinestyle.UserListFragment"
@@ -170,7 +161,6 @@
         <argument android:name="profileUserId" app:argType="long" />
     </fragment>
 
-    <!-- Others Profiles -->
     <fragment
         android:id="@+id/otherUserProfileFragment"
         android:name="com.example.frontendbook.ui.profile.OtherUserProfileFragment"
@@ -184,7 +174,6 @@
             app:destination="@id/listsFragment" />
     </fragment>
 
-    <!-- Lists -->
     <fragment
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
@@ -207,7 +196,6 @@
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-    <!-- Liste Detayı -->
     <fragment
         android:id="@+id/listDetailFragment"
         android:name="com.example.frontendbook.ui.listdetail.ListDetailFragment"

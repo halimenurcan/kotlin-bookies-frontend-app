@@ -9,7 +9,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.notifications.NotificationsFragment">
 
-    <!-- Header -->
     <LinearLayout
         android:id="@+id/notificationsHeader"
         android:layout_width="match_parent"
@@ -29,7 +28,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Direkt RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notificationsRecyclerView"
         android:layout_width="match_parent"

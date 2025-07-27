@@ -27,7 +27,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 📌 "Popular This Week" Title with arrow -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +39,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Popular This Week"
+                    android:text="Popular Between Friends"
                     android:textColor="@color/textSecondary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -55,7 +54,6 @@
                     app:tint="@color/textSecondary" />
             </LinearLayout>
 
-            <!-- 🔁 Horizontal scroll of popular books -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +68,6 @@
                     android:background="@color/backgroundSecondary" />
             </HorizontalScrollView>
 
-            <!-- 📌 Explore More title -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,7 +96,6 @@
                     app:tint="@color/textSecondary" />
             </LinearLayout>
 
-            <!-- 🔲 RecyclerView for books -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/exploreBooksRecyclerView"
                 android:layout_width="match_parent"
@@ -113,7 +109,6 @@
                 tools:itemCount="9"
                 tools:listitem="@layout/item_book_grid" />
 
-            <!-- 🔘 See All Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/exploreSeeAll"
                 style="@style/Widget.Material3.Button.TextButton"
