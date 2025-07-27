@@ -1,6 +1,5 @@
 package com.example.frontendbook.ui.base.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.frontendbook.R
 import com.example.frontendbook.data.api.dto.ListDto
+import com.example.frontendbook.data.api.dto.BookDto
 import com.example.frontendbook.ui.addBook.AddBookToListBottomSheet
 import com.google.android.material.button.MaterialButton
 
@@ -31,6 +31,7 @@ class ListAdapter(
                 AddBookToListBottomSheet.newInstance(listItem.id)
                     .show((itemView.context as FragmentActivity).supportFragmentManager, "AddBookToList")
             }
+
             deleteButton.setOnClickListener {
                 onDeleteClick(listItem.id)
             }
@@ -50,7 +51,14 @@ class ListAdapter(
     override fun getItemCount(): Int = lists.size
 
     fun submitList(newLists: List<ListDto>) {
-        lists = newLists.toList()
+        // Aynı kitaplar tekrar etmesin diye kitapları distinct filtrele
+        val cleanedLists = newLists.map { list ->
+            list.copy(
+                books = list.books.distinctBy(BookDto::id)
+            )
+        }.distinctBy { it.id } // aynı liste birden fazla eklenmesin
+
+        lists = cleanedLists.toList() // yeni referansla güncelle
         notifyDataSetChanged()
     }
 }

@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class EmbeddedComments(
     @SerializedName("commentResponseDTOList")
-    val comments: List<CommentResponseDTO>
+    val comments: List<ReviewDto> = listOf()
 )

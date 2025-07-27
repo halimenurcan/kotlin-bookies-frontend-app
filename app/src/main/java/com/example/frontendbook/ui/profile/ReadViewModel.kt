@@ -34,9 +34,20 @@ class ReadViewModel(
         viewModelScope.launch {
             try {
                 val result = repository.getReadBooks(userId)
-                _readBooks.value = result
+
+                // DEBUG LOGGING
+                result.forEach {
+                    println("📚 Read Book -> id: ${it.bookId}, title: ${it.bookTitle}")
+                }
+
+                // book.id == 0 olanları filtrele
+                val validBooks = result.filter { it.bookId != 0L }
+
+                _readBooks.value = validBooks
+                _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
+                println("🚨 Hata: ${e.message}")
             }
         }
     }

@@ -23,8 +23,8 @@ interface ListsApiService {
         @Path("id") listId: Long
     ): Response<ListDto>
 
-    @GET("lists/{listId}")
-    suspend fun getListWithBooks(@Path("listId") listId: Long): ListDto
+    @GET("lists/{id}")
+    suspend fun getListWithBooks(@Path("id") listId: Long): ListDto
     @POST("lists")
     suspend fun createList(
         @Body listRequest: CreateListRequest
@@ -42,5 +42,6 @@ interface ListsApiService {
 
     @GET("/api/lists")
     suspend fun getAllLists(): List<ListDto>
-
+    @GET("lists/{id}")
+    suspend fun getListById(@Path("id") id: Long): ListDto
 }

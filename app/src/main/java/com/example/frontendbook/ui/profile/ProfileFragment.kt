@@ -204,9 +204,16 @@ class ProfileFragment : Fragment() {
                 }
             )
         }
-        // Listeler
         binding.btnLists.setOnClickListener {
-            findNavController().navigate(R.id.listsFragment)
+            val direction = ProfileFragmentDirections.actionProfileFragmentToListsFragment(
+                argUserId = userId,
+                argTitle = "Listelerim",
+                argType = "custom",
+                argListId = -1L,
+                profileUserId = userId,
+                showUserLists = true
+            )
+            findNavController().navigate(direction)
         }
     }
 

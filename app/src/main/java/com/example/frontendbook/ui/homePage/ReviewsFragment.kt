@@ -22,41 +22,35 @@ class ReviewsFragment : Fragment() {
 
     private var _binding: FragmentReviewsBinding? = null
     private val binding get() = _binding!!
-    private val args: ReviewsFragmentArgs by navArgs()
-    private val viewModel: ReviewsViewModel by viewModels { ReviewsViewModelFactory(requireContext()) }
-    private lateinit var adapter: ReviewsAdapter
-    private val likedReviewIds = mutableListOf<Long>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        Log.d("REVIEWS_FRAGMENT", "onCreateView called")
+    private lateinit var adapter: ReviewsAdapter
+    private val viewModel: ReviewsViewModel by viewModels { ReviewsViewModelFactory(requireContext()) }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentReviewsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("REVIEWS_FRAGMENT", "onViewCreated called")
         super.onViewCreated(view, savedInstanceState)
+
+        val reviewId = arguments?.getLong("reviewId", -1) ?: -1
+        Log.d("REVIEW_FRAG", "Received reviewId=$reviewId")
 
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
-        Log.d("REVIEWS_FRAGMENT", "userId from SharedPreferences: $userId")
 
         if (userId == -1L) {
             Toast.makeText(requireContext(), "Kullanıcı oturumu bulunamadı!", Toast.LENGTH_LONG).show()
-            Log.e("REVIEWS_FRAGMENT", "HATA: user_id bulunamadı, çıkılıyor.")
             return
         }
 
         val likedRepo = LikedReviewsRepository(RetrofitClient.likedReviewsApiService(requireContext()))
-        Log.d("REVIEWS_FRAGMENT", "LikedReviewsRepository oluşturuldu.")
 
-        // 1. BEĞENİLEN REVIEWS ID'LERİNİ ÇEK ve ADAPTER'I OLUŞTUR
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val likedReviewIds = likedRepo.getLikedReviewIds(userId) // suspend fonksiyon
-                Log.d("REVIEWS_FRAGMENT", "Kullanıcının beğendiği yorum id'leri: $likedReviewIds")
+                val likedReviewIds = likedRepo.getLikedReviewIds(userId)
+                Log.d("REVIEW_FRAG", "Liked review IDs: $likedReviewIds")
 
                 adapter = ReviewsAdapter(
                     likedRepo = likedRepo,
@@ -75,37 +69,39 @@ class ReviewsFragment : Fragment() {
                     adapter = this@ReviewsFragment.adapter
                 }
 
-                // YORUMLARI GÖZLE
-                viewModel.comments.observe(viewLifecycleOwner) { comments: List<ReviewDto> ->
-                    Log.d("REVIEWS_FRAGMENT", "viewModel.comments.observe çalıştı, yorum sayısı: ${comments.size}")
+                viewModel.comments.observe(viewLifecycleOwner) { comments ->
+                    Log.d("REVIEW_FRAG", "Observing comments: size=${comments.size}")
                     adapter.submitList(comments)
                 }
-                viewModel.error.observe(viewLifecycleOwner) { msg ->
-                    msg?.let {
-                        Log.e("REVIEWS_FRAGMENT", "viewModel.error: $it")
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+
+                viewModel.selectedReview.observe(viewLifecycleOwner) { selected ->
+                    Log.d("REVIEW_FRAG", "Observing selectedReview: $selected")
+                    selected?.let {
+                        adapter.submitList(listOf(it))
                     }
                 }
 
-                val book = args.book
-                Log.d("REVIEWS_FRAGMENT", "Args.book id: ${book?.id}, title: ${book?.title}")
-                if (book != null && book.id != 0L && book.id != -1L) {
-                    Log.d("REVIEWS_FRAGMENT", "Yorumlar bu kitap için yükleniyor, id=${book.id}")
-                    viewModel.loadCommentsForBook(book.id)
+                viewModel.error.observe(viewLifecycleOwner) {
+                    it?.let { error ->
+                        Log.e("REVIEW_FRAG", "Error observed: $error")
+                        Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                if (reviewId != -1L) {
+                    viewModel.loadCommentById(reviewId)
                 } else {
-                    Log.d("REVIEWS_FRAGMENT", "Kitap ID geçersiz, tüm yorumlar yükleniyor.")
                     viewModel.loadAllComments()
                 }
 
             } catch (e: Exception) {
+                Log.e("REVIEW_FRAG", "Exception during view setup: ${e.message}")
                 Toast.makeText(requireContext(), "Beğenilenler alınamadı: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-
     override fun onDestroyView() {
-        Log.d("REVIEWS_FRAGMENT", "onDestroyView çağrıldı")
         super.onDestroyView()
         _binding = null
     }

@@ -7,9 +7,7 @@ import kotlinx.coroutines.launch
 
 class ListFollowViewModel(
     private val repo: ListFollowsRepository,
-    val followedListIds: MutableLiveData<List<Long>> = MutableLiveData<List<Long>>()
-
-
+    val followedListIds: MutableLiveData<List<Long>> = MutableLiveData()
 ) : ViewModel() {
 
     private val _error = MutableLiveData<String?>()
@@ -18,28 +16,42 @@ class ListFollowViewModel(
     fun toggleFollow(currentUserId: Long, listId: Long) {
         viewModelScope.launch {
             try {
-                val currently = followedListIds.value?.contains(listId) ?: false
-                Log.d("ListFollowVM", "toggleFollow: currently=$currently for listId=$listId")
-                val ok = if (currently) repo.unfollowList(currentUserId, listId)
-                else repo.followList(currentUserId, listId)
-                if (ok) {
-                    // Güncel listeyi tekrar çekiyoruz!
+                val currentlyFollowed = followedListIds.value?.contains(listId) ?: false
+                Log.d("ListFollowVM", "toggleFollow: listId=$listId, currently=$currentlyFollowed")
+
+                val result = if (currentlyFollowed) {
+                    repo.unfollowList(currentUserId, listId).also {
+                        Log.d("ListFollowVM", "Unfollow result: $it")
+                    }
+                } else {
+                    repo.followList(currentUserId, listId).also {
+                        Log.d("ListFollowVM", "Follow result: $it")
+                    }
+                }
+
+                if (result) {
+                    Log.d("ListFollowVM", "Toggle succeeded, reloading followed IDs...")
                     loadFollowedListIds(currentUserId)
-                    Log.d("ListFollowVM", "Toggle success, list updated")
                 } else {
                     _error.value = "İşlem başarısız"
+                    Log.w("ListFollowVM", "Toggle failed")
                 }
             } catch (e: Exception) {
                 _error.value = e.message
+                Log.e("ListFollowVM", "toggleFollow error: ${e.message}", e)
             }
         }
     }
+
     fun loadFollowedListIds(userId: Long) {
         viewModelScope.launch {
             try {
                 val ids = repo.getFollowedListIdsByUser(userId)
-                followedListIds.value = ids
+                Log.d("ListFollowVM", "Gelen takip edilen ID'ler: $ids")
+                followedListIds.postValue(ids.distinct()) // tekrarsız olsun
             } catch (e: Exception) {
+                Log.e("ListFollowVM", "loadFollowedListIds error: ${e.message}", e)
             }
-        }}
+        }
+    }
 }

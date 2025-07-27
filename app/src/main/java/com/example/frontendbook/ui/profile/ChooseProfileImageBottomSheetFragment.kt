@@ -70,11 +70,11 @@ class ChooseProfileImageBottomSheetFragment(
 
                 // Drawable -> Backend avatar ID eşleme
                 val avatar: Long = when (pair.first) {
-                    R.drawable.bookworms -> 1L
-                    R.drawable.bookfriends -> 2L
-                    R.drawable.bookbibliofil -> 3L
-                    R.drawable.bookcat -> 4L
-                    else -> 0L
+                    R.drawable.bookworms -> 2L
+                    R.drawable.bookfriends -> 3L
+                    R.drawable.bookbibliofil -> 4L
+                    R.drawable.bookcat -> 5L
+                    else -> 1L
                 }
 
                 // Doğru SharedPreferences'ten user_id al (!!!)

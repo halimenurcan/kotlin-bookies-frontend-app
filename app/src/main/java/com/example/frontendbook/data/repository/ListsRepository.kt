@@ -18,6 +18,13 @@ class ListsRepository(
             false
         }
     }
+    suspend fun getSingleList(listId: Long): ListDto {
+        val response = api.getListById(listId)
+        return response
+    }
+    suspend fun getListById(listId: Long): ListDto {
+        return api.getListById(listId)
+    }
     suspend fun getUserLists(userId: Long): List<ListDto> {
         val resp = api.getUserLists(userId)
         if (resp.isSuccessful) {
