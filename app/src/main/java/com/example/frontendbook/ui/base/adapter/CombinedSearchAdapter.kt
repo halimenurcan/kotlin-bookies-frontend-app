@@ -91,10 +91,17 @@ class CombinedSearchAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             binding.userName.text = user.username
-            Glide.with(binding.userImage.context)
-                .load(user.profileImageUrl)
-                .placeholder(R.drawable.avatar)
-                .error(R.drawable.avatar)
+            Glide.with(itemView.context)
+                .load(
+                    when (user.profileImageUrl) {
+                        "bookworms.png"     -> R.drawable.bookworms
+                        "bookfriends.png"   -> R.drawable.bookfriends
+                        "bookbibliofil.png" -> R.drawable.bookbibliofil
+                        "bookcat.png"       -> R.drawable.bookcat
+                        else                -> R.drawable.avatar
+                    }
+                )
+                .circleCrop()
                 .into(binding.userImage)
             binding.root.setOnClickListener { onClick(user) }
         }
