@@ -44,7 +44,6 @@
         <action
             android:id="@+id/action_searchFragment_to_threeColumnFragment"
             app:destination="@id/threeColumnFragment" />
-
     </fragment>
 
     <!-- BookInfoPage -->
@@ -69,6 +68,10 @@
             android:name="book"
             app:argType="com.example.frontendbook.domain.model.Book"
             app:nullable="true" />
+        <argument
+            android:name="review"
+            app:argType="com.example.frontendbook.data.api.dto.ReviewDto"
+            app:nullable="true" />
         <action
             android:id="@+id/action_reviewsFragment_to_bookInfoPageFragment"
             app:destination="@id/bookInfoPageFragment" />
@@ -90,7 +93,17 @@
         android:id="@+id/notificationsFragment"
         android:name="com.example.frontendbook.ui.notifications.NotificationsFragment"
         android:label="Notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_otherUserProfileFragment"
+            app:destination="@id/otherUserProfileFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_reviewsFragment"
+            app:destination="@id/reviewsFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_listsFragment"
+            app:destination="@id/listsFragment" />
+    </fragment>
 
     <!-- Three Column Fragment -->
     <fragment
@@ -106,19 +119,16 @@
             app:nullable="true" />
         <argument
             android:name="listId"
-            app:argType="long"
-             />
+            app:argType="long" />
         <argument
             android:name="userId"
-            app:argType="long"
-           />
+            app:argType="long" />
         <action
             android:id="@+id/action_threeColumnFragment_to_bookInfoPageFragment"
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
 
-
-    <!--AddBookBottomSheet -->
+    <!-- AddBookBottomSheet -->
     <dialog
         android:id="@+id/addBookBottomSheet"
         android:name="com.example.frontendbook.ui.addBook.AddBookBottomSheet"
@@ -127,6 +137,7 @@
             android:name="listId"
             app:argType="long" />
     </dialog>
+
     <fragment
         android:id="@+id/otherListsFragment"
         android:name="com.example.frontendbook.ui.homePage.OtherListsFragment"
@@ -147,7 +158,6 @@
         <action
             android:id="@+id/actionListsFragmentToThreeColumnFragment"
             app:destination="@id/threeColumnFragment"/>
-
     </fragment>
 
     <!-- List that contains Users -->
@@ -179,42 +189,22 @@
         android:id="@+id/listsFragment"
         android:name="com.example.frontendbook.ui.homePage.ListsFragment"
         android:label="Lists">
-
-        <argument
-            android:name="arg_title"
-            app:argType="string" />
-        <argument
-            android:name="arg_type"
-            app:argType="string" />
-        <argument
-            android:name="arg_list_id"
-            app:argType="long" />
-        <argument
-            android:name="arg_user_id"
-            app:argType="long" />
-        <argument
-            android:name="profileUserId"
-            app:argType="long" />
-
+        <argument android:name="arg_title" app:argType="string" />
+        <argument android:name="arg_type" app:argType="string" />
+        <argument android:name="arg_list_id" app:argType="long" />
+        <argument android:name="arg_user_id" app:argType="long" />
+        <argument android:name="profileUserId" app:argType="long" />
+        <argument android:name="showUserLists" app:argType="boolean" android:defaultValue="true" />
         <action
             android:id="@+id/actionListsFragmentToThreeColumnFragment"
             app:destination="@id/threeColumnFragment">
-            <argument
-                android:name="title"
-                app:argType="string" />
-            <argument
-                android:name="listId"
-                app:argType="long"
-               />
-            <argument
-                android:name="type"
-                app:argType="string"
-                app:nullable="true" />
+            <argument android:name="title" app:argType="string" />
+            <argument android:name="listId" app:argType="long" />
+            <argument android:name="type" app:argType="string" app:nullable="true" />
         </action>
         <action
             android:id="@+id/action_listsFragment_to_bookInfoPageFragment"
             app:destination="@id/bookInfoPageFragment" />
-
     </fragment>
 
     <!-- Liste Detayı -->
@@ -222,6 +212,7 @@
         android:id="@+id/listDetailFragment"
         android:name="com.example.frontendbook.ui.listdetail.ListDetailFragment"
         android:label="List Detail" />
+
     <fragment
         android:id="@+id/allReviewsFragment"
         android:name="com.example.frontendbook.ui.homePage.AllReviewsFragment"
@@ -230,6 +221,5 @@
             android:id="@+id/action_allReviewsFragment_to_bookInfoPageFragment"
             app:destination="@id/bookInfoPageFragment" />
     </fragment>
-
 
 </navigation>

@@ -25,17 +25,19 @@ class OtherUserProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var userRepository: UserRepository
 
-    private val args: OtherUserProfileFragmentArgs by navArgs()
-    private val targetUserId: Long get() = args.userId
-
+    private var targetUserId: Long = -1L
     private val currentUserId: Long by lazy {
-        requireContext()
-            .getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             .getLong("user_id", -1L)
     }
 
     private val userViewModel: UserViewModel by viewModels { UserViewModelFactory(requireContext()) }
     private val followerViewModel: FollowerViewModel by viewModels { FollowerViewModelFactory(requireContext()) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        targetUserId = arguments?.getLong("userId", -1L) ?: -1L
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentOtherUserProfileBinding.inflate(inflater, container, false)
@@ -55,7 +57,6 @@ class OtherUserProfileFragment : Fragment() {
 
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             binding.otherUsernameText.text = user.username
-            // Avatar artık burada ayarlanmayacak
         }
 
         userViewModel.error.observe(viewLifecycleOwner) {
@@ -72,10 +73,6 @@ class OtherUserProfileFragment : Fragment() {
 
         followerViewModel.isFollowing.observe(viewLifecycleOwner) { following ->
             binding.btnFollowAction.text = if (following) getString(R.string.unfollow) else getString(R.string.follow)
-        }
-
-        followerViewModel.error.observe(viewLifecycleOwner) {
-            it?.let { m -> Toast.makeText(requireContext(), m, Toast.LENGTH_LONG).show() }
         }
 
         followerViewModel.loadIsFollowing(targetUserId, currentUserId)
@@ -151,11 +148,11 @@ class OtherUserProfileFragment : Fragment() {
             val avatarResponse = userRepository.fetchAvatar(userId)
             val avatarName = avatarResponse?.avatar ?: "avatar.png"
             val avatarDrawable = when (avatarName) {
-                "bookworms.png"    -> R.drawable.bookworms
-                "bookfriends.png"  -> R.drawable.bookfriends
-                "bookbibliofil.png"-> R.drawable.bookbibliofil
-                "bookcat.png"      -> R.drawable.bookcat
-                else               -> R.drawable.avatar
+                "bookworms.png"     -> R.drawable.bookworms
+                "bookfriends.png"   -> R.drawable.bookfriends
+                "bookbibliofil.png" -> R.drawable.bookbibliofil
+                "bookcat.png"       -> R.drawable.bookcat
+                else                -> R.drawable.avatar
             }
             binding.otherProfileImage.setImageResource(avatarDrawable)
         }

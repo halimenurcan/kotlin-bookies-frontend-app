@@ -1,21 +1,20 @@
 package com.example.frontendbook.ui.notifications
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.frontendbook.R
 import com.example.frontendbook.data.model.Notification
 import com.example.frontendbook.data.model.NotificationType
 import com.example.frontendbook.databinding.FragmentNotificationsBinding
 import com.example.frontendbook.ui.base.adapter.NotificationAdapter
-import com.example.frontendbook.ui.homePage.ReviewsFragment
-import com.example.frontendbook.ui.listdetail.ListDetailFragment
-import com.example.frontendbook.ui.profile.OtherUserProfileFragment
 
 class NotificationsFragment : Fragment() {
 
@@ -25,10 +24,7 @@ class NotificationsFragment : Fragment() {
     private lateinit var viewModel: NotificationsViewModel
     private lateinit var adapter: NotificationAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -43,12 +39,13 @@ class NotificationsFragment : Fragment() {
 
         adapter = NotificationAdapter(
             items = mutableListOf(),
-
             onClick = { clickedNotification ->
+                Log.d("NOTIFICATIONS", "Clicked notification: $clickedNotification")
                 viewModel.markAsRead(clickedNotification)
                 handleNotificationClick(clickedNotification)
             },
             onDeleteClick = { notification ->
+                Log.d("NOTIFICATIONS", "Deleted notification: $notification")
                 viewModel.deleteNotification(notification)
             }
         )
@@ -56,11 +53,13 @@ class NotificationsFragment : Fragment() {
         binding.notificationsRecyclerView.adapter = adapter
 
         viewModel.notifications.observe(viewLifecycleOwner) { notifications ->
+            Log.d("NOTIFICATIONS", "Notifications loaded: ${notifications.size}")
             adapter.updateItems(notifications)
         }
 
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
+                Log.e("NOTIFICATIONS", "Error: $it")
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
@@ -71,42 +70,38 @@ class NotificationsFragment : Fragment() {
     private fun handleNotificationClick(notification: Notification) {
         when (notification.type) {
             NotificationType.FOLLOW -> {
-                val userId = notification.relatedId
-                val fragment = OtherUserProfileFragment().apply {
-                    arguments = Bundle().apply {
-                        putString("user_id", userId)
-                    }
-                }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                val userId = notification.relatedId.toLongOrNull() ?: return
+                Log.d("NOTIFICATIONS", "Navigating to OtherUserProfileFragment with userId=$userId")
+                val bundle = Bundle().apply { putLong("userId", userId) }
+                findNavController().navigate(R.id.otherUserProfileFragment, bundle)
             }
 
             NotificationType.LIKE_COMMENT -> {
-                val commentId = notification.relatedId.toLongOrNull() ?: return
-                val fragment = ReviewsFragment().apply {
-                    arguments = Bundle().apply {
-                        putLong("review_id", commentId)
-                    }
-                }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                val reviewId = notification.relatedId.toLongOrNull() ?: return
+                Log.d("NOTIFICATIONS", "Navigating to ReviewsFragment with reviewId=$reviewId")
+                val bundle = Bundle().apply { putLong("reviewId", reviewId) }
+                findNavController().navigate(R.id.reviewsFragment, bundle)
             }
 
             NotificationType.FOLLOW_LIST -> {
-                val listId = notification.relatedId
-                val fragment = ListDetailFragment().apply {
-                    arguments = Bundle().apply {
-                        putLong("listId", listId.toLong())
-                    }
-                }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                val userId = notification.relatedId.toLongOrNull() ?: return
+                Log.d("NOTIFICATIONS", "Navigating to ListsFragment with userId=$userId")
+
+                val listId = notification.relatedId.toLongOrNull() ?: return
+                Log.d("NOTIFICATIONS", "Navigating to ListsFragment with listId=$listId")
+
+                val direction = NotificationsFragmentDirections
+                    .actionNotificationsFragmentToListsFragment(
+                        argUserId = userId,
+                        argTitle = "Takip Edilen Listeler",
+                        argType = "FOLLOWED",
+                        argListId = -1L,
+                        profileUserId = userId,
+                        showUserLists = false
+                    )
+
+                findNavController().navigate(direction)
+
             }
         }
     }

@@ -67,7 +67,7 @@ class BookInfoPageFragment : Fragment() {
                 dialog.show(parentFragmentManager, "BookInfoMoreDialog")
             }
             binding.bookInforeviewsButton.setOnClickListener {
-                val action = BookInfoPageFragmentDirections.actionBookInfoPageToReviewsFragment(book)
+                val action = BookInfoPageFragmentDirections.actionBookInfoPageToReviewsFragment(book,null)
                 findNavController().navigate(action)
             }
         }

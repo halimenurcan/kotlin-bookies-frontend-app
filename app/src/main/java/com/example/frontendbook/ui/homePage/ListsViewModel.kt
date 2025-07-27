@@ -42,6 +42,16 @@ class ListsViewModel(
         }
     }
 
+    fun loadSingleList(listId: Long) {
+        viewModelScope.launch {
+            try {
+                val list = repo.getListById(listId)
+                _lists.value = listOf(list) // sadece o liste döner
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
     // Belirli bir kullanıcının tüm listelerini getir
     fun loadOtherListsForUser(userId: Long) {
         viewModelScope.launch {

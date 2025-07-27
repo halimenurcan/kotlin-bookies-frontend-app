@@ -1,7 +1,11 @@
 package com.example.frontendbook.data.api.dto
 
+import android.os.Parcelable
 import com.example.frontendbook.data.remote.dto.UserDto
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 data class ReviewDto(
     val id: Long,
     val userId: Long?,
@@ -13,7 +17,7 @@ data class ReviewDto(
     val createdAt: String,
     var isLiked: Boolean,
 
-    val book: BookDto? = null,
-    val user:UserDto? =null
+    val book:@RawValue BookDto? = null,
+    val user:@RawValue UserDto? =null
 
-)
+) : Parcelable
