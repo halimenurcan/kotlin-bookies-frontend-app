@@ -129,9 +129,7 @@ class SearchFragment : Fragment() {
             showMultiSelectDialog("Select Languages", languageOptions, selectedLanguages)
         }
 
-        binding.applyFiltersButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Filtreler uygulandı", Toast.LENGTH_SHORT).show()
-        }
+
 
         val chipStyleBackground = MaterialShapeDrawable(
             ShapeAppearanceModel().withCornerSize(16f)
@@ -141,14 +139,7 @@ class SearchFragment : Fragment() {
             strokeWidth = 1f
         }
 
-        binding.applyFiltersButton.apply {
-            background = chipStyleBackground
-            setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            textSize = 14f
-            minHeight = 0
-            minimumHeight = 0
-            setPadding(32, 16, 32, 16)
-        }
+
     }
 
     private fun showMultiSelectDialog(
@@ -212,12 +203,10 @@ class SearchFragment : Fragment() {
 
         if (allFilters.isEmpty()) {
             binding.chipGroupFilters.visibility = View.GONE
-            binding.applyFiltersButton.visibility = View.GONE
             return
         }
 
         binding.chipGroupFilters.visibility = View.VISIBLE
-        binding.applyFiltersButton.visibility = View.VISIBLE
 
         allFilters.forEach { label ->
             val chip = Chip(requireContext()).apply {

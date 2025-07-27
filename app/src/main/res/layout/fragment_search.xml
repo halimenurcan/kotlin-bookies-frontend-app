@@ -111,16 +111,7 @@
                     android:textColor="@color/button_textPrimary"
                     app:cornerRadius="8dp" />
 
-                <!-- Apply Filters -->
-                <Button
-                    android:id="@+id/applyFiltersButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Apply Filters"
-                    android:visibility="gone"
-                    android:backgroundTint="@color/buttonPrimary"
-                    android:textColor="@color/white"/>
+
 
                 <!-- Most Popular & Highly Rated -->
                 <LinearLayout
