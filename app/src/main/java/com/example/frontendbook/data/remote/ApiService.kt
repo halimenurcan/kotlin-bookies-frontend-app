@@ -23,7 +23,7 @@ interface ApiService {
 
     @GET("/books/sorted")
     suspend fun getSortedBooks(
-        @Query("sort") sort: String // "most_popular", "highly_rated"
+        @Query("sort") sort: String
     ): Response<List<Book>>
 
 

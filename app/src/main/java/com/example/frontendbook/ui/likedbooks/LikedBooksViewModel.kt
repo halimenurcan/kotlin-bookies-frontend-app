@@ -18,19 +18,19 @@ class LikedBooksViewModel(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    // Belirli bir kitabı beğenmiş mi kontrolü
+
     fun checkLiked(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
                 _isLiked.value = repo.isBookLiked(userId, bookId)
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = e.message ?: "Beğeni kontrolü başarısız"
+                _error.value = e.message ?: "Like check failed"
             }
         }
     }
 
-    // Kitabı beğen / beğenmekten vazgeç (toggle)
+
     fun toggleLike(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
@@ -43,22 +43,22 @@ class LikedBooksViewModel(
                 if (success) {
                     _isLiked.value = !currently
                 } else {
-                    _error.value = "İşlem başarısız"
+                    _error.value = "Operation failed"
                 }
             } catch (e: Exception) {
-                _error.value = e.message ?: "Beğeni işlemi başarısız"
+                _error.value = e.message ?: "Like operation failed"
             }
         }
     }
 
-    // Tüm beğenilen kitapları getirir
+
     fun loadLikedBooks(userId: Long) {
         viewModelScope.launch {
             try {
                 _likedBooks.value = repo.getAllLikedBooks(userId)
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = e.message ?: "Beğenilenler yüklenemedi"
+                _error.value = e.message ?: "Likes could not be loaded"
             }
         }
     }

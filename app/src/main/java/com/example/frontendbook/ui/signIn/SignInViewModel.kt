@@ -25,10 +25,10 @@ class SignInViewModel @Inject constructor(
                 _signInState.value = SignInState.Loading
                 val params = SignInParams(username, password)
                 val result = signInUseCase.execute(params)
-                Log.d("SignInDebug", "Sign-in sonucu: $result")
+                Log.d("SignInDebug", "Sign-in result: $result")
                 _signInState.value = result
             } catch (e: Exception) {
-                _signInState.value = SignInState.Error("Giriş hatası: ${e.localizedMessage}")
+                _signInState.value = SignInState.Error("Login error: ${e.localizedMessage}")
                 Log.e("SignInDebug", "Exception during sign-in", e)
             }
         }

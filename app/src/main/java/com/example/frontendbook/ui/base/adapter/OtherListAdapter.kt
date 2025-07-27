@@ -19,7 +19,7 @@ class OtherListAdapter(
     private var lists: List<ListDto>,
     private val onFollowClick: (ListDto) -> Unit,
     private val onBookClick: (BookDto) -> Unit,
-    private val onSeeMoreClick: (ListDto) -> Unit  // ✅ Eklendi
+    private val onSeeMoreClick: (ListDto) -> Unit
 ) : RecyclerView.Adapter<OtherListAdapter.OtherListViewHolder>() {
 
     private var followedListIds: Set<Long> = emptySet()

@@ -12,7 +12,7 @@ class BookRepository(context: Context) {
     private val api = RetrofitClient.booksApiService(context)
     val apiService = RetrofitClient.booksApiService(context)
 
-    /** Tüm kitapları getir ve domain model’e map et */
+
     suspend fun fetchAllBooks(): List<Book> {
         val resp = api.getAllBooks()
         return if (resp.isSuccessful) {
@@ -24,11 +24,10 @@ class BookRepository(context: Context) {
         } else {
             val err = resp.errorBody()?.string()
             Log.e("BookRepo", "fetchAllBooks failed: code=${resp.code()}, body=$err")
-            throw Exception("Kitaplar yüklenemedi: ${resp.code()}")
+            throw Exception("Books could not be loaded: ${resp.code()}")
         }
     }
 
-    /** Tek bir kitabı getir ve domain model’e map et */
     suspend fun fetchBookById(id: Long): Book {
         val resp = api.getBookById(id)
         return if (resp.isSuccessful) {
@@ -38,11 +37,11 @@ class BookRepository(context: Context) {
         } else {
             val err = resp.errorBody()?.string()
             Log.e("BookRepo", "fetchBookById failed: code=${resp.code()}, body=$err")
-            throw Exception("Kitap bilgisi yüklenemedi: ${resp.code()}")
+            throw Exception("Book information could not be loaded: ${resp.code()}")
         }
     }
 
-    /** Arama yapmak için HAL wrapper’da gömülü kitap listesini alıp map et */
+
     suspend fun searchBooks(query: String): List<Book> {
         val resp = api.searchBooks(query)
         return if (resp.isSuccessful) {
@@ -54,7 +53,7 @@ class BookRepository(context: Context) {
         } else {
             val err = resp.errorBody()?.string()
             Log.e("BookRepo", "searchBooks failed: code=${resp.code()}, body=$err")
-            throw Exception("Kitap arama başarısız: ${resp.code()}")
+            throw Exception("Book search unsuccessful: ${resp.code()}")
         }
     }
     suspend fun getBooksByListId(listId: Long): List<Book> {
@@ -62,7 +61,7 @@ class BookRepository(context: Context) {
         if (response.isSuccessful) {
             return response.body() ?: emptyList()
         } else {
-            throw Exception("Liste kitapları alınamadı")
+            throw Exception("The listed books could not be retrieved.")
         }
     }
     suspend fun fetchPopularBooks(): List<Book> {

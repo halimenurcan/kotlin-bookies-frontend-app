@@ -38,7 +38,7 @@ class ReviewsAdapter(
             review.isLiked = likedReviewIds.contains(review.id)
         }
 
-        submitList(currentList.toList()) // Yeni referansla tetikler
+        submitList(currentList.toList())
     }
 
     private fun isReviewLiked(reviewId: Long): Boolean {
@@ -90,7 +90,7 @@ class ReviewsAdapter(
                 notifyItemChanged(bindingAdapterPosition)
             }
 
-            b.reviewBookTitle.text = "Yükleniyor..."
+            b.reviewBookTitle.text = "Loading..."
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val repo = BookRepository(b.root.context)
@@ -100,7 +100,7 @@ class ReviewsAdapter(
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        b.reviewBookTitle.text = "Bilinmeyen Kitap"
+                        b.reviewBookTitle.text = "Unknown Book"
                     }
                 }
             }
@@ -113,9 +113,9 @@ class ReviewsAdapter(
 
             b.likeButton.setOnClickListener {
                 val isNowLiked = !r.isLiked
-                r.isLiked = isNowLiked // DTO'yu anında güncelle
+                r.isLiked = isNowLiked
 
-                // UI anında değişsin
+
                 b.likeButton.setImageResource(
                     if (isNowLiked) R.drawable.like_filled else R.drawable.like
                 )
@@ -133,9 +133,9 @@ class ReviewsAdapter(
                             b.likeButton.setImageResource(
                                 if (r.isLiked) R.drawable.like_filled else R.drawable.like
                             )
-                            Toast.makeText(b.root.context, "İşlem başarısız oldu!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(b.root.context, "Operation failed!", Toast.LENGTH_SHORT).show()
                         } else {
-                            onLikedChanged?.invoke() // Dışarıya bildir
+                            onLikedChanged?.invoke()
                         }
                     }
                 }

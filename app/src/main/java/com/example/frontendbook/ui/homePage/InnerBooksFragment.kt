@@ -69,7 +69,7 @@ class InnerBooksFragment : Fragment() {
 
         with(binding) {
             popularArrow.setOnClickListener {
-                openThreeColumnPage("Popular This Week", "popular")
+                openThreeColumnPage("Popular Between Friends", "popular")
 
             }
             exploreArrow.setOnClickListener {
@@ -79,7 +79,6 @@ class InnerBooksFragment : Fragment() {
                 openThreeColumnPage("Explore More", "explore")
             }
 
-            // DOĞRU NAVIGATION!
             exploreAdapter = BookAdapter { book ->
                 (parentFragment as? HomePageFragment)?.openBookDetail(book)
             }
@@ -100,7 +99,6 @@ class InnerBooksFragment : Fragment() {
             }
             viewModel.fetchPopularBooks()
 
-            // Type parametresine göre kitapları yükle
             viewModel.fetchBooks(type ?: "fiction")
         }
     }
@@ -128,7 +126,6 @@ class InnerBooksFragment : Fragment() {
                     .placeholder(R.drawable.bookk)
                     .into(iv)
             }
-            // YENİ: Doğru navigation!
             itemView.setOnClickListener {
                 (parentFragment as? HomePageFragment)?.openBookDetail(book)
             }

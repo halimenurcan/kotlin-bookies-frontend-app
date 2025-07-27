@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.ReviewsRepository
 
-/**
- * Factory for creating ReviewsViewModel with ReviewsRepository dependency.
- */
+
 class ReviewsViewModelFactory(
     private val context: Context
 ) : ViewModelProvider.Factory {
@@ -17,7 +15,7 @@ class ReviewsViewModelFactory(
         if (modelClass.isAssignableFrom(ReviewsViewModel::class.java)) {
             val apiService = RetrofitClient.reviewsApiService(context)
             val repository = ReviewsRepository(apiService)
-            return ReviewsViewModel(repository, context) as T  // ❗ context parametresi eklendi
+            return ReviewsViewModel(repository, context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

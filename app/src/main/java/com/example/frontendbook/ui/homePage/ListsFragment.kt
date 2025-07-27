@@ -92,21 +92,21 @@ class ListsFragment : Fragment() {
 
         when {
             listId != -1L -> {
-                Log.d("ListsFragment", "🔽 loadSingleList çağrıldı (listId=$listId)")
+                Log.d("ListsFragment", "called from loadSingleList (listId=$listId)")
                 viewModel.loadSingleList(listId)
             }
             showUserLists && userId != -1L -> {
-                Log.d("ListsFragment", "👤 loadUserLists çağrıldı (userId=$userId)")
+                Log.d("ListsFragment", " called loadUserLists  (userId=$userId)")
                 viewModel.loadUserLists(userId)
             }
             else -> {
-                Log.d("ListsFragment", "🌍 loadExploreLists çağrıldı")
+                Log.d("ListsFragment", "called loadExploreLists ")
                 viewModel.loadExploreLists()
             }
         }
 
         viewModel.lists.observe(viewLifecycleOwner) { lists ->
-            Log.d("ListsFragment", "🧩 Gözlemlenen liste boyutu: ${lists.size}")
+            Log.d("ListsFragment", " Observed list size: ${lists.size}")
             if (showUserLists || listId != -1L) {
                 listAdapter.submitList(lists)
             } else {
@@ -209,15 +209,15 @@ class ListsFragment : Fragment() {
                 val userId = prefs.getLong("user_id", -1L)
                 viewModel.createList(userId, listName) { success ->
                     if (success) {
-                        Toast.makeText(context, "Liste oluşturuldu", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "The list has been created", Toast.LENGTH_SHORT).show()
                         viewModel.loadUserLists(userId)
                         dialog.dismiss()
                     } else {
-                        Toast.makeText(context, "Liste oluşturulamadı", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Could not create list", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
-                inputLayout.error = "Liste adı boş olamaz"
+                inputLayout.error = "List name can not be empty!"
             }
         }
     }

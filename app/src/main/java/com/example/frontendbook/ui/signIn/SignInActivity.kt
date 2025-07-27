@@ -38,7 +38,7 @@ class SignInActivity : BaseActivity<SignInViewModel, SignInState, ActivitySignIn
         when (state) {
             is SignInState.Loading -> { /* Loading UI */ }
             is SignInState.Success -> {
-                Log.d("SignInActivity", "Token: ${state.token}, UserId: ${state.userId}")  // Log burada
+                Log.d("SignInActivity", "Token: ${state.token}, UserId: ${state.userId}")
                 saveTokenToPrefs(state.token, state.userId)
                 goToMain()
             }

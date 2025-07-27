@@ -4,5 +4,5 @@ data class AvatarResponse(
     val createdAt: String,
     val updatedAt: String,
     val userId: Long,
-    val avatar: String // <-- Long DEĞİL, String olacak!
+    val avatar: String
 )

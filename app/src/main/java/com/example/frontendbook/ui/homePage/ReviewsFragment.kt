@@ -41,7 +41,7 @@ class ReviewsFragment : Fragment() {
         val userId = prefs.getLong("user_id", -1L)
 
         if (userId == -1L) {
-            Toast.makeText(requireContext(), "Kullanıcı oturumu bulunamadı!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "User session not found!", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -96,7 +96,7 @@ class ReviewsFragment : Fragment() {
 
             } catch (e: Exception) {
                 Log.e("REVIEW_FRAG", "Exception during view setup: ${e.message}")
-                Toast.makeText(requireContext(), "Beğenilenler alınamadı: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Likes could not received: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

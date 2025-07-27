@@ -48,12 +48,12 @@ class ListDetailFragment : Fragment() {
             val container = view.findViewById<LinearLayout>(R.id.bookContainer)
             container.removeAllViews()
 
-            // AddBook kartı
+
             val addToListView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.add_to_list_card, container, false)
             container.addView(addToListView)
 
-            // Kitap kutuları
+
             books.forEach { book ->
                 val bookView = LayoutInflater.from(requireContext())
                     .inflate(R.layout.item_book_grid, container, false)
@@ -68,20 +68,19 @@ class ListDetailFragment : Fragment() {
                     .into(imageView)
 
                 bookView.setOnClickListener {
-                    Toast.makeText(requireContext(), "${book.title} tıklandı", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "${book.title} clicked", Toast.LENGTH_SHORT).show()
                 }
 
                 container.addView(bookView)
             }
 
-            // See More kartı
             val seeMoreView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.see_more_card, container, false)
             container.addView(seeMoreView)
         }
 
         viewModel.error.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it ?: "Hata", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), it ?: "Error", Toast.LENGTH_SHORT).show()
         }
     }
 

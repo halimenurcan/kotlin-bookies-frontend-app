@@ -30,7 +30,7 @@ class ListsRepository(
         if (resp.isSuccessful) {
             return resp.body().orEmpty()
         }
-        throw Exception("Listeler yüklenemedi: ${resp.code()}")
+        throw Exception("Lists could not be retrieved: ${resp.code()}")
     }
 
     suspend fun createList(userId: Long, title: String): Boolean {
@@ -57,7 +57,7 @@ class ListsRepository(
 
 
     suspend fun getAllLists(): List<ListDto> {
-        Log.d("LISTS_REPO", "API'den dönen: ${api.getAllLists()}")
+        Log.d("LISTS_REPO", "Fetch from API: ${api.getAllLists()}")
 
         return api.getAllLists()
     }

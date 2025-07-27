@@ -206,25 +206,25 @@ class BookInfoMoreDialog : DialogFragment() {
     private suspend fun addToRead(book: Book?, userId: Long) {
         if (book == null) return
         readRepository.addToReadBooks(userId, book.id)
-        Toast.makeText(requireContext(), "Okuduklarına eklendi!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Added to Read!", Toast.LENGTH_SHORT).show()
     }
 
     private suspend fun removeFromRead(book: Book?, userId: Long) {
         if (book == null) return
         readRepository.removeFromReadBooks(userId, book.id)
-        Toast.makeText(requireContext(), "Okuduklarından çıkarıldı!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Removed from Read!", Toast.LENGTH_SHORT).show()
     }
 
     private suspend fun addToToRead(book: Book?, userId: Long) {
         if (book == null) return
         readRepository.addToReadList(userId, book.id)
-        Toast.makeText(requireContext(), "Okuyacaklarına eklendi!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Added to ReadList!", Toast.LENGTH_SHORT).show()
     }
 
     private suspend fun removeFromToRead(book: Book?, userId: Long) {
         if (book == null) return
         readRepository.removeFromReadList(userId, book.id)
-        Toast.makeText(requireContext(), "Okuyacaklardan çıkarıldı!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Removed from ReadList!", Toast.LENGTH_SHORT).show()
     }
 
     private fun updateReadIcon(btn: ImageView) {

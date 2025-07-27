@@ -111,22 +111,22 @@ class BookInfoPageFragment : Fragment() {
             try {
                 val repo = ReviewsRepository(RetrofitClient.reviewsApiService(requireContext()))
                 val reviews: List<ReviewDto> = repo.fetchReviewsForBook(bookId)
-                Log.d("BookInfoPage", "Gelen review sayısı: ${reviews.size}")
+                Log.d("BookInfoPage", "Number of reviews received: ${reviews.size}")
                 reviews.forEachIndexed { i, r ->
                     Log.d("BookInfoPage", "Review $i: score=${r.score}")
                 }
                 averageRating = if (reviews.isNotEmpty()) {
                     val totalScore = reviews.sumOf { it.score ?: 0 }
-                    Log.d("BookInfoPage", "Toplam puan: $totalScore, Review Count: ${reviews.size}")
-                    // Ortalamayı aşağıya yuvarla
+                    Log.d("BookInfoPage", "Total points: $totalScore, Review Count: ${reviews.size}")
+
                     Math.floor(totalScore.toDouble() / reviews.size).toInt()
                 } else {
                     0
                 }
-                Log.d("BookInfoPage", "Ortalamam: $averageRating")
+                Log.d("BookInfoPage", "Average: $averageRating")
                 renderRatingStars(averageRating)
             } catch (e: Exception) {
-                Log.e("BookInfoPage", "Ortalama hesaplanamadı: ${e.message}")
+                Log.e("BookInfoPage", "Average could not be calculated: ${e.message}")
             }
         }
     }

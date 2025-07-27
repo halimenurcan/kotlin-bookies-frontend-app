@@ -148,7 +148,7 @@ class SearchFragment : Fragment() {
         selectedSet: MutableSet<String>
     ) {
         if (options.isEmpty() || options.any { it.isBlank() }) {
-            Toast.makeText(requireContext(), "$title verileri yüklenemedi", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "$title  data could not be loaded", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -239,7 +239,7 @@ class SearchFragment : Fragment() {
                 adapter.submitList(results)
             } else {
                 binding.recyclerView.visibility = View.GONE
-                Toast.makeText(requireContext(), "Sonuç bulunamadı", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No results found", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -14,14 +14,13 @@ class NotificationsViewModel(
     private val userRepo: UserRepository
 ) : ViewModel() {
 
-    // Arka uçtan gelen ham bildirim listesi (DTO formatında)
+
     private val _notifications = MutableLiveData<List<Notification>>()
     val notifications: LiveData<List<Notification>> = _notifications
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    /** Bildirimleri yükler ve DTO → Notification dönüşümünü yapar */
     fun loadNotifications() {
         viewModelScope.launch {
             try {
@@ -40,7 +39,6 @@ class NotificationsViewModel(
     }
 
 
-    /** Belirli bildirimi okundu olarak işaretler ve listeyi günceller */
     fun markAsRead(notification: Notification) {
         viewModelScope.launch {
             try {
@@ -50,7 +48,7 @@ class NotificationsViewModel(
                         if (it.id == notification.id) it.copy(read = true) else it
                     }
                 } else {
-                    _error.value = "İşlem başarısız"
+                    _error.value = "Operation failed."
                 }
             } catch (e: Exception) {
                 _error.value = e.message
@@ -61,23 +59,23 @@ class NotificationsViewModel(
     fun deleteNotification(notification: Notification) {
         viewModelScope.launch {
             try {
-                Log.d("DELETE_NOTIFICATION", "Siliniyor: id=${notification.id}")
+                Log.d("DELETE_NOTIFICATION", "Deleting: id=${notification.id}")
                 val response = repo.deleteNotification(notification.id)
                 if (response.isSuccessful) {
                     _notifications.value = _notifications.value?.filterNot { it.id == notification.id }
                 } else {
-                    // Gerekirse logla ama kullanıcıya göstermeyelim
+
                     Log.e("DELETE_NOTIFICATION", "Response code: ${response.code()}")
                 }
 
             } catch (e: Exception) {
-                _error.value = "Hata: ${e.message}"
+                _error.value = "Error: ${e.message}"
             }
         }
     }
 
 
-    /** DTO'dan UI modeli olan Notification nesnesine dönüşüm */
+
     private fun NotificationDto.toNotification(senderUsername: String): Notification {
         return Notification(
             message = generateMessage(type),
@@ -93,15 +91,15 @@ class NotificationsViewModel(
 
     private fun generateMessage(type: String): String {
         return when (type) {
-            "FOLLOW_USER" -> "Seni takip etti"
-            "FOLLOW_LIST" -> "Listeni takip etti"
-            "LIKE_COMMENT" -> "Yorumunu beğendi"
-            else -> "Bildirim"
+            "FOLLOW_USER" -> "Followed you"
+            "FOLLOW_LIST" -> "Followed your list"
+            "LIKE_COMMENT" -> "Liked your review"
+            else -> "Notification"
         }
     }
 
 
-    /** Mesaja göre NotificationType belirlenir */
+
     private fun determineNotificationType(rawType: String): NotificationType {
         return when (rawType.uppercase()) {
             "FOLLOW_USER"  -> NotificationType.FOLLOW
@@ -112,12 +110,12 @@ class NotificationsViewModel(
     }
 
 
-    /** ISO 8601 timestamp'i sadeleştir (örn: 2025-07-04T10:45:00Z → 10:45) */
+
     private fun formatTime(timestamp: String): String {
         return timestamp.substringAfter("T").substring(0, 5)
     }
 
-    /** Mesajdan ilgili ID'yi çıkarmak için regex veya sabit değer kullanılabilir */
+
     private fun extractRelatedId(message: String): String {
         // TODO: Gerçek backend formatına göre düzenlenebilir
         return "42"

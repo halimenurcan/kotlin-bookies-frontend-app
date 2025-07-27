@@ -33,18 +33,18 @@ class HomePageFragment : Fragment(), AllReviewsFragment.BookClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // SystemBars padding
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
             insets
         }
 
-        // Başlangıçta InnerBooksFragment
+
         loadInnerFragment(InnerBooksFragment.newInstance("All Books", "fiction"))
         updateButtonColors(binding.header.booksButton)
 
-        // Button click’leri
+
         binding.header.booksButton.setOnClickListener {
             loadInnerFragment(InnerBooksFragment.newInstance("All Books", "fiction"))
             updateButtonColors(binding.header.booksButton)
@@ -64,7 +64,7 @@ class HomePageFragment : Fragment(), AllReviewsFragment.BookClickListener {
 
     }
 
-    // Kitap detayına NAVIGATION ile git!
+
     fun openBookDetail(book: Book) {
         val action = HomePageFragmentDirections.actionHomePageFragmentToBookInfoPageFragment(book)
         findNavController().navigate(action)

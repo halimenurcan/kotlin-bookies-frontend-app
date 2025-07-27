@@ -48,7 +48,7 @@ class OtherUserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (currentUserId == -1L || targetUserId == -1L) {
-            Toast.makeText(requireContext(), "Kullanıcı bilgisi eksik", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "User information is missing", Toast.LENGTH_SHORT).show()
             return
         }
 

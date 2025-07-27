@@ -51,14 +51,14 @@ class ListAdapter(
     override fun getItemCount(): Int = lists.size
 
     fun submitList(newLists: List<ListDto>) {
-        // Aynı kitaplar tekrar etmesin diye kitapları distinct filtrele
+
         val cleanedLists = newLists.map { list ->
             list.copy(
                 books = list.books.distinctBy(BookDto::id)
             )
-        }.distinctBy { it.id } // aynı liste birden fazla eklenmesin
+        }.distinctBy { it.id }
 
-        lists = cleanedLists.toList() // yeni referansla güncelle
+        lists = cleanedLists.toList()
         notifyDataSetChanged()
     }
 }

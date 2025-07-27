@@ -20,7 +20,7 @@ class PopularBooksViewModel(private val repository: BookRepository) : ViewModel(
                 val books = repository.fetchPopularBooks()
                 _popularBooks.value = books
             } catch (e: Exception) {
-                _error.value = "Popüler kitaplar yüklenemedi: ${e.message}"
+                _error.value = "Popular books could not be loaded: ${e.message}"
             }
         }
     }

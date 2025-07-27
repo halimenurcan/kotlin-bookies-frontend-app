@@ -22,7 +22,7 @@ class ReadRepository(private val api: ReadApiService) {
 
         entries.mapNotNull { entry ->
             try {
-                val book = api.getBookById(entry.id)  // ✅ Artık çalışır
+                val book = api.getBookById(entry.id)
 
                 ReadEntry(
                     userId = userId,
@@ -53,23 +53,23 @@ class ReadRepository(private val api: ReadApiService) {
     }
 
     suspend fun getReadBooks(userId: Long): List<ReadEntry> = withContext(Dispatchers.IO) {
-        val entries = api.getReadByUserId(userId) // 🔄 DÖNÜŞ TİPİ: List<SimpleReadRequest>
+        val entries = api.getReadByUserId(userId)
 
-        Log.d("READ_DEBUG", "📥 getReadByUserId response (${entries.size} adet):")
+        Log.d("READ_DEBUG", " getReadByUserId response (${entries.size} adet):")
         entries.forEachIndexed { index, entry ->
-            Log.d("READ_DEBUG", "🔹 [$index] Entry: userId=${userId}, bookId=${entry.id}")
+            Log.d("READ_DEBUG", " [$index] Entry: userId=${userId}, bookId=${entry.id}")
         }
 
         entries.mapNotNull { entry ->
             val bookId = entry.id
             if (bookId == null || bookId == 0L) {
-                Log.e("READ_DEBUG", "❌ Geçersiz bookId: $bookId")
+                Log.e("READ_DEBUG", " Invalid bookId: $bookId")
                 return@mapNotNull null
             }
 
             try {
                 val book = api.getBookById(bookId)
-                Log.d("READ_DEBUG", "✅ Kitap çekildi: ${book.title} (${book.id})")
+                Log.d("READ_DEBUG", "Books fetched: ${book.title} (${book.id})")
 
                 ReadEntry(
                     userId = userId,
@@ -84,7 +84,7 @@ class ReadRepository(private val api: ReadApiService) {
                     bookCoverUrl = book.coverImageUrl.toString()
                 )
             } catch (e: Exception) {
-                Log.e("READ_DEBUG", "❌ Kitap çekilemedi: $e")
+                Log.e("READ_DEBUG", "Books could not be fetched: $e")
                 null
             }
         }

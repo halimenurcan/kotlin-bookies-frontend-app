@@ -43,7 +43,7 @@ class ReviewsRepository(
                 comment = dto.comment ?: "",
                 createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = book.coverImageUrl ?: "",
-                userName = user.username ?: "Bilinmeyen",
+                userName = user.username ?: "Unknown",
                 isLiked = false,
                 book = book
             )
@@ -77,7 +77,7 @@ class ReviewsRepository(
                 comment = dto.comment ?: "",
                 createdAt = dto.createdAt.orEmpty(),
                 bookCoverUrl = book.coverImageUrl ?: "",
-                userName = user.username ?: "Bilinmeyen",
+                userName = user.username ?: "Unknown",
                 isLiked = false,
                 book = book
             )
@@ -121,7 +121,7 @@ class ReviewsRepository(
             comment = dto.content ?: "",
             createdAt = dto.createdAt.orEmpty(),
             bookCoverUrl = book.coverImageUrl ?: "",
-            userName = user.username ?: "Bilinmeyen",
+            userName = user.username ?: "Unknown",
             isLiked = false,
             book = book
         )
@@ -154,7 +154,7 @@ class ReviewsRepository(
             comment = dto.content ?: "",
             createdAt = dto.createdAt ?: "",
             bookCoverUrl = book.coverImageUrl ?: "",
-            userName = user.username ?: "Bilinmeyen",
+            userName = user.username ?: "Unknown",
             isLiked = false,
             book = book
         )

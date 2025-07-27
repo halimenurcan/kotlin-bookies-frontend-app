@@ -44,7 +44,7 @@ class StatusViewModel(
         viewModelScope.launch {
             try {
                 repo.addReadBook(book)
-                // İstersen tekrar yükle
+
             } catch (e: Exception) {
                 _error.value = e.message
             }
@@ -55,7 +55,7 @@ class StatusViewModel(
         viewModelScope.launch {
             try {
                 repo.addWillReadBook(book)
-                // İstersen tekrar yükle
+
             } catch (e: Exception) {
                 _error.value = e.message
             }

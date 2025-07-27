@@ -15,11 +15,7 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
     val books: LiveData<List<Book>> = _books
     private val _popularBooks = MutableLiveData<List<Book>>()
     val popularBooks: LiveData<List<Book>> get() = _popularBooks
-    /**
-     * type:
-     *  - "popular", "explore", "fiction" --> tüm kitapları getirir
-     *  - aksi halde, searchBooks(query) ile arama yapar
-     */
+
     fun fetchBooks(type: String) {
         viewModelScope.launch {
             try {
@@ -28,7 +24,7 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
                         repository.fetchAllBooks()
                     }
                     else -> {
-                        // tür değil arama sorgusu
+
                         repository.searchBooks(type)
                     }
                 }
@@ -52,7 +48,7 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
                 val books = repository.getBooksByListId(listId)
                 _books.postValue(books)
             } catch (e: Exception) {
-                Log.e("BookViewModel", "Liste kitaplarını getirme hatası", e)
+                Log.e("BookViewModel", "Error fetching list books", e)
             }
         }
     }
@@ -62,7 +58,7 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
                 val books = repository.fetchPopularBooks()
                 _popularBooks.value = books
             } catch (e: Exception) {
-                Log.e("BookViewModel", "Popüler kitaplar alınamadı: ${e.message}")
+                Log.e("BookViewModel", "Popular books could not be fetched: ${e.message}")
             }
         }
     }

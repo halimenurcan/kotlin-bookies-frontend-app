@@ -44,7 +44,7 @@ class SearchViewModel(
                 _error.postValue(null)
             } catch (e: Exception) {
                 _combinedResults.postValue(emptyList())
-                _error.postValue(e.message ?: "Bir hata oluştu")
+                _error.postValue(e.message ?: "An error occurred")
             } finally {
                 _isLoading.postValue(false)
             }
@@ -64,7 +64,7 @@ class SearchViewModel(
                 _genres.postValue(genreList)
                 _languages.postValue(languageList)
             } catch (e: Exception) {
-                _error.postValue("Filtreler yüklenemedi: ${e.message}")
+                _error.postValue("Filters could not load: ${e.message}")
             }
         }
     }

@@ -51,19 +51,16 @@ class AllReviewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // SystemBars padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
             insets
         }
 
-        // Beğeni işlemleri için repo ve userId
         val likedRepo = LikedReviewsRepository(RetrofitClient.likedReviewsApiService(requireContext()))
         val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         val userId = prefs.getLong("user_id", -1L)
 
-        // Adapter
         reviewsAdapter = ReviewsAdapter(
             likedRepo = likedRepo,
             userId = userId,
@@ -77,7 +74,6 @@ class AllReviewsFragment : Fragment() {
             adapter = reviewsAdapter
         }
 
-        // LiveData observers
         viewModel.comments.observe(viewLifecycleOwner) { list ->
             reviewsAdapter.submitList(list)
         }
@@ -88,7 +84,6 @@ class AllReviewsFragment : Fragment() {
             }
         }
 
-        // 🔥 Güncel yorumları ve beğeni durumlarını yükle
         viewModel.loadAllCommentsWithLikes(userId)
     }
 

@@ -26,13 +26,11 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
 
         val sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
-        // Kullanıcı bilgilerini al
         val username = sharedPrefs.getString("user_username", "default")
         val name = sharedPrefs.getString("user_name", "")
         val surname = sharedPrefs.getString("user_surname", "")
         val email = sharedPrefs.getString("user_email", "")
 
-        // View’lara set et
         val usernameField = view.findViewById<EditText>(R.id.settingsUsername)
         val nameField = view.findViewById<EditText>(R.id.settingsName)
         val surnameField = view.findViewById<EditText>(R.id.settingsSurname)
@@ -46,12 +44,10 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
         surnameField.setText(surname)
         emailField.setText(email)
 
-        // Cancel butonu
         view.findViewById<TextView>(R.id.btnCancel).setOnClickListener {
             dismiss()
         }
 
-        // Save butonu
         view.findViewById<Button>(R.id.btnSave).setOnClickListener {
             val newName = nameField.text.toString()
             val newSurname = surnameField.text.toString()
@@ -67,7 +63,6 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        // Logout butonu
         view.findViewById<Button>(R.id.btnLogout).setOnClickListener {
             sharedPrefs.edit().clear().apply()
 
@@ -79,7 +74,7 @@ class SettingsBottomSheetFragment : BottomSheetDialogFragment() {
             requireActivity().finish()
         }
 
-        // Change password bottom sheet aç
+
         view.findViewById<Button>(R.id.btnChangePassword).setOnClickListener {
             val bottomSheet = ChangePasswordBottomSheetFragment()
             bottomSheet.show(parentFragmentManager, "ChangePasswordBottomSheet")

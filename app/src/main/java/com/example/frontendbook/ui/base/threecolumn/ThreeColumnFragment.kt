@@ -95,7 +95,7 @@ class ThreeColumnFragment : Fragment() {
 
 
         if (listId != null && listId != 0L) {
-            Log.d("THREE_COLUMN", "📘 Liste ID ile kitaplar yüklenecek: $listId")
+            Log.d("THREE_COLUMN", "Books will be loaded with List ID: $listId")
             threeColumnViewModel.fetchListWithBooks(listId!!)
             threeColumnViewModel.listWithBooks.observe(viewLifecycleOwner) { listDto ->
                 val books = listDto.books.map {

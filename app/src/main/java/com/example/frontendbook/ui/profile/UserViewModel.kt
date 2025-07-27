@@ -27,19 +27,18 @@ class UserViewModel(
     val error: LiveData<String> = _error
 
     fun loadUser(userId: Long) {
-        Log.d(TAG, "loadUser() -> başlıyor, userId=$userId")
+        Log.d(TAG, "loadUser() -> starts..., userId=$userId")
         viewModelScope.launch {
             try {
                 val fetched = repository.fetchUser(userId)
-                Log.d(TAG, "loadUser() -> kullanıcı verisi: $fetched")
+                Log.d(TAG, "loadUser() -> user data: $fetched")
                 _user.value = fetched
 
-                // (İsteğe bağlı: burada sayıları da yükleyebilirsin)
                 loadFollowersCount(userId)
                 loadFollowingCount(userId)
             } catch (e: Exception) {
-                Log.e(TAG, "loadUser() -> hata", e)
-                _error.value = e.message ?: "Kullanıcı bilgisi alınırken hata oluştu"
+                Log.e(TAG, "loadUser() -> Error", e)
+                _error.value = e.message ?: "An error occurred while retrieving user information."
             }
         }
     }
@@ -51,8 +50,8 @@ class UserViewModel(
                 _followersCount.value = count
                 Log.d(TAG, "loadFollowersCount() -> $count")
             } catch (e: Exception) {
-                Log.e(TAG, "loadFollowersCount() -> hata", e)
-                _error.value = e.message ?: "Takipçi sayısı alınamadı"
+                Log.e(TAG, "loadFollowersCount() -> Error", e)
+                _error.value = e.message ?: "Could not get follower count"
             }
         }
     }
@@ -64,8 +63,8 @@ class UserViewModel(
                 _followingCount.value = count
                 Log.d(TAG, "loadFollowingCount() -> $count")
             } catch (e: Exception) {
-                Log.e(TAG, "loadFollowingCount() -> hata", e)
-                _error.value = e.message ?: "Takip edilen sayısı alınamadı"
+                Log.e(TAG, "loadFollowingCount() -> Error", e)
+                _error.value = e.message ?: "Could not get following count"
             }
         }
     }
@@ -74,9 +73,9 @@ class UserViewModel(
         viewModelScope.launch {
             try {
                 val response = repository.updateAvatar(userId, avatarId)
-                Log.d("UserViewModel", "Avatar güncellendi: $response")
+                Log.d("UserViewModel", "Avatar updated: $response")
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Avatar güncelleme hatası", e)
+                Log.e("UserViewModel", "Avatar update error", e)
             }
         }
     }

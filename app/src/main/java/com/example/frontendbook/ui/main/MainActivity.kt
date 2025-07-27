@@ -14,18 +14,15 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
     }
 
     override fun setupViews() {
-        // 👇 Toolbar'ı ActionBar olarak ayarla
+
         setSupportActionBar(binding.mainToolbar)
 
-        // 👇 NavHostFragment üzerinden güvenli şekilde navController alıyoruz
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Bottom nav ile bağla
         binding.bottomNav.setupWithNavController(navController)
 
-        // Orta butona özel işlem
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.addBookFragment -> {
@@ -34,7 +31,7 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
                     false
                 }
                 else -> {
-                    // Sadece destination varsa gitmeye çalış
+
                     if (navController.currentDestination?.id != item.itemId) {
                         navController.navigate(item.itemId)
                     }

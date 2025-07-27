@@ -23,7 +23,7 @@ class LikedBooksRepository(
         } else {
             val err = resp.errorBody()?.string()
             Log.e("BookRepo", "fetchAllLikedBooks failed: code=${resp.code()}, body=$err")
-            throw Exception("Beğenilen kitaplar yüklenemedi: ${resp.code()}")
+            throw Exception("Favorite books could not be loaded: ${resp.code()}")
         }
     }
     suspend fun isBookLiked(userId: Long, bookId: Long): Boolean {

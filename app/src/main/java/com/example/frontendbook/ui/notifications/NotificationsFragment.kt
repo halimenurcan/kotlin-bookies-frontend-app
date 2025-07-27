@@ -93,7 +93,7 @@ class NotificationsFragment : Fragment() {
                 val direction = NotificationsFragmentDirections
                     .actionNotificationsFragmentToListsFragment(
                         argUserId = userId,
-                        argTitle = "Takip Edilen Listeler",
+                        argTitle = "Followed lists",
                         argType = "FOLLOWED",
                         argListId = -1L,
                         profileUserId = userId,

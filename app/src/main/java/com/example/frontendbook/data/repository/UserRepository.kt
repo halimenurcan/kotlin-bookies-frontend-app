@@ -29,11 +29,11 @@ class UserRepository(private val api: UserApiService) {
                 AvatarRequest(userId,avatar)
             )
             if (!response.isSuccessful) {
-                Log.e("UserRepository", "updateAvatar() -> başarısız! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
+                Log.e("UserRepository", "updateAvatar() -> Unsuccessful! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
             }
             response.isSuccessful
         } catch (e: Exception) {
-            Log.e("UserRepository", "updateAvatar() -> hata: ${e.message}", e)
+            Log.e("UserRepository", "updateAvatar() -> Error: ${e.message}", e)
             false
         }
     }
@@ -44,11 +44,11 @@ class UserRepository(private val api: UserApiService) {
             if (response.isSuccessful) {
                 response.body()
             } else {
-                Log.e(TAG, "getAvatarByUserId() -> Fail! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
+                Log.e(TAG, "getAvatarByUserId() -> Unsuccessful! HTTP ${response.code()} - Body: ${response.errorBody()?.string()}")
                 null
             }
         } catch (e: Exception) {
-            Log.e(TAG, "getAvatarByUserId() -> hata: ${e.message}", e)
+            Log.e(TAG, "getAvatarByUserId() -> Error: ${e.message}", e)
             null
         }
     }
@@ -89,7 +89,7 @@ class UserRepository(private val api: UserApiService) {
             Log.d(TAG, "sendBookInteraction() -> HTTP ${response.code()}")
             response.isSuccessful
         } catch (e: Exception) {
-            Log.e(TAG, "sendBookInteraction() -> hata: ${e.message}", e)
+            Log.e(TAG, "sendBookInteraction() -> Error: ${e.message}", e)
             false
         }
     }

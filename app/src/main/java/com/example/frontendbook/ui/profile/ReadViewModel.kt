@@ -18,14 +18,13 @@ class ReadViewModel(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    // Okunacaklar listesini getir
     fun loadToReadList(userId: Long) {
         viewModelScope.launch {
             try {
                 _toReadList.value = repository.getToReadList(userId)
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = "Okunacaklar yüklenemedi: ${e.message}"
+                _error.value = "Readlist could not be loaded: ${e.message}"
             }
         }
     }
@@ -35,25 +34,24 @@ class ReadViewModel(
             try {
                 val result = repository.getReadBooks(userId)
 
-                // DEBUG LOGGING
+
                 result.forEach {
-                    println("📚 Read Book -> id: ${it.bookId}, title: ${it.bookTitle}")
+                    println(" Read Book -> id: ${it.bookId}, title: ${it.bookTitle}")
                 }
 
-                // book.id == 0 olanları filtrele
                 val validBooks = result.filter { it.bookId != 0L }
 
                 _readBooks.value = validBooks
                 _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message
-                println("🚨 Hata: ${e.message}")
+                println(" Error: ${e.message}")
             }
         }
     }
 
 
-    // Okunacaklara ekle
+
     fun addToReadList(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
@@ -61,12 +59,11 @@ class ReadViewModel(
                 _error.value = null
                 loadToReadList(userId)
             } catch (e: Exception) {
-                _error.value = "Okunacaklara eklenemedi: ${e.message}"
+                _error.value = "Could not added to ReadList: ${e.message}"
             }
         }
     }
 
-    // Okunmuşlara ekle
     fun addToReadBooks(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
@@ -74,12 +71,12 @@ class ReadViewModel(
                 _error.value = null
                 loadReadBooks(userId)
             } catch (e: Exception) {
-                _error.value = "Okunanlara eklenemedi: ${e.message}"
+                _error.value = "Could not add to Read: ${e.message}"
             }
         }
     }
 
-    // Okunacaklardan sil
+
     fun removeFromReadList(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
@@ -87,12 +84,12 @@ class ReadViewModel(
                 _error.value = null
                 loadToReadList(userId)
             } catch (e: Exception) {
-                _error.value = "Okunacaklardan silinemedi: ${e.message}"
+                _error.value = "Could not be deleted from ReadList: ${e.message}"
             }
         }
     }
 
-    // Okunmuşlardan sil
+
     fun removeFromReadBooks(userId: Long, bookId: Long) {
         viewModelScope.launch {
             try {
@@ -100,7 +97,7 @@ class ReadViewModel(
                 _error.value = null
                 loadReadBooks(userId)
             } catch (e: Exception) {
-                _error.value = "Okunanlardan silinemedi: ${e.message}"
+                _error.value = "Could not be deleted from Read: ${e.message}"
             }
         }
     }

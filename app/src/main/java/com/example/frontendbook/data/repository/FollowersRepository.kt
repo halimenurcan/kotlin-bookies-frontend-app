@@ -22,16 +22,16 @@ class FollowersRepository(
 
     suspend fun getFollowersOfUser(userId: Long): List<UserResponse> {
         val resp = api.getFollowersOfUser(userId)
-        if (!resp.isSuccessful) throw Exception("Takipçiler alınamadı: ${resp.code()}")
+        if (!resp.isSuccessful) throw Exception("Followers could not be retrieved: ${resp.code()}")
         return resp.body()?._embedded?.userResponseDTOList ?: emptyList()
     }
     suspend fun getFollowingOfUser(userId: Long): List<UserResponse> {
         val resp = api.getFollowingOfUser(userId)
-        if (!resp.isSuccessful) throw Exception("Takip edilenler alınamadı: ${resp.code()}")
+        if (!resp.isSuccessful) throw Exception("Following could not be retrieved: ${resp.code()}")
         return resp.body()?._embedded?.userResponseDTOList ?: emptyList()
     }
 
-    // ---- EKLEDİKLERİN: ----
+
     suspend fun getFollowerCount(userId: Long): Int {
          return api.getFollowerCount(userId)
 

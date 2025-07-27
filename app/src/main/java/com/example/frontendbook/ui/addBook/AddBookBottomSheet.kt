@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -30,7 +29,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import android.view.KeyEvent
 import android.view.MotionEvent
-import com.example.frontendbook.data.repository.ReadRepository
 import com.example.frontendbook.ui.profile.ReadViewModel
 import com.example.frontendbook.ui.profile.ReadViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior

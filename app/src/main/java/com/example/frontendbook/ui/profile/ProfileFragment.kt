@@ -70,18 +70,17 @@ class ProfileFragment : Fragment() {
         val userId = prefs.getLong("user_id", -1L)
         Log.d(TAG, "onViewCreated - userId from prefs = $userId")
         if (userId == -1L) {
-            Toast.makeText(requireContext(), "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "User could not found", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Her profil açılışında avatar'ı çek
+
         loadAvatar(userId)
 
-        // LiveData gözlemleri (User)
         viewModel.user.observe(viewLifecycleOwner) { user ->
             Log.d(TAG, "observe(user) -> $user")
             binding.usernameText.text = user.username
-            // Profil fotoğrafı için Glide (isteğe bağlı)
+
             if (!user.profileImageUrl.isNullOrBlank()) {
                 Glide.with(this)
                     .load(user.profileImageUrl)
@@ -105,16 +104,16 @@ class ProfileFragment : Fragment() {
 
         // ReadViewModel LiveData gözlemleri
         readViewModel.toReadList.observe(viewLifecycleOwner) { list ->
-            Log.d(TAG, "Okunacak kitaplar: ${list.size}")
+            Log.d(TAG, "Books to read: ${list.size}")
         }
         readViewModel.readBooks.observe(viewLifecycleOwner) { list ->
-            Log.d(TAG, "Okunan kitaplar: ${list.size}")
+            Log.d(TAG, "Books already read: ${list.size}")
         }
         readViewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() }
         }
 
-        // Animasyonlar
+
         val scaleAnim = ScaleAnimation(
             1f, 1.1f, 1f, 1.1f,
             ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
@@ -128,16 +127,12 @@ class ProfileFragment : Fragment() {
             AnimationUtils.loadAnimation(requireContext(), R.anim.scale_glow)
         )
 
-        // User verisi yükle
         Log.d(TAG, "loadUser: $userId")
         viewModel.loadUser(userId)
 
-        // Profil resmi ve ayarlar butonları
         binding.profileImage.setOnClickListener {
             ChooseProfileImageBottomSheetFragment { selectedResId ->
-                // Seçilen resmi anında göster
                 binding.profileImage.setImageResource(selectedResId)
-                // Avatarı backend'e kaydettikten sonra güncel halini çek (veya anında göster)
                 loadAvatar(userId)
             }.show(parentFragmentManager, "ChooseProfile")
         }
@@ -146,7 +141,6 @@ class ProfileFragment : Fragment() {
             SettingsBottomSheetFragment().show(parentFragmentManager, "Settings")
         }
 
-        // OKUNMUŞ KİTAPLAR (btnRead)
         binding.btnRead.setOnClickListener {
             readViewModel.loadReadBooks(userId)
             findNavController().navigate(
@@ -159,7 +153,7 @@ class ProfileFragment : Fragment() {
                 }
             )
         }
-        // OKUNACAK KİTAPLAR (btnReadlist)
+
         binding.btnReadlist.setOnClickListener {
             readViewModel.loadToReadList(userId)
             findNavController().navigate(
@@ -172,7 +166,7 @@ class ProfileFragment : Fragment() {
                 }
             )
         }
-        // BEĞENİLER (btnLikes)
+
         binding.btnLikes.setOnClickListener {
             likedBooksViewModel.loadLikedBooks(userId)
             findNavController().navigate(

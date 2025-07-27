@@ -58,7 +58,7 @@ class OtherListsFragment : Fragment() {
                 if (currentUserId != -1L) {
                     followViewModel.toggleFollow(currentUserId, listDto.id)
                 } else {
-                    Toast.makeText(requireContext(), "Kullanıcı bulunamadı!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "User not found!", Toast.LENGTH_SHORT).show()
                 }
             },
             onBookClick = { book ->
@@ -123,7 +123,7 @@ class OtherListsFragment : Fragment() {
 
         followViewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
-                Toast.makeText(requireContext(), "Takip hatası: $it", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Follow error: $it", Toast.LENGTH_SHORT).show()
             }
         }
     }

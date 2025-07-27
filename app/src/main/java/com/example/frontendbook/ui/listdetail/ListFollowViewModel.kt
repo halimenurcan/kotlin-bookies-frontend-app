@@ -33,7 +33,7 @@ class ListFollowViewModel(
                     Log.d("ListFollowVM", "Toggle succeeded, reloading followed IDs...")
                     loadFollowedListIds(currentUserId)
                 } else {
-                    _error.value = "İşlem başarısız"
+                    _error.value = "Operation failed"
                     Log.w("ListFollowVM", "Toggle failed")
                 }
             } catch (e: Exception) {
@@ -47,8 +47,8 @@ class ListFollowViewModel(
         viewModelScope.launch {
             try {
                 val ids = repo.getFollowedListIdsByUser(userId)
-                Log.d("ListFollowVM", "Gelen takip edilen ID'ler: $ids")
-                followedListIds.postValue(ids.distinct()) // tekrarsız olsun
+                Log.d("ListFollowVM", "Incoming tracked IDs: $ids")
+                followedListIds.postValue(ids.distinct())
             } catch (e: Exception) {
                 Log.e("ListFollowVM", "loadFollowedListIds error: ${e.message}", e)
             }
