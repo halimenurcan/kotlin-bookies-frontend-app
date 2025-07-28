@@ -3,7 +3,6 @@ package com.example.frontendbook.data.api.service
 import com.example.frontendbook.data.model.AddBookToListRequest
 import com.example.frontendbook.data.model.CreateListRequest
 import com.example.frontendbook.data.api.dto.ListDto
-import com.example.frontendbook.data.remote.dto.ListWithBooksDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

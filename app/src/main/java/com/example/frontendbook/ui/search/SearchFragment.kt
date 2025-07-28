@@ -124,6 +124,23 @@ class SearchFragment : Fragment() {
         binding.genreButton.setOnClickListener {
             showMultiSelectDialog("Select Genres", genreOptions, selectedGenres)
         }
+        binding.aiSearchButton.setOnClickListener {
+            val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val userId = prefs.getLong("user_id", -1L)
+
+            if (userId == -1L) {
+                Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val action = SearchFragmentDirections.actionSearchFragmentToThreeColumnFragment(
+                title = "AI Recommendations",
+                type = "ai", // özel tür olarak "ai" gönderiyoruz
+                listId = 0L,
+                userId = userId
+            )
+            findNavController().navigate(action)
+        }
 
         binding.languageButton.setOnClickListener {
             showMultiSelectDialog("Select Languages", languageOptions, selectedLanguages)

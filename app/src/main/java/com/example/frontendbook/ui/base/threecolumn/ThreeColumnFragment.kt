@@ -1,13 +1,16 @@
 package com.example.frontendbook.ui.base.threecolumn
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.frontendbook.data.remote.AiRepository
 import com.example.frontendbook.data.remote.RetrofitClient
 import com.example.frontendbook.data.repository.LikedBooksRepository
 import com.example.frontendbook.data.repository.ListsRepository
@@ -17,6 +20,7 @@ import com.example.frontendbook.ui.base.adapter.BookAdapter
 import com.example.frontendbook.ui.likedbooks.LikedBooksViewModel
 import com.example.frontendbook.ui.profile.ReadViewModel
 import com.example.frontendbook.ui.profile.ReadViewModelFactory
+import com.example.frontendbook.ui.recommendation.AiRecommendationViewModelFactory
 import com.example.frontendbook.ui.viewmodel.BookViewModel
 
 class ThreeColumnFragment : Fragment() {
@@ -27,6 +31,10 @@ class ThreeColumnFragment : Fragment() {
     private lateinit var likedBooksViewModel: LikedBooksViewModel
     private lateinit var readViewModel: ReadViewModel
     private lateinit var adapter: BookAdapter
+    val aiRepo = AiRepository()
+    val aiViewModel: AiRecommendationViewModel by viewModels {
+        AiRecommendationViewModelFactory(requireContext(), aiRepo)
+    }
 
     private val bookViewModel: BookViewModel by viewModels()
 
@@ -48,6 +56,7 @@ class ThreeColumnFragment : Fragment() {
                     type?.let { putString(ARG_TYPE, it) }
                     listId?.let { putLong(ARG_LIST_ID, it) }
                     userId?.let { putLong(ARG_USER_ID, it) }
+
                 }
             }
         }
@@ -194,7 +203,23 @@ class ThreeColumnFragment : Fragment() {
                 }
             }
         }
+        else if (type == "ai") {
+            aiViewModel.recommendedBooks.observe(viewLifecycleOwner) { books ->
+                adapter.submitList(books)
+            }
 
+            aiViewModel.error.observe(viewLifecycleOwner) { err ->
+                err?.let {
+                    Toast.makeText(requireContext(), "AI Error: $it", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            val prefs = requireContext().getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val userId = prefs.getLong("user_id", -1L)
+            if (userId != -1L) {
+                aiViewModel.fetchRecommendationsFromLikedBooks(userId)
+            }
+        }
         else {
             bookViewModel.books.observe(viewLifecycleOwner) { books ->
                 adapter.submitList(books)

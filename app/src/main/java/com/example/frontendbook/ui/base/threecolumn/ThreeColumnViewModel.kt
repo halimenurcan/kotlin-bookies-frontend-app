@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontendbook.data.api.dto.ListDto
-import com.example.frontendbook.data.remote.dto.ListWithBooksDto
 import com.example.frontendbook.data.repository.ListsRepository
 import kotlinx.coroutines.launch
 
