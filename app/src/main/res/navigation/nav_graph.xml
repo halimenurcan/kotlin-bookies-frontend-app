@@ -6,6 +6,12 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homePageFragment">
 
+    <!-- GLOBAL ACTION added at root level -->
+    <action
+        android:id="@+id/action_global_threeColumnFragment"
+        app:destination="@id/threeColumnFragment"
+        app:launchSingleTop="true" />
+
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.frontendbook.ui.homePage.HomePageFragment"

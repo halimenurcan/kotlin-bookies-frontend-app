@@ -2,6 +2,7 @@ package com.example.frontendbook.ui.profile
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class ChangePasswordBottomSheetFragment : BottomSheetDialogFragment() {
 
         val sharedPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentPassword = sharedPrefs.getString("user_password", null)
+        Log.d("ChangePassword", "Current password in prefs: $currentPassword")
 
         btnUpdate.setOnClickListener {
             val oldPassword = oldPasswordInput.text.toString()

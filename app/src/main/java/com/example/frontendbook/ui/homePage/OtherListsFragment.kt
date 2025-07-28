@@ -79,14 +79,13 @@ class OtherListsFragment : Fragment() {
                 findNavController().navigate(action)
             },
             onSeeMoreClick = { listDto ->
-                val action = OtherListsFragmentDirections
-                    .actionListsFragmentToThreeColumnFragment(
-                        title = listDto.title ?: "List",
-                        listId = listDto.id,
-                        type = "custom",
-                        userId = listDto.owner.id
-                    )
-                findNavController().navigate(action)
+                val bundle = Bundle().apply {
+                    putString("title", listDto.title ?: "List")
+                    putLong("listId", listDto.id)
+                    putString("type", "custom")
+                    putLong("userId", listDto.owner.id)
+                }
+                findNavController().navigate(R.id.action_global_threeColumnFragment, bundle)
             }
         )
 
@@ -184,14 +183,13 @@ class OtherListsFragment : Fragment() {
 
         val seeMoreCard = inflater.inflate(R.layout.see_more_card, container, false)
         seeMoreCard.setOnClickListener {
-            val action = OtherListsFragmentDirections
-                .actionListsFragmentToThreeColumnFragment(
-                    title = listDto.title ?: "List",
-                    listId = listDto.id,
-                    type = "custom",
-                    userId = listDto.owner.id
-                )
-            findNavController().navigate(action)
+            val bundle = Bundle().apply {
+                putString("title", listDto.title ?: "List")
+                putLong("listId", listDto.id)
+                putString("type", "custom")
+                putLong("userId", listDto.owner.id)
+            }
+            findNavController().navigate(R.id.action_global_threeColumnFragment, bundle)
         }
         container.addView(seeMoreCard)
     }

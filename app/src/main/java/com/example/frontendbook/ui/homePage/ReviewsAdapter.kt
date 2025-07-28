@@ -59,8 +59,10 @@ class ReviewsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(r: ReviewDto) {
+
             val isLiked = r.isLiked
             Log.d("ADAPTER_BIND", "Binding review id=${r.id}, isLiked=$isLiked")
+            Log.d("REVIEW_ADAPTER", "Binding comment: ${r.comment}")
 
             Glide.with(b.reviewBookCover.context)
                 .load(r.bookCoverUrl)

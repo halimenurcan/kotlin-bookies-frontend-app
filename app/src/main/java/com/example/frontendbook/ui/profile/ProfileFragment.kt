@@ -216,9 +216,9 @@ class ProfileFragment : Fragment() {
             val avatarResponse = userRepository.fetchAvatar(userId)
             val avatarName = avatarResponse?.avatar ?: "avatar.png"
             val avatarDrawable = when (avatarName) {
-                "bookworms.png"    -> R.drawable.bookworms
-                "bookfriends.png"  -> R.drawable.bookfriends
-                "bookbibliofil.png"-> R.drawable.bookbibliofil
+                "bookworms.png"    -> R.drawable.avatar
+                "bookfriends.png"  -> R.drawable.bookbibliofil
+                "bookbibliofil.png"-> R.drawable.bookworms
                 "bookcat.png"      -> R.drawable.bookcat
                 else               -> R.drawable.avatar
             }
